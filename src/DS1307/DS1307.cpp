@@ -70,7 +70,7 @@ namespace PatricksDrivers {
 		if (rawData[2] & (1 << 6)) { // 12 hour mode
 			// needs to be read, and converted into 24 hour mode for the result
 			info =  (10 * ((rawData[2] & 0x10) >> 4)) + (rawData[2] & 0x0F);
-			if (rawData[2] & (1 << 5))
+			if ((rawData[2] & (1 << 5)) && (info < 12))
 				info += 12;
 		} else { // 24 hour mode
 			info =  (10 * ((rawData[2] & 0x30) >> 4)) + (rawData[2] & 0x0F);
@@ -183,7 +183,54 @@ namespace PatricksDrivers {
 	}
 	
 	void DS1307::toggle_mode() {
-		printf("\nWRITE THIS!");
+		// read in the value from 0x02.
+		unsigned char* val = new unsigned char[1];
+		Device->readRegister(_bus, DS1307_DEV_ADDR, 0x02, val);
+		unsigned char regVal = val[0];
+		delete val;
+		// declare a variable for the result
+		unsigned char newVal = 0x00;
+		// a place to work with my hour value
+		unsigned int hour;
+		// determine the current mode
+		hourMode_t hourMode = (regVal & (1 << 6)) ? TWELVEHOURMODE : TWENTYFOURHOURMODE;
+		if (hourMode == TWELVEHOURMODE) {
+			// switching to 24 hour mode
+			// read the current hour
+			hour = (10 * ((regVal & 0x10) >> 4)) + (regVal & 0x0F);
+			// read the am/pm bit
+			meridian_t am_pm = (regVal & (1 << 5)) ? PM : AM;
+			if (am_pm == AM) { // (hour = 12am - 11am)
+				if (hour == 12) { // (12am -> 0000)
+					hour = 0;
+				}
+			} else { // am_pm == PM (hour = 12pm - 11pm)
+				if (hour < 12) { // (hour = 1pm - 11pm -> 1300 - 2300)
+					hour += 12;
+				}
+			}
+			// write the hour to newVal, unset bit 6
+			newVal = 0x00 | ((hour / 10) << 4) | (hour % 10);
+		} else { // hourMode == TWENTYFOURHOURMODE
+			// switching to 12 hour mode
+			// read the current hour
+			hour = (10 * ((regVal & 0x30) >> 4)) + (regVal & 0x0F);
+			if (hour < 12) { // AM (hour = 0000 - 1100)
+				if (hour == 0) {
+					hour = 12;
+				}
+				// set newVal here w/ am/pm flag set to 0
+				newVal = 0x40 | ((hour / 10) << 4) | (hour % 10);
+			} else { // PM (hour = 1200 - 2300)
+				if (hour > 12) { // (hour = 1300 - 2300 -> 1pm - 11pm)
+					hour -= 12;
+				}
+				// set newVal here w/ am/pm flag set to 1
+				newVal = 0x60 | ((hour / 10) << 4) | (hour % 10);
+			}
+		}
+		// write newVal back to the register on the chip.
+		Device->writeRegister(_bus, DS1307_DEV_ADDR, 0x02, newVal);
 	}
 	
 	hourMode_t DS1307::read_mode() {

@@ -18,7 +18,7 @@ namespace PatricksDrivers {
 			void start();
 			void stop();
 			void duty(int r, int g, int b);
-			void period(int val);
+			//void period(int val);
 	}; // class TriColor_LED
 	
 } // namespace PatricksDrivers

@@ -1,5 +1,7 @@
 #include "TriColor_LED.h"
 
+#include <cstdio>		// pulls in printf()
+
 using namespace std;
 
 namespace PatricksDrivers {
@@ -9,7 +11,7 @@ namespace PatricksDrivers {
 		const char* green_key,
 		const char* blue_key
 	) : Red(red_key), Green(green_key), Blue(blue_key) {
-		
+		start();
 	}
 	
 	TriColor_LED::~TriColor_LED() {
@@ -34,10 +36,12 @@ namespace PatricksDrivers {
 		Blue.duty(b);
 	}
 	
+	/*
 	void TriColor_LED::period(int val) {
 		Red.period(val);
-		Blue.period(val);
 		Green.period(val);
+		Blue.period(val);
 	}
+	*/
 	
 } // namespace PatricksDrivers

@@ -22,6 +22,9 @@ namespace BBIO {
 	
 	bool PWM::_initialized = false;
 	
+	// This should be accepting a parameter for the period.
+	// The period isn't supposed to be changed at runtime.
+	// It's supposed to be set before you start the PWM generator running, and then left alone.
 	PWM::PWM(const char* key) {
 		_info.name = NULL;
 		_info.key = NULL;
@@ -62,7 +65,6 @@ namespace BBIO {
 		// set the default values for the PWM pin
 		duty(0);
 		period(500000);
-		start();
 	}
 	
 	PWM::~PWM() {
@@ -100,6 +102,15 @@ namespace BBIO {
 		write(path, filename, value);
 	}
 	
+	// The period on a PWM is not supposed to be altered during run time.
+	// It's suppsed to be set once, and then left alone.
+	// Create the object, set the period, set the duty to 0, start it, change the duty as needed.
+	// If you're using two PWM pins that connect to the same controller on the board
+	// then you won't be able to set the period on either pin w/o unloading the DTO fragment
+	// for the blocking pin.
+	// It would be possible to change some logic to make this possible, but it would also mean
+	// cutting a PWM signal on two pins to change the period on one of them.
+	// Because of this, it's best to just let the period default to 500000.
 	void PWM::period(int val) {
 		stringstream s;
 		s << _info.ocp_path;

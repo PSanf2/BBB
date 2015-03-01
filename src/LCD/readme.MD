@@ -355,3 +355,20 @@ debian@beaglebone:~$ cat /sys/devices/ocp.3/helper.15/AIN1
 1750
 debian@beaglebone:~$ cat /sys/devices/ocp.3/helper.15/AIN1
 195
+
+================================================================================
+
+GETTING DOWN TO ACTUALLY WRITING AN LCD DRIVER
+
+https://learn.adafruit.com/character-lcd-with-raspberry-pi-or-beaglebone-black
+See the above for the wiring.
+I used those instructions to connect an LCD w/ a tri-color backlight to my BBB.
+I've tested the LCD with the Adafruit code, and it works fine.
+I was able to modify my TriColor_LED code to work the backlight on the LCD.
+I also learned that there is some funny behavior with PWM periods due to a kernel bug.
+If you're using two PWM pins that are governed by the same controller on the board then you will not be able to change the period on either of them. This is due to a locking condition involving the controller.
+There's a resolution that involves recombiling the BBB Linux PWM driver.
+A workaround involves unloading the DTO fragment of the blocking pin so you can change the period on the other.
+The smart thing to do is work with the default period of 500000. If you want to be really clever, then when you try to change the period or duty values, you'd read in the existing period, and scale the duty to match, storing a "virtual" period in a member variable to take into account. It'd be a nifty way to seemingly correct the issue for most practacle purposes.
+
+For my LCD driver, I'm finding that the PWM pins on the P9 header won't let me change the period value because they're being managed by the same controller on the BBB. No matter what I do, the period is stuck at the default value of 500000. I'll just use that. I've found that I can control the color of the backlight without an issue when I do.

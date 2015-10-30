@@ -1,7 +1,7 @@
 #ifndef _PWM_BOARD_H
 #define __PWM_BOARD_H
 
-#include "I2C_IO.h"
+#include "../lib/I2C_IO.h"
 
 #define MODE1 0x0
 #define PRE_SCALE 0xFE

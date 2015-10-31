@@ -17,12 +17,11 @@ From the terminal run i2cdetect -y -r 1 to verify the device address.
 From the repository main directory run ./bash/link_PCA9685_CLI_main.sh. 
 From the repository main directory run ./bin/PCA9685_CLI. 
 
-
 I've found that 75Mhz is a good frequency. 
 You need to set the refresh rate before controlling the servos. 
 You need to set the refresh rate after a reset. 
 You need to wake the board up before anything will happen. 
-The ON setting will almost always be 0, and the OFF setting will determing 
+The ON setting will almost always be 0, and the OFF setting will determine 
 what position the servo will move to. 
 Understand what you're doing with the servos before trying to use the program. 
 

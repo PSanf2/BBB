@@ -13,5 +13,7 @@ NOT HOLD THE AUTHOR RESPONSIBLE FOR ANY DAMAGE THAT MAY BE CAUSED TO
 ANY EQUIPMENT, PERSONS, OR INFORMATION.
 
 References and Credits:
+
 Derek Molloy - Exploring BeagleBone (http://www.exploringbeaglebone.com/)
+
 Bill Earl - Adafruit 16-Channel Servo Drive with Arduino (https://learn.adafruit.com/16-channel-pwm-servo-driver)

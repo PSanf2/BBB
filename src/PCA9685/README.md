@@ -11,6 +11,7 @@ P9_20 I2C2_SDA -> SDA
 
 Apply appropriate external power for the servos as documented by Adafruit. 
 Connect the servos as documented by Adafruit. 
+
 From the terminal run i2cdetect -l to make sure the bus is available. 
 From the terminal run i2cdetect -y -r 1 to verify the device address. 
 From the repository main directory run ./bash/link_PCA9685_CLI_main.sh. 

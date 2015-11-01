@@ -1,0 +1,44 @@
+These are Patrick Sanford's development notes.
+This file contains information that will be of questionable value to 
+anyone other than the author.
+
+CONNECTING A DEVICE TO THE BBB
+
+Connecting an I2C device to the BBB requires four pins.
+The I2C device will need to have GND, VCC, SDA, and SCL pins connected 
+to the BBB.
+
+BBB					I2C Device
+P9_01 GND		->	GND
+P9_07 SYS_5V	->	VCC
+P9_19 I2C2_SCL	->	SCL
+P9_20 I2C2_SDA	->	SDA
+
+NOTES ABOUT P9_07 vs P9_03
+P9_03 DC_3.3V has been documented being used in the book on another device.
+I'm not sure if P9_03 is limited, or goes through a power controller on the board.
+Most Arduino breakout boards seem to need 5V. P9_07 provides that, and is regulated.
+Don't try to power too many boards off the microcontroller. The SYS_5V rail
+can only support 250mA. If I'm going to get insane with the number of boards
+connected to the BBB then they should get their own power source.
+
+Once you have the four rails established I should be able
+to connect multiple devices to the bus. Each device on the
+bus needs to have a unique address. The BBB has two I2C busses
+available, but one of them isn't enabled by default. The bus i2c-0 shouldn't
+be used for anything. I believe it's used for something involving HDMI.
+
+WHEN CONNECTING A NEW DEVICE
+sudo i2cdetect -l // To see which I2C busses are available. There's one that's not enabled by default.
+sudo i2cdetect -y -r <i2c bus num> // To see which addresses are available. These roughly match to which devices are connected.
+sudo i2cdump -y <i2c bus num> <i2c dev hex addr> // To dump all of the registers on the device.
+
+CODING NOTES
+Reading/Writing to/from an I2C device register isn't that difficult.
+The main challenge is knowing what each register on a device is supposed to do.
+I'm basically expanding off a class that does a good job of reading/writing
+from a device. I'm writting wrappers that define functions for procedures that
+need to be performed, and define vocabulary for abstraction.
+Another challange may be in making sure I don't have collisions on the bus.
+Once I have multiple devices communicating on the bus then I may need to
+find a method to implement collision avoidance.

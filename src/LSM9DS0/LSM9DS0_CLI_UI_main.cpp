@@ -8,6 +8,8 @@
 #include <iostream>		// pulls in cin and hex
 #include <cstdio>		// pulls in printf()
 
+#include "LSM9DS0.h"
+
 using namespace std;
 
 // Functions to put things on the screen.
@@ -60,6 +62,7 @@ int main(int argc, char* argv[]) {
 	
 	PatricksDrivers::PWM_Board ServoBoard(bus, dev);
 	*/
+	
 	
 	unsigned int menu_choice;//, reg, val, ch, on, off;
 	

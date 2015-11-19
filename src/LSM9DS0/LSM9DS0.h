@@ -39,7 +39,6 @@ namespace PatricksDrivers {
 
 	class LSM9DS0 {
 		public:
-			
 			// typedefs
 			// The typedefs below were coppied from the Adafruit code.
 			// It's being used here under the BSD license that Adafruit published their code under.
@@ -144,7 +143,19 @@ namespace PatricksDrivers {
 			// End Kevin Townsend typedefs
 			
 			LSM9DS0();
+			LSM9DS0(
+				unsigned char bus,
+				lsm9ds0AccelRange_t accelRange,
+				lsm9ds0MagGain_t magGain,
+				lsm9ds0GyroScale_t gyroScale);
 			~LSM9DS0();
+		protected:
+			; // do nothing. this is a placeholder.
+		private:
+			unsigned char _bus;
+			lsm9ds0AccelRange_t _range;
+			lsm9ds0MagGain_t _gain;
+			lsm9ds0GyroScale_t _scale;
 	};
 
 }

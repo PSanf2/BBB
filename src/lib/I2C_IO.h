@@ -13,15 +13,16 @@ namespace PatricksDrivers {
 			bool is_open();
 			void close();
 			unsigned char readRegister(unsigned int reg);
+			unsigned char* readRegisters(unsigned int reg, unsigned char num);
 			int writeRegister(unsigned int reg, unsigned char val);
 			int write(unsigned char val);
 			~I2C_IO();
 		protected:
-			unsigned char bus;
-			unsigned char addr;
-			int error_code;	// will be used for error checking
+			unsigned char _bus;
+			unsigned char _addr;
+			int _error_code;	// will be used for error checking
 		private:
-			int file;
+			int _file;
 	};
 	
 }

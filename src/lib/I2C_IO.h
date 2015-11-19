@@ -12,10 +12,10 @@ namespace PatricksDrivers {
 			int open();
 			bool is_open();
 			void close();
-			unsigned char readRegister(unsigned int reg);
-			unsigned char* readRegisters(unsigned int reg, unsigned char num);
-			int writeRegister(unsigned int reg, unsigned char val);
-			int write(unsigned char val);
+			unsigned char readRegister(unsigned char reg);
+			unsigned char* readRegisters(unsigned char reg, unsigned char num);
+			int writeRegister(unsigned char reg, unsigned char val);
+			int get_error();
 			~I2C_IO();
 		protected:
 			unsigned char _bus;

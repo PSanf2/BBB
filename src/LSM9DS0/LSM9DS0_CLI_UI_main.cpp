@@ -63,6 +63,7 @@ int main(int argc, char* argv[]) {
 	PatricksDrivers::PWM_Board ServoBoard(bus, dev);
 	*/
 	
+	PatricksDrivers::LSM9DS0 SensorBoard;
 	
 	unsigned int menu_choice;//, reg, val, ch, on, off;
 	

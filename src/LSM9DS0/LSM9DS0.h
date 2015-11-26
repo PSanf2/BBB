@@ -2,6 +2,7 @@
 #define __LSM9DS0
 
 #include <cstdio>	// pulls in printf() for debugging
+#include "../lib/I2C_IO.h"
 
 // Linear Acceleration: mg per LSB
 #define LSM9DS0_ACCEL_MG_LSB_2G			(0.061F)
@@ -142,6 +143,14 @@ namespace PatricksDrivers {
 			} lsm9ds0Vector_t;
 			// End Kevin Townsend typedefs
 			
+			typedef enum
+			{
+				LSM9DS0_ADDRESS_GYRO = 0x6B,
+				LSM9DS0_ADDRESS_ACCELMAG = 0x1D,
+				LSM9DS0_XM_ID = 0b01001001,
+				LSM9DS0_G_ID = 0b11010100
+			} lsm9ds0DeviceInfo;
+			
 			// functions
 			LSM9DS0();
 			LSM9DS0(
@@ -153,6 +162,7 @@ namespace PatricksDrivers {
 			void readGyro();
 			void readMag();
 			void readTemp();
+			int get_err();
 			~LSM9DS0();
 		protected:
 			; // do nothing. this is a placeholder.
@@ -165,6 +175,7 @@ namespace PatricksDrivers {
 			float   _accel_mg_lsb;
 			float   _mag_mgauss_lsb;
 			float   _gyro_dps_digit;
+			int _err;
 	};
 
 }

@@ -18,6 +18,28 @@ namespace PatricksDrivers {
 			_range = accelRange;
 			_gain = magGain;
 			_scale = gyroScale;
+			
+			// I need to perform the setup tasks here.
+			// I'll need to read in a value from select registers, and
+			// populate the _accel_mg_lsb, _mag_mgauss_lsb, and _gyro_dps_digit variables
+			
+			
+	}
+	
+	void readAccel() {
+		
+	}
+	
+	void readGyro() {
+		
+	}
+	
+	void readMag() {
+		
+	}
+	
+	void readTemp() {
+		
 	}
 	
 	LSM9DS0::~LSM9DS0() {

@@ -142,20 +142,29 @@ namespace PatricksDrivers {
 			} lsm9ds0Vector_t;
 			// End Kevin Townsend typedefs
 			
+			// functions
 			LSM9DS0();
 			LSM9DS0(
 				unsigned char bus,
 				lsm9ds0AccelRange_t accelRange,
 				lsm9ds0MagGain_t magGain,
 				lsm9ds0GyroScale_t gyroScale);
+			void readAccel();
+			void readGyro();
+			void readMag();
+			void readTemp();
 			~LSM9DS0();
 		protected:
 			; // do nothing. this is a placeholder.
 		private:
+			// private variables
 			unsigned char _bus;
 			lsm9ds0AccelRange_t _range;
 			lsm9ds0MagGain_t _gain;
 			lsm9ds0GyroScale_t _scale;
+			float   _accel_mg_lsb;
+			float   _mag_mgauss_lsb;
+			float   _gyro_dps_digit;
 	};
 
 }

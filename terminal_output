@@ -1,0 +1,93 @@
+debian@beaglebone:~/git-repos/BBB$ ./bash/link_LSM9DS0_CLI_main.sh 
+Linking.
+Building LSM9DS0 with CLI.
+Building library objects.
+Done linking.
+debian@beaglebone:~/git-repos/BBB$ ./bin/LSM9DS0_CLI 
+
+LSM9DS0 Constructor called.
+_bus	= 1
+_range	= 0.000000
+_gain	= 0.000000
+_scale	= 0.000000
+_err	= 0
+LSM9DS0_REGISTER_WHO_AM_I_XM	== LSM9DS0_XM_ID
+LSM9DS0_REGISTER_WHO_AM_I_G	== LSM9DS0_G_ID
+comm->get_error() = 0
+comm->get_error() = 0
+comm->get_error() = 0
+comm->get_error() = 0
+comm->get_error() = 0
+All devices enabled.
+comm->get_error() = 0
+tempReg	= 0
+tempReg	= 0
+tempReg	= 0
+comm->get_error() = 0
+&_accel_mg_lsb		= BE9F43A8
+_accel_mg_lsb	= 0.061000
+comm->get_error() = 0
+tempReg	= 0
+tempReg	= 0
+tempReg	= 0
+comm->get_error() = 0
+&_mag_mgauss_lsb	= BE9F43AC
+_mag_mgauss_lsb	= 0.080000
+comm->get_error() = 0
+tempReg	= 0
+tempReg	= 0
+tempReg	= 0
+comm->get_error() = 0
+&_gyro_dps_digit	= BE9F43B0
+_gyro_dps_digit	= 0.008750
+		-----MAIN MENU-----
+	 1) Print Main Menu
+	 2) Read Accel
+	 3) Read Mag
+	 4) Read Gyro
+	 5) Read Temp
+	 0) Quit
+Input selection 2
+
+&_accel_mg_lsb		= BE9F4404
+_accel_mg_lsb	= 0.000000
+		-----MAIN MENU-----
+	 1) Print Main Menu
+	 2) Read Accel
+	 3) Read Mag
+	 4) Read Gyro
+	 5) Read Temp
+	 0) Quit
+Input selection 3
+
+&_mag_mgauss_lsb	= BE9F4408
+_mag_mgauss_lsb	= -0.000006
+		-----MAIN MENU-----
+	 1) Print Main Menu
+	 2) Read Accel
+	 3) Read Mag
+	 4) Read Gyro
+	 5) Read Temp
+	 0) Quit
+Input selection 4
+
+&_gyro_dps_digit	= BE9F440C
+_gyro_dps_digit	= 0.000000
+		-----MAIN MENU-----
+	 1) Print Main Menu
+	 2) Read Accel
+	 3) Read Mag
+	 4) Read Gyro
+	 5) Read Temp
+	 0) Quit
+Input selection 5
+
+		-----MAIN MENU-----
+	 1) Print Main Menu
+	 2) Read Accel
+	 3) Read Mag
+	 4) Read Gyro
+	 5) Read Temp
+	 0) Quit
+Input selection 0
+Goodbye!

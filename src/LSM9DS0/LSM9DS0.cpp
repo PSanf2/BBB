@@ -107,6 +107,7 @@ namespace PatricksDrivers {
 					_accel_mg_lsb = LSM9DS0_ACCEL_MG_LSB_16G;
 				break;
 			}
+			printf("\n&_accel_mg_lsb\t\t= %X", &_accel_mg_lsb);
 			printf("\n_accel_mg_lsb\t= %f", _accel_mg_lsb);
 			// setup mag
 			tempReg = comm->readRegister(LSM9DS0_REGISTER_CTRL_REG6_XM);
@@ -132,6 +133,7 @@ namespace PatricksDrivers {
 					_mag_mgauss_lsb = LSM9DS0_MAG_MGAUSS_12GAUSS;
 				break;
 			}
+			printf("\n&_mag_mgauss_lsb\t= %X", &_mag_mgauss_lsb);
 			printf("\n_mag_mgauss_lsb\t= %f", _mag_mgauss_lsb);
 			delete comm;
 			// setup gyro
@@ -156,20 +158,24 @@ namespace PatricksDrivers {
 					_gyro_dps_digit = LSM9DS0_GYRO_DPS_DIGIT_2000DPS;
 				break;
 			}
+			printf("\n&_gyro_dps_digit\t= %X", &_gyro_dps_digit);
 			printf("\n_gyro_dps_digit\t= %f", _gyro_dps_digit);
 			delete comm;
 	}
 	
 	void LSM9DS0::readAccel() {
-		
+		printf("\n&_accel_mg_lsb\t\t= %X", &_accel_mg_lsb);
+		printf("\n_accel_mg_lsb\t= %f", _accel_mg_lsb);
 	}
 	
 	void LSM9DS0::readGyro() {
-		
+		printf("\n&_gyro_dps_digit\t= %X", &_gyro_dps_digit);
+		printf("\n_gyro_dps_digit\t= %f", _gyro_dps_digit);
 	}
 	
 	void LSM9DS0::readMag() {
-		
+		printf("\n&_mag_mgauss_lsb\t= %X", &_mag_mgauss_lsb);
+		printf("\n_mag_mgauss_lsb\t= %f", _mag_mgauss_lsb);
 	}
 	
 	void LSM9DS0::readTemp() {

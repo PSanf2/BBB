@@ -151,6 +151,11 @@ namespace PatricksDrivers {
 				LSM9DS0_G_ID = 0b11010100
 			} lsm9ds0DeviceInfo;
 			
+			lsm9ds0Vector_t acceleration;
+			lsm9ds0Vector_t magnetic;
+			lsm9ds0Vector_t gyroscopic;
+			float temperature;
+			
 			// functions
 			LSM9DS0();
 			LSM9DS0(
@@ -172,9 +177,9 @@ namespace PatricksDrivers {
 			lsm9ds0AccelRange_t _range;
 			lsm9ds0MagGain_t _gain;
 			lsm9ds0GyroScale_t _scale;
-			float   _accel_mg_lsb;
-			float   _mag_mgauss_lsb;
-			float   _gyro_dps_digit;
+			float _accel_mg_lsb;
+			float _mag_mgauss_lsb;
+			float _gyro_dps_digit;
 			int _err;
 	};
 

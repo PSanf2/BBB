@@ -16,6 +16,10 @@ using namespace std;
 void printMenu() {
 	printf("\n\t\t-----MAIN MENU-----");
 	printf("\n\t 1) Print Main Menu");
+	printf("\n\t 2) Read Accel");
+	printf("\n\t 3) Read Mag");
+	printf("\n\t 4) Read Gyro");
+	printf("\n\t 5) Read Temp");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -50,7 +54,7 @@ void getDecInput(unsigned int *ptr) {
 // I want to support command line arguments.
 int main(int argc, char* argv[]) {
 	
-	//PatricksDrivers::LSM9DS0 SensorBoard;
+	LSM9DS0 SensorBoard;
 	
 	unsigned int menu_choice;//, reg, val, ch, on, off;
 	
@@ -63,6 +67,22 @@ int main(int argc, char* argv[]) {
 		switch (menu_choice) {
 			case 1:
 				printMenu();
+			break;
+			
+			case 2:
+				SensorBoard.readAccel();
+			break;
+			
+			case 3:
+				SensorBoard.readMag();
+			break;
+			
+			case 4:
+				SensorBoard.readGyro();
+			break;
+			
+			case 5:
+				SensorBoard.readTemp();
 			break;
 			
 			case 0:

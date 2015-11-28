@@ -4,26 +4,22 @@
 #define BBB_I2C_0 "/dev/i2c-0"
 #define BBB_I2C_1 "/dev/i2c-1"
 
-namespace PatricksDrivers {
-	
-	class I2C_IO {
-		public:
-			I2C_IO(unsigned char bus, unsigned char addr);
-			int open();
-			bool is_open();
-			void close();
-			unsigned char readRegister(unsigned char reg);
-			unsigned char* readRegisters(unsigned char reg, unsigned char num);
-			int writeRegister(unsigned char reg, unsigned char val);
-			int get_error();
-			~I2C_IO();
-		private:
-			unsigned char _bus;
-			unsigned char _addr;
-			int _error_code;	// will be used for error checking
-			int _file;
-	};
-	
-}
+class I2C_IO {
+	public:
+		I2C_IO(unsigned char bus, unsigned char addr);
+		int open();
+		bool is_open();
+		void close();
+		unsigned char readRegister(unsigned char reg);
+		unsigned char* readRegisters(unsigned char reg, unsigned char num);
+		int writeRegister(unsigned char reg, unsigned char val);
+		int get_error();
+		~I2C_IO();
+	private:
+		unsigned char _bus;
+		unsigned char _addr;
+		int _error_code;	// will be used for error checking
+		int _file;
+};
 
 #endif

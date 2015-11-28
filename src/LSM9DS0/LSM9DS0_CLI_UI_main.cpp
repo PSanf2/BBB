@@ -54,7 +54,7 @@ void getDecInput(unsigned int *ptr) {
 // I want to support command line arguments.
 int main(int argc, char* argv[]) {
 	
-	LSM9DS0 SensorBoard;
+	LSM9DS0 SensorBoard(1, LSM9DS0_ACCELRANGE_2G, LSM9DS0_MAGGAIN_2GAUSS, LSM9DS0_GYROSCALE_245DPS);
 	
 	unsigned int menu_choice;//, reg, val, ch, on, off;
 	

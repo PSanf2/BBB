@@ -149,10 +149,17 @@ typedef enum
 
 class LSM9DS0 {
 	public:
+		// these hold human readable information
 		lsm9ds0Vector_t acceleration;
 		lsm9ds0Vector_t magnetic;
 		lsm9ds0Vector_t gyroscopic;
 		float temperature;
+		// these hold raw sensor daya
+		lsm9ds0Vector_t accelData;
+		lsm9ds0Vector_t magData;
+		lsm9ds0Vector_t gyroData;
+		short tempData;
+		// functions
 		LSM9DS0(
 			unsigned char bus,
 			lsm9ds0AccelRange_t accelRange,

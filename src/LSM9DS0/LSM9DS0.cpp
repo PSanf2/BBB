@@ -177,18 +177,169 @@ LSM9DS0::~LSM9DS0() {
 void LSM9DS0::readAccel() {
 	printf("\n_accel_mg_lsb =\t%f", _accel_mg_lsb);
 	printf("\n&_accel_mg_lsb = \t%X", &_accel_mg_lsb);
+	
+	I2C_IO* comm;
+	comm = new I2C_IO(_bus, LSM9DS0_ADDRESS_ACCELMAG);
+	unsigned char* result =  new unsigned char[6];
+	
+	result = comm->readRegisters(0x80 | LSM9DS0_REGISTER_OUT_X_L_A, 6);
+	
+	unsigned char xlo = result[0];
+	signed short xhi = result[1];
+	unsigned char ylo = result[2];
+	signed short yhi = result[3];
+	unsigned char zlo = result[4];
+	signed short zhi = result[5];
+	
+	xhi <<= 8;
+	xhi |= xlo;
+	yhi <<= 8;
+	yhi |= ylo;
+	zhi <<= 8;
+	zhi |= zlo;
+	
+	accelData.x = xhi;
+	accelData.y = yhi;
+	accelData.z = zhi;
+	
+	printf("\naccelData.x =\t%f", accelData.x);
+	printf("\naccelData.y =\t%f", accelData.y);
+	printf("\naccelData.z =\t%f", accelData.z);
+	
+	acceleration.x = accelData.x * _accel_mg_lsb;
+	acceleration.x /= 1000;
+	acceleration.x *= SENSORS_GRAVITY_STANDARD;
+	
+	acceleration.y = accelData.y * _accel_mg_lsb;
+	acceleration.y /= 1000;
+	acceleration.y *= SENSORS_GRAVITY_STANDARD;
+	
+	acceleration.z = accelData.z * _accel_mg_lsb;
+	acceleration.z /= 1000;
+	acceleration.z *= SENSORS_GRAVITY_STANDARD;
+	
+	printf("\nacceleration.x =\t%f", acceleration.x);
+	printf("\nacceleration.y =\t%f", acceleration.y);
+	printf("\nacceleration.z =\t%f", acceleration.z);
+	
+	delete result;
+	delete comm;
 }
 
 void LSM9DS0::readMag() {
 	printf("\n_mag_mgauss_lsb =\t%f", _mag_mgauss_lsb);
 	printf("\n&_mag_mgauss_lsb = \t%X", &_mag_mgauss_lsb);
+	
+	I2C_IO* comm;
+	comm = new I2C_IO(_bus, LSM9DS0_ADDRESS_ACCELMAG);
+	unsigned char* result =  new unsigned char[6];
+	
+	result = comm->readRegisters(0x80 | LSM9DS0_REGISTER_OUT_X_L_M, 6);
+	
+	unsigned char xlo = result[0];
+	signed short xhi = result[1];
+	unsigned char ylo = result[2];
+	signed short yhi = result[3];
+	unsigned char zlo = result[4];
+	signed short zhi = result[5];
+	
+	xhi <<= 8;
+	xhi |= xlo;
+	yhi <<= 8;
+	yhi |= ylo;
+	zhi <<= 8;
+	zhi |= zlo;
+	
+	magData.x = xhi;
+	magData.y = yhi;
+	magData.z = zhi;
+	
+	printf("\nmagData.x =\t%f", magData.x);
+	printf("\nmagData.y =\t%f", magData.y);
+	printf("\nmagData.z =\t%f", magData.z);
+	
+	magnetic.x = magData.x * _mag_mgauss_lsb;
+	magnetic.x /= 1000;
+	
+	magnetic.y = magData.y * _mag_mgauss_lsb;
+	magnetic.y /= 1000;
+	
+	magnetic.z = magData.z * _mag_mgauss_lsb;
+	magnetic.z /= 1000;
+	
+	printf("\nmagnetic.x =\t%f", magnetic.x);
+	printf("\nmagnetic.y =\t%f", magnetic.y);
+	printf("\nmagnetic.z =\t%f", magnetic.z);
+	
+	delete result;
+	delete comm;
 }
 
 void LSM9DS0::readGyro() {
 	printf("\n_gyro_dps_digit =\t%f", _gyro_dps_digit);
 	printf("\n&_gyro_dps_digit = \t%X", &_gyro_dps_digit);
+	
+	I2C_IO* comm;
+	comm = new I2C_IO(_bus, LSM9DS0_ADDRESS_GYRO);
+	unsigned char* result =  new unsigned char[6];
+	
+	result = comm->readRegisters(0x80 | LSM9DS0_REGISTER_OUT_X_L_G, 6);
+	
+	unsigned char xlo = result[0];
+	signed short xhi = result[1];
+	unsigned char ylo = result[2];
+	signed short yhi = result[3];
+	unsigned char zlo = result[4];
+	signed short zhi = result[5];
+	
+	xhi <<= 8;
+	xhi |= xlo;
+	yhi <<= 8;
+	yhi |= ylo;
+	zhi <<= 8;
+	zhi |= zlo;
+	
+	gyroData.x = xhi;
+	gyroData.y = yhi;
+	gyroData.z = zhi;
+	
+	printf("\ngyroData.x =\t%f", gyroData.x);
+	printf("\ngyroData.y =\t%f", gyroData.y);
+	printf("\ngyroData.z =\t%f", gyroData.z);
+	
+	gyroscopic.x = gyroData.x * _gyro_dps_digit;
+	gyroscopic.y = gyroData.y * _gyro_dps_digit;
+	gyroscopic.z = gyroData.z * _gyro_dps_digit;
+	
+	printf("\ngyroscopic.x =\t%f", gyroscopic.x);
+	printf("\ngyroscopic.y =\t%f", gyroscopic.y);
+	printf("\ngyroscopic.z =\t%f", gyroscopic.z);
+	
+	delete result;
+	delete comm;
 }
 
 void LSM9DS0::readTemp() {
+	I2C_IO* comm;
+	comm = new I2C_IO(_bus, LSM9DS0_ADDRESS_ACCELMAG);
+	unsigned char* result =  new unsigned char[2];
 	
+	result = comm->readRegisters(0x80 | LSM9DS0_REGISTER_TEMP_OUT_L_XM, 2);
+	
+	unsigned char xlo = result[0];
+	signed short xhi = result[1];
+	
+	xhi <<= 8;
+	xhi |= xlo;
+	
+	tempData = xhi;
+	
+	printf("\ntempData = %i", tempData);
+	
+	temperature = 21.0 + (float) tempData / 8;
+	
+	printf("\ntemperature = %f", temperature);
+	
+	delete result;
+	delete comm;
 }

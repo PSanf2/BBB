@@ -1,15 +1,6 @@
 #include "LSM9DS0.h"
 
 using namespace std;
-
-/*
-LSM9DS0::LSM9DS0() {
-	printf("\n&_accel_mg_lsb = \t%X", &_accel_mg_lsb);
-	printf("\n&_mag_mgauss_lsb = \t%X", &_mag_mgauss_lsb);
-	printf("\n&_gyro_dps_digit = \t%X", &_gyro_dps_digit);
-	LSM9DS0(1, LSM9DS0_ACCELRANGE_2G, LSM9DS0_MAGGAIN_2GAUSS, LSM9DS0_GYROSCALE_245DPS);
-}
-*/
 	
 LSM9DS0::LSM9DS0(
 	unsigned char bus,
@@ -218,9 +209,9 @@ void LSM9DS0::readAccel() {
 	acceleration.z /= 1000;
 	acceleration.z *= SENSORS_GRAVITY_STANDARD;
 	
-	printf("\nacceleration.x =\t%f", acceleration.x);
-	printf("\nacceleration.y =\t%f", acceleration.y);
-	printf("\nacceleration.z =\t%f", acceleration.z);
+	//printf("\nacceleration.x =\t%f", acceleration.x);
+	//printf("\nacceleration.y =\t%f", acceleration.y);
+	//printf("\nacceleration.z =\t%f", acceleration.z);
 	
 	delete result;
 	delete comm;
@@ -267,9 +258,9 @@ void LSM9DS0::readMag() {
 	magnetic.z = magData.z * _mag_mgauss_lsb;
 	magnetic.z /= 1000;
 	
-	printf("\nmagnetic.x =\t%f", magnetic.x);
-	printf("\nmagnetic.y =\t%f", magnetic.y);
-	printf("\nmagnetic.z =\t%f", magnetic.z);
+	//printf("\nmagnetic.x =\t%f", magnetic.x);
+	//printf("\nmagnetic.y =\t%f", magnetic.y);
+	//printf("\nmagnetic.z =\t%f", magnetic.z);
 	
 	delete result;
 	delete comm;
@@ -311,9 +302,9 @@ void LSM9DS0::readGyro() {
 	gyroscopic.y = gyroData.y * _gyro_dps_digit;
 	gyroscopic.z = gyroData.z * _gyro_dps_digit;
 	
-	printf("\ngyroscopic.x =\t%f", gyroscopic.x);
-	printf("\ngyroscopic.y =\t%f", gyroscopic.y);
-	printf("\ngyroscopic.z =\t%f", gyroscopic.z);
+	//printf("\ngyroscopic.x =\t%f", gyroscopic.x);
+	//printf("\ngyroscopic.y =\t%f", gyroscopic.y);
+	//printf("\ngyroscopic.z =\t%f", gyroscopic.z);
 	
 	delete result;
 	delete comm;
@@ -338,7 +329,7 @@ void LSM9DS0::readTemp() {
 	
 	temperature = 21.0 + (float) tempData / 8;
 	
-	printf("\ntemperature = %f", temperature);
+	//printf("\ntemperature = %f", temperature);
 	
 	delete result;
 	delete comm;

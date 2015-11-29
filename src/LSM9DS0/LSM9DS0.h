@@ -2,7 +2,7 @@
 #define __LSM9DS0
 
 #include "../lib/I2C_IO.h"
-#include <cstdio>	// pulls in printf
+//#include <cstdio>	// pulls in printf
 
 // Linear Acceleration: mg per LSB
 #define LSM9DS0_ACCEL_MG_LSB_2G			(0.061F)

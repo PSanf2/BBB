@@ -42,3 +42,12 @@ need to be performed, and define vocabulary for abstraction.
 Another challange may be in making sure I don't have collisions on the bus.
 Once I have multiple devices communicating on the bus then I may need to
 find a method to implement collision avoidance.
+
+The LSM9DS0_Singleton branch contains code for the board that's running I2C_IO as a singleton.
+This is being done to avoid collisions on the bus as various objects attempt to communicate with boards.
+In order to avoid race conditions I'll have all of my objects utilize the I2C bus through a unified
+interface. This will help to ensure there's a "gatekeeper" to ensure everybody takes turns. As long
+as I don't try to get nuts with multi-threading on the I2C bus I should be alright. The singleton
+verion of the I2C_IO class offer function calls that are simplified, more verbose, and provide greater
+utility. When being called the member function provide a greater freedom to allow the programmer to
+define what's getting put on the bus, and received, but they're expected to know what they're doing.

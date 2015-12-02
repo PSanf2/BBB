@@ -28,5 +28,5 @@ References and Credits:
 
 Derek Molloy - Exploring BeagleBone (http://www.exploringbeaglebone.com/)
 Bill Earl - Adafruit 16-Channel Servo Drive with Arduino (https://learn.adafruit.com/16-channel-pwm-servo-driver)
-Kevin Townsend - Adafruit LSM9DS0 (https://learn.adafruit.com/lsm9ds0-accelerometer-gyro-magnetometer-9-dof-breakouts)
+Kevin Townsend - Adafruit LSM9DS0 (https://learn.adafruit.com/adafruit-lsm9ds0-accelerometer-gyro-magnetometer-9-dof-breakouts)
 

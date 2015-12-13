@@ -102,6 +102,13 @@ namespace PatricksDrivers {
 		public:
 			ADS1015_Singleton(unsigned char bus, unsigned char addr);
 			~ADS1015_Singleton();
+			unsigned int readADC_SingleEnded(unsigned char channel);
+			int readADC_Differential_0_1();
+			int readADC_Differential_2_3();
+			void startComparator_SingleEnded(unsigned char channel, unsigned int threshold);
+			int getLastConversionREsults();
+			void setGain(adsGain_t gain);
+			adsGain_t getGain();
 	}; // class
 	
 	class ADS1115_Singleton : public ADS1015_Singleton {

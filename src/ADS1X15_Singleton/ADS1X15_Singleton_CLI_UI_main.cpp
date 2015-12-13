@@ -43,7 +43,7 @@ void getDecInput(unsigned int *ptr) {
 
 int main(int argc, char* argv[]) {
 	
-	PatricksDrivers::ADS1X15_Singleton SensorBoard(1, 0x48);
+	PatricksDrivers::ADS1115_Singleton SensorBoard(1, 0x48);
 	
 	unsigned int menu_choice;
 	

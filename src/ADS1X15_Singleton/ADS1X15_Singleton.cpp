@@ -1,8 +1,3 @@
-/*
- * How am I going to handle the diferences between the 1015 and the 1115?
- * The Adafruit code has 1015 as a base class, and 1115 inherits off it.
- */
-
 #include "ADS1X15_Singleton.h"
 
 using namespace std;
@@ -10,10 +5,13 @@ using namespace std;
 namespace PatricksDrivers {
 	
 	// Class ADS1015
-	ADS1015_Singleton::ADS1015_Singleton(unsigned char bus = 1, unsigned char addr = 0x48) {
+	ADS1015_Singleton::ADS1015_Singleton(unsigned char bus = 1, unsigned char addr = ADS1015_ADDRESS) {
 		Device = I2C_IO_Singleton::getInstance();
 		_bus = bus;
 		_addr = addr;
+		_convDelay = ADS1015_CONVERSIONDELAY;
+		_bitShift = 4;
+		_gain = GAIN_TWOTHIRDS;
 	}
 	
 	ADS1015_Singleton::~ADS1015_Singleton() {
@@ -21,10 +19,13 @@ namespace PatricksDrivers {
 	}
 	
 	// Class ADS1115 (child class of ADS1015)
-	ADS1115_Singleton::ADS1115_Singleton(unsigned char bus = 1, unsigned char addr = 0x48) {
+	ADS1115_Singleton::ADS1115_Singleton(unsigned char bus = 1, unsigned char addr = ADS1015_ADDRESS) {
 		Device = I2C_IO_Singleton::getInstance();
 		_bus = bus;
 		_addr = addr;
+		_convDelay = ADS1115_CONVERSIONDELAY;
+		_bitShift = 0;
+		_gain = GAIN_TWOTHIRDS;
 	}
 	
 } // namespace

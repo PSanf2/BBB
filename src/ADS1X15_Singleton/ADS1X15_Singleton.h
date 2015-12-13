@@ -96,6 +96,9 @@ namespace PatricksDrivers {
 			I2C_IO_Singleton* Device;
 			unsigned char _bus;
 			unsigned char _addr;
+			unsigned char _convDelay;
+			unsigned char _bitShift;
+			adsGain_t _gain;
 		public:
 			ADS1015_Singleton(unsigned char bus, unsigned char addr);
 			~ADS1015_Singleton();

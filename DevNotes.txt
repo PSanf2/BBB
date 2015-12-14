@@ -79,3 +79,6 @@ function. An operation on the I2C bus is simply a file read/write operation to t
 already mechinisms in place for details such as collision avoidance, and blocks. As long as I only
 have one thread trying to mess with the I2C bus (and thus only one entitiy messing w/ the bus) then
 everything should be fine.
+
+I also need to get proper make files set up. The system of using batch files to manage compiling
+and linking the files into executables is just dumb.

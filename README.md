@@ -30,7 +30,7 @@ Derek Molloy<br>
 	* Exploring BeagleBone (http://www.exploringbeaglebone.com/)
 
 Bill Earl<br>
-	* Adafruit 16-Channel Servo Drive with Arduino (https://learn.adafruit.com/16-channel-pwm-servo-driver)
+	* Adafruit 16-Channel Servo Drive with Arduino (https://learn.adafruit.com/16-channel-pwm-servo-driver)<br>
 	* Adafruit 4-Channel ADC Breakouts (https://learn.adafruit.com/adafruit-4-channel-adc-breakouts)
 
 Kevin Townsend<br>

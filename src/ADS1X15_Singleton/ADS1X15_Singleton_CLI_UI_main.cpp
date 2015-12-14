@@ -10,6 +10,8 @@ using namespace std;
 void printMenu() {
 	printf("\n\t\t-----MAIN MENU-----");
 	printf("\n\t 1) Read Single Ended");
+	printf("\n\t 2) Read Differential 0-1");
+	printf("\n\t 3) Read Differential 2-3");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -66,6 +68,14 @@ int main(int argc, char* argv[]) {
 				printf("Input channel: ");
 				getDecInput(&channel);
 				printf("\nA%i = %i", channel, SensorBoard.readADC_SingleEnded(channel));
+			break;
+			
+			case 2:
+				printf("Differential 0-1 = %i", SensorBoard.readADC_Differential_0_1());
+			break;
+			
+			case 3:
+				printf("Differential 2-3 = %i", SensorBoard.readADC_Differential_2_3());
 			break;
 			
 			case 0:

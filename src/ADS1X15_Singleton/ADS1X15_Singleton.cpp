@@ -56,7 +56,6 @@ namespace PatricksDrivers {
 		config |= ADS1015_REG_CONFIG_OS_SINGLE;
 
 		// Write config register to the ADC
-		//writeRegister(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
 		unsigned char* vals = new unsigned char[3];
 		vals[0] = ADS1015_REG_POINTER_CONFIG;
 		vals[1] = config >> 8;
@@ -75,16 +74,112 @@ namespace PatricksDrivers {
 		result = vals[0] << 8;
 		result = result | vals[1];
 		delete vals;
-		
+		result = result >> _bitShift;
 		return result;
 	}
 	
 	int ADS1015_Singleton::readADC_Differential_0_1() {
-		return 0;
+		// Start with default values
+		unsigned int config = ADS1015_REG_CONFIG_CQUE_NONE | // Disable the comparator (default val)
+			ADS1015_REG_CONFIG_CLAT_NONLAT  | // Non-latching (default val)
+			ADS1015_REG_CONFIG_CPOL_ACTVLOW | // Alert/Rdy active low   (default val)
+			ADS1015_REG_CONFIG_CMODE_TRAD   | // Traditional comparator (default val)
+			ADS1015_REG_CONFIG_DR_1600SPS   | // 1600 samples per second (default)
+			ADS1015_REG_CONFIG_MODE_SINGLE;   // Single-shot mode (default)
+
+		// Set PGA/voltage range
+		config |= _gain;
+
+		// Set channels
+		config |= ADS1015_REG_CONFIG_MUX_DIFF_0_1; // AIN2 = P, AIN3 = N
+
+		// Set 'start single-conversion' bit
+		config |= ADS1015_REG_CONFIG_OS_SINGLE;
+
+		// Write config register to the ADC
+		unsigned char* vals = new unsigned char[3];
+		vals[0] = ADS1015_REG_POINTER_CONFIG;
+		vals[1] = config >> 8;
+		vals[2] = config & 0xFF;
+		Device->write(_bus, _addr, 3, vals);
+		delete vals;
+
+		// Wait for the conversion to complete
+		usleep(_convDelay * 1000);
+
+		// Read the conversion results
+		vals = new unsigned char[2];
+		Device->read(_bus, _addr, ADS1015_REG_POINTER_CONVERT, 2, vals);
+		unsigned int result = 0;
+		result = vals[0] << 8;
+		result = result | vals[1];
+		result = result >> _bitShift;
+		delete vals;
+		
+		if (_bitShift == 0)
+		{
+			return (int) result;
+		} else {
+			// Shift 12-bit results right 4 bits for the ADS1015,
+			// making sure we keep the sign bit intact
+			if (result > 0x07FF){
+				// negative number - extend the sign to 16th bit
+				result |= 0xF000;
+			}
+			return (int) result;
+		}
 	}
 	
 	int ADS1015_Singleton::readADC_Differential_2_3() {
-		return 0;
+		// Start with default values
+		unsigned int config = ADS1015_REG_CONFIG_CQUE_NONE | // Disable the comparator (default val)
+			ADS1015_REG_CONFIG_CLAT_NONLAT  | // Non-latching (default val)
+			ADS1015_REG_CONFIG_CPOL_ACTVLOW | // Alert/Rdy active low   (default val)
+			ADS1015_REG_CONFIG_CMODE_TRAD   | // Traditional comparator (default val)
+			ADS1015_REG_CONFIG_DR_1600SPS   | // 1600 samples per second (default)
+			ADS1015_REG_CONFIG_MODE_SINGLE;   // Single-shot mode (default)
+
+		// Set PGA/voltage range
+		config |= _gain;
+
+		// Set channels
+		config |= ADS1015_REG_CONFIG_MUX_DIFF_2_3; // AIN2 = P, AIN3 = N
+
+		// Set 'start single-conversion' bit
+		config |= ADS1015_REG_CONFIG_OS_SINGLE;
+
+		// Write config register to the ADC
+		unsigned char* vals = new unsigned char[3];
+		vals[0] = ADS1015_REG_POINTER_CONFIG;
+		vals[1] = config >> 8;
+		vals[2] = config & 0xFF;
+		Device->write(_bus, _addr, 3, vals);
+		delete vals;
+
+		// Wait for the conversion to complete
+		usleep(_convDelay * 1000);
+
+		// Read the conversion results
+		vals = new unsigned char[2];
+		Device->read(_bus, _addr, ADS1015_REG_POINTER_CONVERT, 2, vals);
+		unsigned int result = 0;
+		result = vals[0] << 8;
+		result = result | vals[1];
+		result = result >> _bitShift;
+		delete vals;
+		
+		if (_bitShift == 0)
+		{
+			return (int) result;
+		} else {
+			// Shift 12-bit results right 4 bits for the ADS1015,
+			// making sure we keep the sign bit intact
+			if (result > 0x07FF){
+				// negative number - extend the sign to 16th bit
+				result |= 0xF000;
+			}
+			return (int) result;
+		}
 	}
 	
 	void ADS1015_Singleton::startComparator_SingleEnded(unsigned char channel, unsigned int threshold) {

@@ -22,38 +22,61 @@ namespace PatricksDrivers {
 	}
 	
 	unsigned int ADS1015_Singleton::readADC_SingleEnded(unsigned char channel) {
-		/*
-		 * Whatever is working for the Adafruit code isn't going to work here.
-		 * I tried copying the code, and making the changes needed for it to
-		 * work here, but kept getting a result of 0 for every channel. I'll
-		 * need to go over the datasheet, and pretty much write this from
-		 * scratch. The Adafruit code is doing a lot of fancy shit with some
-		 * calculations that's always resulting in exactly the same result.
-		 * There's no point in doing that. A lot of the #defines can probably
-		 * be removed after examining how they're used.
-		 */
-		 
-		/*
-		 * Every operation on this chip involves reading/writing two bytes on the bus.
-		 * The order is typically to write a register, then read or write two bytes.
-		 * The unsigned int types are shifted and &'ed to before every write, and
-		 * after every read. The I2C_IO_Singleton class is perfectly able to read/write
-		 * two bytes at a time. Since the same shifted and & operations are done for
-		 * every read/write to the bus I need to do some processing on the unsigned int
-		 * I'm passing around.
-		 * On page 11 of the datasheet it explains how to read/write to the device.
-		 * I believe that I have everything I need already in the I2C_IO_Singleton class.
-		 * The documentation is slightly confusing. When it's talking about doing a write
-		 * operation before doing a read it's going on about specifying which register
-		 * you'll be reading from to the device. This is already implimented and working
-		 * in the exisitng code. The big question I need to be asking is which register
-		 * I'll be reading from. It looks like this is almost always going to be a
-		 * "conversion register," and I'll always be getting two bytes from it. The
-		 * Adafruit code makes it look like this is called the ADS1015_REG_POINTER_CONVERT
-		 * and this is defined as 0x00. For writes it looks like everything is going to
-		 * ADS1015_REG_POINTER_CONFIG which is 0x01.
-		 */
-		return 0;
+		if (channel > 3)
+			return 0;
+		
+		// Start with default values
+		unsigned int config = ADS1015_REG_CONFIG_CQUE_NONE    | // Disable the comparator (default val)
+			ADS1015_REG_CONFIG_CLAT_NONLAT  | // Non-latching (default val)
+			ADS1015_REG_CONFIG_CPOL_ACTVLOW | // Alert/Rdy active low   (default val)
+			ADS1015_REG_CONFIG_CMODE_TRAD   | // Traditional comparator (default val)
+			ADS1015_REG_CONFIG_DR_1600SPS   | // 1600 samples per second (default)
+			ADS1015_REG_CONFIG_MODE_SINGLE;   // Single-shot mode (default)
+		
+		// Set PGA/voltage range
+		config |= _gain;
+		
+		// Set single-ended input channel
+		switch (channel) {
+			case (0):
+				config |= ADS1015_REG_CONFIG_MUX_SINGLE_0;
+			break;
+			case (1):
+				config |= ADS1015_REG_CONFIG_MUX_SINGLE_1;
+			break;
+			case (2):
+				config |= ADS1015_REG_CONFIG_MUX_SINGLE_2;
+			break;
+			case (3):
+				config |= ADS1015_REG_CONFIG_MUX_SINGLE_3;
+			break;
+		}
+
+		// Set 'start single-conversion' bit
+		config |= ADS1015_REG_CONFIG_OS_SINGLE;
+
+		// Write config register to the ADC
+		//writeRegister(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
+		unsigned char* vals = new unsigned char[3];
+		vals[0] = ADS1015_REG_POINTER_CONFIG;
+		vals[1] = config >> 8;
+		vals[2] = config & 0xFF;
+		Device->write(_bus, _addr, 3, vals);
+		delete vals;
+
+		// Wait for the conversion to complete
+		usleep(_convDelay * 1000);
+
+		// Read the conversion results
+		// Shift 12-bit results right 4 bits for the ADS1015
+		vals = new unsigned char[2];
+		Device->read(_bus, _addr, ADS1015_REG_POINTER_CONVERT, 2, vals);
+		unsigned int result = 0;
+		result = vals[0] << 8;
+		result = result | vals[1];
+		delete vals;
+		
+		return result;
 	}
 	
 	int ADS1015_Singleton::readADC_Differential_0_1() {

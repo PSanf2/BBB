@@ -22,16 +22,16 @@ P9, 19 => I2C2_SCL<br>
 P9, 20 => I2C2_SDA<br>
 
 I have used these pin configurations to succesfully test my code using
-PCA9685 and LSM9DS0 breakout boards. Your results may vary.
+PCA9685, LSM9DS0, and ADS1115 breakout boards. Your results may vary.
 
 References and Credits:
 
-Derek Molloy
+Derek Molloy<br>
 	* Exploring BeagleBone (http://www.exploringbeaglebone.com/)
 
-Bill Earl
+Bill Earl<br>
 	* Adafruit 16-Channel Servo Drive with Arduino (https://learn.adafruit.com/16-channel-pwm-servo-driver)
 	* Adafruit 4-Channel ADC Breakouts (https://learn.adafruit.com/adafruit-4-channel-adc-breakouts)
 
-Kevin Townsend
+Kevin Townsend<br>
 	* Adafruit LSM9DS0 Accelerometer + Gyro + Magnetometer 9-DOF Breakouts (https://learn.adafruit.com/adafruit-lsm9ds0-accelerometer-gyro-magnetometer-9-dof-breakouts)

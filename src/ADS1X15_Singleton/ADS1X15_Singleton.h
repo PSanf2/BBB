@@ -107,7 +107,7 @@ namespace PatricksDrivers {
 			int readADC_Differential_0_1();
 			int readADC_Differential_2_3();
 			void startComparator_SingleEnded(unsigned char channel, unsigned int threshold);
-			int getLastConversionREsults();
+			int getLastConversionResults();
 			void setGain(adsGain_t gain);
 			adsGain_t getGain();
 	}; // class

@@ -73,8 +73,8 @@ namespace PatricksDrivers {
 		unsigned int result = 0;
 		result = vals[0] << 8;
 		result = result | vals[1];
-		delete vals;
 		result = result >> _bitShift;
+		delete vals;
 		return result;
 	}
 	
@@ -182,12 +182,92 @@ namespace PatricksDrivers {
 		}
 	}
 	
+	/*
+	 * This function is untested. If you test it, and want to make corrections
+	 * then please contact the author of the git repository.
+	 * https://github.com/PSanf2/BBB
+	 */
 	void ADS1015_Singleton::startComparator_SingleEnded(unsigned char channel, unsigned int threshold) {
+		// Start with default values
+		unsigned int config = ADS1015_REG_CONFIG_CQUE_1CONV   | // Comparator enabled and asserts on 1 match
+			ADS1015_REG_CONFIG_CLAT_LATCH   | // Latching mode
+			ADS1015_REG_CONFIG_CPOL_ACTVLOW | // Alert/Rdy active low   (default val)
+			ADS1015_REG_CONFIG_CMODE_TRAD   | // Traditional comparator (default val)
+			ADS1015_REG_CONFIG_DR_1600SPS   | // 1600 samples per second (default)
+			ADS1015_REG_CONFIG_MODE_CONTIN  | // Continuous conversion mode
+			ADS1015_REG_CONFIG_MODE_CONTIN;   // Continuous conversion mode
+
+		// Set PGA/voltage range
+		config |= _gain;
+			
+		// Set single-ended input channel
+		switch (channel) {
+			case (0):
+				config |= ADS1015_REG_CONFIG_MUX_SINGLE_0;
+			break;
+			
+			case (1):
+				config |= ADS1015_REG_CONFIG_MUX_SINGLE_1;
+			break;
+			
+			case (2):
+				config |= ADS1015_REG_CONFIG_MUX_SINGLE_2;
+			break;
+			
+			case (3):
+				config |= ADS1015_REG_CONFIG_MUX_SINGLE_3;
+			break;
+		}
 		
+		// Set the high threshold register
+		// Shift 12-bit results left 4 bits for the ADS1015
+		threshold = threshold << _bitShift;
+		unsigned char* vals = new unsigned char[3];
+		vals[0] = ADS1015_REG_POINTER_HITHRESH;
+		vals[1] = threshold >> 8;
+		vals[2] = threshold & 0xFF;
+		Device->write(_bus, _addr, 3, vals);
+		delete vals;
+		
+		// Write config register to the ADC
+		vals = new unsigned char[3];
+		vals[0] = ADS1015_REG_POINTER_CONFIG;
+		vals[1] = config >> 8;
+		vals[2] = config & 0xFF;
+		Device->write(_bus, _addr, 3, vals);
+		delete vals;
 	}
 	
-	int ADS1015_Singleton::getLastConversionREsults() {
-		return 0;
+	/*
+	 * This function is untested. If you test it, and want to make corrections
+	 * then please contact the author of the git repository.
+	 * https://github.com/PSanf2/BBB
+	 */
+	int ADS1015_Singleton::getLastConversionResults() {
+		// Wait for the conversion to complete
+		usleep(_convDelay * 1000);
+		
+		// Read the conversion results
+		unsigned char* vals = new unsigned char[2];
+		Device->read(_bus, _addr, ADS1015_REG_POINTER_CONVERT, 2, vals);
+		unsigned int result = 0;
+		result = vals[0] << 8;
+		result = result | vals[1];
+		result = result >> _bitShift;
+		delete vals;
+		
+		if (_bitShift == 0)
+		{
+			return (int) result;
+		} else {
+			// Shift 12-bit results right 4 bits for the ADS1015,
+			// making sure we keep the sign bit intact
+			if (result > 0x07FF){
+				// negative number - extend the sign to 16th bit
+				result |= 0xF000;
+			}
+			return (int) result;
+		}
 	}
 	
 	void ADS1015_Singleton::setGain(adsGain_t gain) {

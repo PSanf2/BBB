@@ -55,8 +55,6 @@ int main(int argc, char* argv[]) {
 	
 	PatricksDrivers::ADS1115_Singleton SensorBoard(bus, addr);
 	
-	//system("clear");
-	
 	do {
 		
 		printMenu();

@@ -93,6 +93,7 @@ namespace PatricksDrivers {
 		private:
 			;
 		protected:
+			// variables
 			I2C_IO_Singleton* Device;
 			unsigned char _bus;
 			unsigned char _addr;

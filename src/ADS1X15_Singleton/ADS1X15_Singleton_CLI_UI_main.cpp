@@ -9,7 +9,7 @@ using namespace std;
 // Functions to put things on the screen.
 void printMenu() {
 	printf("\n\t\t-----MAIN MENU-----");
-	printf("\n\t 1) Print Main Menu");
+	printf("\n\t 1) Read Single Ended");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -43,11 +43,17 @@ void getDecInput(unsigned int *ptr) {
 
 int main(int argc, char* argv[]) {
 	
-	PatricksDrivers::ADS1115_Singleton SensorBoard(1, 0x48);
+	unsigned int menu_choice, bus, addr, channel;
 	
-	unsigned int menu_choice;
+	printf("Input I2C Bus: ");
+	getDecInput(&bus);
 	
-	system("clear");
+	printf("Input device address in hex: ");
+	getHexInput(&addr);
+	
+	PatricksDrivers::ADS1115_Singleton SensorBoard(bus, addr);
+	
+	//system("clear");
 	
 	do {
 		
@@ -57,7 +63,9 @@ int main(int argc, char* argv[]) {
 		
 		switch (menu_choice) {
 			case 1:
-				printMenu();
+				printf("Input channel: ");
+				getDecInput(&channel);
+				printf("\nA%i = %i", channel, SensorBoard.readADC_SingleEnded(channel));
 			break;
 			
 			case 0:

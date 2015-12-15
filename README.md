@@ -32,3 +32,6 @@ Bill Earl<br>
 
 Kevin Townsend<br>
 	* Adafruit LSM9DS0 Accelerometer + Gyro + Magnetometer 9-DOF Breakouts (https://learn.adafruit.com/adafruit-lsm9ds0-accelerometer-gyro-magnetometer-9-dof-breakouts)
+
+Lady Ada<br>
+	* Adafruit TCA9548A 1-to-8 I2C Multiplexer Breakout (https://learn.adafruit.com/adafruit-tca9548a-1-to-8-i2c-multiplexer-breakout)

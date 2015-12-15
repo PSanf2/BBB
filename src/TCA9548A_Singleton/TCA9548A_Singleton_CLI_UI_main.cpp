@@ -9,7 +9,9 @@ using namespace std;
 // Functions to put things on the screen.
 void printMenu() {
 	printf("\n\t\t-----MAIN MENU-----");
-	
+	printf("\n\t 1) Set channel");
+	printf("\n\t 2) Disable all channels");
+	printf("\n\t 3) Print current active channels");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -51,7 +53,7 @@ int main(int argc, char* argv[]) {
 	printf("Input device address in hex: ");
 	getHexInput(&addr);
 	
-	PatricksDrivers::TCA9548A_Singleton SensorBoard(bus, addr);
+	PatricksDrivers::TCA9548A_Singleton I2CMultiplexer(bus, addr);
 	
 	do {
 		
@@ -61,8 +63,18 @@ int main(int argc, char* argv[]) {
 		
 		switch (menu_choice) {
 			case 1:
-				//printf("Input channel: ");
-				//getDecInput(&channel);
+				printf("Input channel: ");
+				getDecInput(&channel);
+				I2CMultiplexer.select(channel);
+			break;
+			
+			case 2:
+				printf("\nAll channels disabled.");
+				I2CMultiplexer.disableAll();
+			break;
+			
+			case 3:
+				printf("\nCurrnet active channels: %X", I2CMultiplexer.current());
 			break;
 			
 			case 0:

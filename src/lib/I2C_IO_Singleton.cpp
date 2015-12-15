@@ -98,6 +98,49 @@ namespace PatricksDrivers {
 		return result;
 	} // read
 	
+	
+	
+	
+	
+	
+	
+	
+	unsigned char* I2C_IO_Singleton::read(
+		unsigned char bus,
+		unsigned char addr,
+		unsigned char num,
+		unsigned char* result
+	) {
+		// This function will be used to read an arbitrary number of values from a device.
+		// The results will be written to the memory provided by the pointer, and ultimately
+		// returned.
+		
+		error_code = 0;
+		
+		// open a connection to the device
+		if (open(bus, addr) != 0)
+			return NULL;
+		
+		// read in the proper number of values
+		if (::read(file, result, num) != num) {
+			close();
+			error_code = 4;
+			return NULL;
+		}
+		
+		close();
+		return result;
+	} // read
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	int I2C_IO_Singleton::open(unsigned char bus, unsigned char addr) {
 		
 		error_code = 0;

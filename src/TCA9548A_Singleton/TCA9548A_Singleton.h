@@ -14,6 +14,12 @@ namespace PatricksDrivers {
 		public:
 			TCA9548A_Singleton(unsigned char bus, unsigned char addr);
 			~TCA9548A_Singleton();
+			void select(unsigned char channel);
+			void enable(unsigned char channel);
+			void disable(unsigned char channel);
+			void disableAll();
+			unsigned char current();
+			bool enabled(unsigned char channel);
 	}; // class
 	
 } // namespace

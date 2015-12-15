@@ -98,13 +98,6 @@ namespace PatricksDrivers {
 		return result;
 	} // read
 	
-	
-	
-	
-	
-	
-	
-	
 	unsigned char* I2C_IO_Singleton::read(
 		unsigned char bus,
 		unsigned char addr,
@@ -131,15 +124,6 @@ namespace PatricksDrivers {
 		close();
 		return result;
 	} // read
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	int I2C_IO_Singleton::open(unsigned char bus, unsigned char addr) {
 		

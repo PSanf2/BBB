@@ -112,3 +112,18 @@ be standard on my breadboard when working w/ I2C devices. In order for
 the multiplexer to work with mixed voltages on the bus lines it must 
 be using pullups on each side of board. I'll need to have pullups on 
 all eight of the channels the board provides.
+
+I was able to make some additions to what was being described by 
+Adafruit for the TCA9548A breakout board. Adafruit had the code set up 
+so the board would select a single channel that the master could 
+communicate with. When I looked at the datasheet I saw that it was 
+possible to toggle which channels were on or off, and also get 
+information back from the chip about it. I can have multiple channels 
+enabled at the same time, or disable selected channels. As long as you 
+don't have I2C slaves sharing the same addresses between different 
+output busses on the multiplexer it works fine. When you enable a 
+channel on the multiplexer it just ties the far bus in to the bus the 
+master has visable to it. This will make the device addressable to the I2C 
+master, and usable. Which channels are active on the multiplexer 
+depend on a one byte bit-mask. Each byte in the bitmask tells if a 
+specific channel is active or not.

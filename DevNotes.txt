@@ -71,14 +71,7 @@ g++. I may be able to use C++11 with the -std=c++0x option in the terminal. I ma
 g++ on the system because support for C++11 on 4.6.3 doesn't appear to be optimal. Newer versions are
 promising better support for the newer features. I should also go through the code, and find places
 where default values may be defined for function parameters. Since each breakout board is unique there's
-not much that can be done in terms of polymorphism or inheritance. Unless I start dealing with
-multi-threading in applications then there shouldn't be much reason to get too fancy with the code.
-Even if I do get into multi-threading I'll be alright as long as I keep the I2C I/O operations confined
-to a single thread. I'm relying on the OS to manage file read/writes that the I2C code relies on to
-function. An operation on the I2C bus is simply a file read/write operation to the OS, and there are
-already mechinisms in place for details such as collision avoidance, and blocks. As long as I only
-have one thread trying to mess with the I2C bus (and thus only one entitiy messing w/ the bus) then
-everything should be fine.
+not much that can be done in terms of polymorphism or inheritance.
 
 I also need to get proper make files set up. The system of using batch files to manage compiling
 and linking the files into executables is just dumb.
@@ -94,4 +87,23 @@ sure if this will become a concern at a later point. I worry that the
 I2C multiplexer I have may not pass a current onto the I2C bus that 
 will keep the boards alive. If this is the case then I'll need to 
 figure out what needs to be done. I may also need to consult with 
-Adafruit customer support.
+Adafruit customer support. Page one of the multiplexer datasheet says 
+"external pullup resistors pull the bus up to the desired voltage 
+level for each channel." This either means that pulling the I2C bus 
+lines high isn't going to be a concern, or I'll need to add some 
+capacitors and resistors to the mix. Page 12 of the datasheet clears 
+it up. It explicitly states that the SDA/SCL lines must be connected 
+to a positive supply through pullup resistors connected to the output 
+stages of the device. This does not match up with the pictures on the 
+Adafruit page. After checking additonal documentation it turns out 
+that the chips can drive the bus, but cannot drive it high. This means 
+that the chips are only going to be able to perform a limited number 
+of functions without jumping each line to VCC through a resistor. YUP! 
+I should be putting a resistor between each I2C bus line and VCC. 
+It'll be between 1Kohm an 10Kohm on each of them. The values affect 
+the communication speed. One source recommends 1k8 as giving the best 
+value. Not having this set up on the bus lines is the reason the 
+ADS1X15 boards won't work unless they're jacked directly into the BBB 
+with a very short piece of wire. The resistance of the wire is causing 
+what little signal to get through to get pulled down to 0v, and lost 
+to heat.

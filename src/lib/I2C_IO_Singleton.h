@@ -38,6 +38,13 @@ namespace PatricksDrivers {
 				unsigned char* result
 			); // read
 			
+			unsigned char* read(
+				unsigned char bus,
+				unsigned char addr,
+				unsigned char num,
+				unsigned char* result
+			); // read
+			
 			unsigned char writeRegister(
 				unsigned char bus,
 				unsigned char addr,

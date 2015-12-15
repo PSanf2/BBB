@@ -82,3 +82,16 @@ everything should be fine.
 
 I also need to get proper make files set up. The system of using batch files to manage compiling
 and linking the files into executables is just dumb.
+
+For some reason the ADS1X15 boards don't want to work unless there's 
+another board using the same bus, or the I2C pins are connected 
+directly into the BBB with a short piece of wire. I believe this has 
+something to do with pull-up/pull-down resistor usage. The datasheet 
+for the boards has some diagrams wiring the microcontroller VCC line 
+into each I2C line. I'm not about to attempt this with my BBB (and 
+possibly damage it) when there's a stupid easy workaround. I'm not 
+sure if this will become a concern at a later point. I worry that the 
+I2C multiplexer I have may not pass a current onto the I2C bus that 
+will keep the boards alive. If this is the case then I'll need to 
+figure out what needs to be done. I may also need to consult with 
+Adafruit customer support.

@@ -53,7 +53,8 @@ int main(int argc, char* argv[]) {
 	printf("Input device address in hex: ");
 	getHexInput(&addr);
 	
-	PatricksDrivers::ADS1115_Singleton SensorBoard(bus, addr);
+	//PatricksDrivers::ADS1115_Singleton SensorBoard(bus, addr);
+	PatricksDrivers::ADS1015_Singleton SensorBoard(bus, addr);
 	
 	do {
 		

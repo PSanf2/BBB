@@ -21,7 +21,7 @@ SCL and SDA should be wired to SYS_5V through 1Kohm pullup resistors.
 
 I have used these pin configurations to succesfully test my code using PCA9685, LSM9DS0, ADS1015, ADS1115, and TCS9548A breakout boards. Your results may vary. I have been able to test this code with multiple breakout boards connected to the same I2C bus successfully.
 
-References and Credits:
+References, Credits, and Special Mentions:
 
 Derek Molloy<br>
 	* Exploring BeagleBone (http://www.exploringbeaglebone.com/)
@@ -35,3 +35,8 @@ Kevin Townsend<br>
 
 Lady Ada<br>
 	* Adafruit TCA9548A 1-to-8 I2C Multiplexer Breakout (https://learn.adafruit.com/adafruit-tca9548a-1-to-8-i2c-multiplexer-breakout)
+
+Adafruit Customer Support Team (http://forums.adafruit.com/)<br>
+	* adafruit_support_mike
+	* adafruit_support_rick
+	* adafruit_support_bill

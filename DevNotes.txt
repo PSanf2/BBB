@@ -108,4 +108,7 @@ with a very short piece of wire. The resistance of the wire is causing
 what little signal to get through to get pulled down to 0v, and lost 
 to heat. Fixed it! :-D I added a 1K resistor between VCC and each of 
 the I2C lines and the chip started working. It's something that should 
-be standard on my breadboard when working w/ I2C devices.
+be standard on my breadboard when working w/ I2C devices. In order for 
+the multiplexer to work with mixed voltages on the bus lines it must 
+be using pullups on each side of board. I'll need to have pullups on 
+all eight of the channels the board provides.

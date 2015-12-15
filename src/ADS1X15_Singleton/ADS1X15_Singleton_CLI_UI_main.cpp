@@ -43,15 +43,46 @@ void getDecInput(unsigned int *ptr) {
 	}
 }
 
-int main(int argc, char* argv[]) {
+void ADS1015_main(unsigned char bus, unsigned char addr) {
+	unsigned int menu_choice, channel;
 	
-	unsigned int menu_choice, bus, addr, channel;
+	PatricksDrivers::ADS1015_Singleton SensorBoard(bus, addr);
 	
-	printf("Input I2C Bus: ");
-	getDecInput(&bus);
-	
-	printf("Input device address in hex: ");
-	getHexInput(&addr);
+	do {
+		
+		printMenu();
+		
+		getDecInput(&menu_choice);
+		
+		switch (menu_choice) {
+			case 1:
+				printf("Input channel: ");
+				getDecInput(&channel);
+				printf("\nA%i = %i", channel, SensorBoard.readADC_SingleEnded(channel));
+			break;
+			
+			case 2:
+				printf("Differential 0-1 = %i", SensorBoard.readADC_Differential_0_1());
+			break;
+			
+			case 3:
+				printf("Differential 2-3 = %i", SensorBoard.readADC_Differential_2_3());
+			break;
+			
+			case 0:
+				; // do nothing
+			break;
+			
+			default:
+				printf("\nINVALID SELECTION.");
+			
+		}
+		
+	} while (menu_choice != 0);
+}
+
+void ADS1115_main(unsigned char bus, unsigned char addr) {
+	unsigned int menu_choice, channel;
 	
 	PatricksDrivers::ADS1115_Singleton SensorBoard(bus, addr);
 	
@@ -86,6 +117,33 @@ int main(int argc, char* argv[]) {
 		}
 		
 	} while (menu_choice != 0);
+}
+
+int main(int argc, char* argv[]) {
+	
+	unsigned int bus, addr, type;
+	
+	printf("Input I2C Bus: ");
+	getDecInput(&bus);
+	
+	printf("Input device address in hex: ");
+	getHexInput(&addr);
+	
+	printf("Am I using an ADS1015 or ADS 1115?");
+	printf("\nInput 1 for ADS1015 or 2 for ADS1115.");
+	printf("\nInput selection: ");
+	getDecInput(&type);
+	while ((type != 1) && (type != 2)) {
+		printf("\nINVALID SELECTION.");
+		printf("\nInput 1 for ADS1015 or 2 for ADS1115.");
+		printf("\nInput selection: ");
+		getDecInput(&type);
+	}
+	
+	if (type == 1)
+		ADS1015_main(bus, addr);
+	else
+		ADS1115_main(bus, addr);
 	
 	printf("Goodbye!\n");
 	

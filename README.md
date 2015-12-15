@@ -17,6 +17,8 @@ P9, 07 => SYS_5V<br>
 P9, 19 => I2C2_SCL<br>
 P9, 20 => I2C2_SDA<br>
 
+SCL and SDA should be wired to SYS_5V through 1Kohm pullup resistors.
+
 I have used these pin configurations to succesfully test my code using PCA9685, LSM9DS0, ADS1015, and ADS1115 breakout boards. Your results may vary. I have been able to test this code with multiple breakout boards connected to the same I2C bus successfully.
 
 References and Credits:

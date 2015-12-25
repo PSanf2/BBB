@@ -136,3 +136,31 @@ It's pretty redundant at this point. At some point I'll also need to
 go over all of my existing code, and update it accordingly. Most of 
 the updating can probably be accomplished by deleting most instances 
 of "_Singleton" or some variation.
+
+With the DS1307 the following is used to add the device to the system 
+as a real time clock that's consulted after booting.
+
+Thing binds the chip as a device in the operating system. Once this is 
+done the device can no longer be freely communicated with via I2C w/o 
+forcing the transaction (bad). You run this before running the other 
+commands. You must be the superuser to run this command. Using sudo 
+will return an invalid permission error. Use sudo su to become the 
+superuser.
+echo ds1307 0x68 > /sys/class/i2c-adapter/i2c-1/new_device
+
+Whenever the time is written to the chip from the OS it's in GMT/UTC. 
+The OS will read the UTC time from the chip, and then adjust for the 
+local timezone that's set on the BBB.
+
+Reads the time from the chip.
+hwclock -r -f /dev/rtc1
+
+Writes the system time to the chip.
+hwclock -w -f /dev/rtc1
+
+Sets the system time from the chip.
+hwclock -s -f /dev/rtc1
+
+Running the proper commands after bootup to set the system type from 
+the chip is supposed to be set up as a service. Review the Adafruit 
+instructions for information on how to do this.

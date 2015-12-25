@@ -1,6 +1,7 @@
 #include "DS1307.h"
 
 #include <cstdio>	// pulls in printf()
+#include <ctime>	// pulls in date/time library
 
 using namespace std;
 

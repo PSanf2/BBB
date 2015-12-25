@@ -130,3 +130,9 @@ specific channel is active or not.
 
 Since I now have quite a number of drivers available I may with to 
 switch the framework to a Model-Controller-View setup.
+
+Moving forward, I need to quit using the _Singleton suffix on everything.
+It's pretty redundant at this point. At some point I'll also need to 
+go over all of my existing code, and update it accordingly. Most of 
+the updating can probably be accomplished by deleting most instances 
+of "_Singleton" or some variation.

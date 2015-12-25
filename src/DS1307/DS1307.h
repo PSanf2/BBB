@@ -57,13 +57,21 @@ namespace PatricksDrivers {
 			
 			/* REQUIRED FUNCTIONS
 			 * Funtions to read/write from the 56 bytes of battery backed RAM on the chip
-			 * 		The RAm is available in addresses 0x08 - 0x3F.
-			 * 		I'll want to be able to write any C++ standard data type from the RAM.
+			 * 		The RAM is available in addresses 0x08 - 0x3F.
+			 * 		I'll want to be able to write any C++ standard data type to the RAM.
+			 * 		I want to accept a register address, and a variable. Evaluate the variable
+			 * 		to determine it's type, and figure out how many bytes to write. Make sure my
+			 * 		first byte is a valid register to write to, make sure I won't write to an address
+			 * 		beyond 0x3F, and write the bytes to the registers.
 			 * 		I'll need to see if there's some function parameter type witchery that will
 			 * 		allow a function to accept an argument of an arbitrary type. I'll want to use
 			 * 		function templates for this.
 			 * 		For reading functions I'll want to know what type of a variable I'll be
-			 * 		getting from the RAM so I can cast the result before returning it.
+			 * 		getting from the RAM so I can cast the result before returning it. I'll
+			 * 		accept an address, a type, make sure I don't try to read past 0x3F, cast
+			 * 		the result to the proper type, and retun it.
+			 * 		I'm not going to worry about memory management other than making sure I'm
+			 * 		reading/writing from valid register addresses.
 			 */
 			 
 	}; // class

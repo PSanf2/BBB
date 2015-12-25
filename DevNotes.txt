@@ -127,3 +127,6 @@ master has visable to it. This will make the device addressable to the I2C
 master, and usable. Which channels are active on the multiplexer 
 depend on a one byte bit-mask. Each byte in the bitmask tells if a 
 specific channel is active or not.
+
+Since I now have quite a number of drivers available I may with to 
+switch the framework to a Model-Controller-View setup.

@@ -16,8 +16,8 @@ namespace PatricksDrivers {
 	
 	typedef enum
 	{
-		twentyFour = 0,
-		twelve = 1
+		TWENTYFOURHOURMODE = 0,
+		TWELVEHOURMODE = 1
 	} hourMode_t;
 	
 	typedef enum
@@ -40,7 +40,7 @@ namespace PatricksDrivers {
 			unsigned char _bus;
 		public:
 			DS1307(unsigned char bus);
-			struct tm* read_time();
+			struct tm* read_time(struct tm* result);
 			void write_time (struct tm* newDateTime);
 			void toggle_CH();
 			bool CH_enabled();

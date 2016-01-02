@@ -131,6 +131,7 @@ int main(int argc, char* argv[]) {
 			
 			case 5:
 				//5) Toggle 12/24 Hour Mode
+				RTClock.toggle_mode();
 			break;
 			
 			case 6:
@@ -145,7 +146,6 @@ int main(int argc, char* argv[]) {
 			
 			case 8:
 				//8) Set Square Wave Frequency
-				
 				printf("\n-----SET SQUARE WAVE FREQUENCY-----");
 				printf("\n\t0) 1 Hz");
 				printf("\n\t1) 4.096kHz");
@@ -153,7 +153,6 @@ int main(int argc, char* argv[]) {
 				printf("\n\t3) 32.768kHz");
 				printf("\nINPUT FREQUENCY SELECTION: ");
 				getDecInput(&freq_choice);
-				
 				switch (freq_choice) {
 					case PatricksDrivers::ONE_HZ:
 						RTClock.set_rate(PatricksDrivers::ONE_HZ);

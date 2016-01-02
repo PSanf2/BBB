@@ -52,8 +52,8 @@ namespace PatricksDrivers {
 		Device->read(_bus, DS1307_DEV_ADDR, 0x00, 7, rawData);
 		
 		// this is for debugging
-		for (int i = 0; i < 7; i++)
-			printf("\n0x%X = 0x%X", i, rawData[i]);
+		//for (int i = 0; i < 7; i++)
+		//	printf("\n0x%X = 0x%X", i, rawData[i]);
 		
 		// turn the data into information
 		unsigned char info = 0;
@@ -98,6 +98,7 @@ namespace PatricksDrivers {
 		info =  100 + (10 * ((rawData[6] & 0xF0) >> 4)) + (rawData[6] & 0x0F);
 		result->tm_year = info;
 		
+		/*
 		// print some things for debugging
 		printf("\nresult->tm_sec =\t%i", result->tm_sec);
 		printf("\nresult->tm_min =\t%i", result->tm_min);
@@ -108,6 +109,7 @@ namespace PatricksDrivers {
 		printf("\nresult->tm_wday =\t%i", result->tm_wday);
 		printf("\nresult->tm_yday =\t%i", result->tm_yday);
 		printf("\nresult->tm_isdst =\t%i", result->tm_isdst);
+		*/
 		
 		delete rawData;
 		
@@ -115,7 +117,52 @@ namespace PatricksDrivers {
 	}
 	
 	void DS1307::write_time (struct tm* newDateTime) {
+		/*
+		printf("\nnewDateTime->tm_sec =\t%i", newDateTime->tm_sec);
+		printf("\nnewDateTime->tm_min =\t%i", newDateTime->tm_min);
+		printf("\nnewDateTime->tm_hour =\t%i", newDateTime->tm_hour);
+		printf("\nnewDateTime->tm_mday =\t%i", newDateTime->tm_mday);
+		printf("\nnewDateTime->tm_mon =\t%i", newDateTime->tm_mon);
+		printf("\nnewDateTime->tm_year =\t%i", newDateTime->tm_year);
+		printf("\nnewDateTime->tm_wday =\t%i", newDateTime->tm_wday);
+		printf("\nnewDateTime->tm_yday =\t%i", newDateTime->tm_yday);
+		printf("\nnewDateTime->tm_isdst =\t%i", newDateTime->tm_isdst);
+		*/
 		
+		// Writing the time to the chip will cause it to go into 24 hour mode.
+		// This is because don't want to do a read to determine the current
+		// mode, and made a lot of adjustments.
+		
+		// Writing the time is also going to disable to Clock Hold.
+		// What's the point of setting the time if you're not going to keep up with it?
+		
+		unsigned char* newVals = new unsigned char[8];
+		
+		// starting register i'll be writing to
+		newVals[0] = 0x00;
+		// seconds (also disables the CH bit)
+		newVals[1] = 0x00 | ((newDateTime->tm_sec / 10) << 4) | (newDateTime->tm_sec % 10);
+		// minutes
+		newVals[2] = 0x00 | ((newDateTime->tm_min / 10) << 4) | (newDateTime->tm_min % 10);
+		// hours (switches to 24 hour mode)
+		newVals[3] = 0x00 | ((newDateTime->tm_hour / 10) << 4) | (newDateTime->tm_hour % 10);
+		// day of the week (accounting for funky offset)
+		newVals[4] = 0x00 | (newDateTime->tm_wday + 1);
+		// day of the month
+		newVals[5] = 0x00 | ((newDateTime->tm_mday / 10) << 4) | (newDateTime->tm_mday % 10);
+		// month of the year (accounting for offset)
+		newVals[6] = 0x00 | (newDateTime->tm_mon + 1);
+		// years since 1900 or 2000. whatever!
+		int year = newDateTime->tm_year - 100;
+		newVals[7] = 0x00 | ((year / 10) << 4) | (year % 10);
+		//newVals[7] = 0x00 | (((newDateTime->tm_year - 100) / 10) << 4) | ((newDateTime->tm_mday - 100) % 10);
+		
+		//for (int i = 1; i < 8; i++)
+		//	printf("\nnewVals[%i] = 0x%X", i, newVals[i]);
+		
+		Device->write(_bus, DS1307_DEV_ADDR, 8, newVals);
+		
+		delete newVals;
 	}
 	
 	void DS1307::toggle_CH() {
@@ -141,38 +188,38 @@ namespace PatricksDrivers {
 		unsigned char result = val[0];
 		delete val;
 		
-		printf("\nresult = %X", result);
+		//printf("\nresult = %X", result);
 		
 		unsigned char hour;
 		
 		if (result & (1<< 6)) { // if in 12 hour mode
 			// going to 24 hour mode
-			printf("\n24->12");
+			//printf("\n24->12");
 			hour = (10 * ((result & 0x10) >> 4)) + (result & 0x0F);
-			printf("\nhour= %i", hour);
+			//printf("\nhour= %i", hour);
 			if ((result & (1 << 5)) && (hour != 12)) { // PM == true (12PM == 1200 -> don't adjust)
 				hour += 12;
-				printf("\nhour= %i", hour);
+				//printf("\nhour= %i", hour);
 			} else if (hour == 12) { // (12AM == 0000 -> adjust)
 				hour = 0;
-				printf("\nhour= %i", hour);
+				//printf("\nhour= %i", hour);
 			}
-			printf("\nhour= %i", hour);
+			//printf("\nhour= %i", hour);
 			result = 0x00 | ((hour / 10) << 4) | (hour % 10);
-			printf("\nresult = %X", result);
+			//printf("\nresult = %X", result);
 		} else { // in 24 hour mode
 			// going to 12 hour mode
-			printf("\n24->12");
+			//printf("\n24->12");
 			hour = (10 * ((result & 0x30) >> 4)) + (result & 0x0F);
 			if (hour > 12) { // PM = true
 				hour -= 12;
-				printf("\nhour= %i", hour);
+				//printf("\nhour= %i", hour);
 			} else if (hour == 0) { // (0000 == 12AM -> adjust)
 				hour = 12;
-				printf("\nhour= %i", hour);
+				//printf("\nhour= %i", hour);
 			}
 			result = 0x40 | ((hour / 10) << 4) | (hour % 10);
-			printf("\nresult = %X", result);
+			//printf("\nresult = %X", result);
 		}
 		
 		Device->writeRegister(_bus, DS1307_DEV_ADDR, 0x02, result);

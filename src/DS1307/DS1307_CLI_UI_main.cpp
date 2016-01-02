@@ -122,6 +122,9 @@ int main(int argc, char* argv[]) {
 			
 			case 3:
 				//3) Write Time
+				time_t timer;
+				time(&timer);
+				RTClock.write_time(gmtime(&timer));
 			break;
 			
 			case 4:

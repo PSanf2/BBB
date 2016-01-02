@@ -32,6 +32,8 @@ WHEN CONNECTING A NEW DEVICE
 sudo i2cdetect -l // To see which I2C busses are available. There's one that's not enabled by default.
 sudo i2cdetect -y -r <i2c bus num> // To see which addresses are available. These roughly match to which devices are connected.
 sudo i2cdump -y <i2c bus num> <i2c dev hex addr> // To dump all of the registers on the device.
+sudo i2cset -y <i2c bus num> <i2c dev hex addr> <register hex addr> <val> // set a register value
+sudo i2cget -y <i2c bus num> <i2c dev hex addr> <register hex addr> // read a register value
 
 CODING NOTES
 Reading/Writing to/from an I2C device register isn't that difficult.

@@ -1,6 +1,7 @@
 #include <iostream>		// pulls in cin and hex
 #include <cstdio>		// pulls in printf()
 #include <cstdlib>		// lets me use system()
+#include <ctime>		// pulls in date/time library
 
 #include "DS1307.h"
 
@@ -53,6 +54,8 @@ void getDecInput(unsigned int *ptr) {
 int main(int argc, char* argv[]) {
 	
 	unsigned int menu_choice, bus;
+	
+	struct tm* chipTime = new tm;
 	
 	printf("Input I2C Bus: ");
 	getDecInput(&bus);
@@ -111,39 +114,51 @@ int main(int argc, char* argv[]) {
 			break; // case 1
 			
 			case 2:
-				
+				//2) Read Time
+				printf("\n-----READ TIME-----");
+				RTClock.read_time(chipTime);
+				printf("\nchipTime->tm_sec =\t%i", chipTime->tm_sec);
+				printf("\nchipTime->tm_min =\t%i", chipTime->tm_min);
+				printf("\nchipTime->tm_hour =\t%i", chipTime->tm_hour);
+				printf("\nchipTime->tm_mday =\t%i", chipTime->tm_mday);
+				printf("\nchipTime->tm_mon =\t%i", chipTime->tm_mon);
+				printf("\nchipTime->tm_year =\t%i", chipTime->tm_year);
+				printf("\nchipTime->tm_wday =\t%i", chipTime->tm_wday);
+				printf("\nchipTime->tm_yday =\t%i", chipTime->tm_yday);
+				printf("\nchipTime->tm_isdst =\t%i", chipTime->tm_isdst);
 			break;
 			
 			case 3:
-				
+				//3) Write Time
 			break;
 			
 			case 4:
-				
+				//4) Toggle Clock Halt
+				RTClock.toggle_CH();
 			break;
 			
 			case 5:
-				
+				//5) Toggle 12/24 Hour Mode
 			break;
 			
 			case 6:
-				
+				//6) Toggle Output Control
 			break;
 			
 			case 7:
-				
+				//7) Toggle Square-wave Enable
 			break;
 			
 			case 8:
-				
+				//8) Set Square Wave Frequency
 			break;
 			
 			case 9:
-				
+				//9) Memory Read
 			break;
 			
 			case 10:
-				
+				//10) Memory Write
 			break;
 			
 			case 0:
@@ -153,9 +168,11 @@ int main(int argc, char* argv[]) {
 			default:
 				printf("\nINVALID SELECTION.");
 			
-		}
+		} // switch (menu_choice)
 		
 	} while (menu_choice != 0);
+	
+	delete chipTime;
 	
 	printf("Goodbye!\n");
 	

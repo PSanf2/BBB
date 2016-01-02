@@ -3,6 +3,7 @@
 
 #include "../lib/I2C_IO_Singleton.h"
 #include <cstdio>
+#include <ctime>	// pulls in date/time library
 
 namespace PatricksDrivers {
 	

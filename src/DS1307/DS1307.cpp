@@ -25,6 +25,94 @@ namespace PatricksDrivers {
 		 * appropriate registers.
 		 */
 		
+		 /*
+		  * Zero out all of the values received in result.
+		  * Get as much data as possible from the chip.
+		  * Convert the data into information, populate as many members of result as possible.
+		  * //Run result rhough mktime() to populate any missing members.
+		  * //Immediatly run that result throuhg gmtime to get a properly populated tm.
+		  * //Use the values in that tm to populate result.
+		  * Don't do those last three steps. I'm returning what's on the chip, not what
+		  * the system thinks of what's on the chip. If the calling function wants the returned
+		  * struct to have all possible values populated then let the programmer worry about it.
+		  */
+		
+		result->tm_sec = 0;
+		result->tm_min = 0;
+		result->tm_hour = 0;
+		result->tm_mday = 0;
+		result->tm_mon = 0;
+		result->tm_year = 0;
+		result->tm_wday = 0;
+		result->tm_yday = 0;
+		result->tm_isdst = 0;
+		
+		// read six bytes from the device starting at 0x0.
+		unsigned char* rawData = new unsigned char[7];
+		Device->read(_bus, DS1307_DEV_ADDR, 0x00, 7, rawData);
+		
+		// this is for debugging
+		//for (int i = 0; i < 7; i++)
+		//	printf("\n0x%X = 0x%X", i, rawData[i]);
+		
+		// turn the data into information
+		unsigned char info = 0;
+		
+		// seconds
+		info =  (10 * ((rawData[0] & 0x70) >> 4)) + (rawData[0] & 0x0F);
+		result->tm_sec = info;
+		
+		// minutes
+		info =  (10 * ((rawData[1] & 0x70) >> 4)) + (rawData[1] & 0x0F);
+		result->tm_min = info;
+		
+		// hours
+		if (rawData[2] & (1 << 6)) { // 12 hour mode
+			// needs to be read, and converted into 24 hour mode for the result
+			info =  (10 * ((rawData[2] & 0xE0) >> 4)) + (rawData[2] & 0x0F);
+			if (rawData[2] & (1 << 5))
+				info += 12;
+		} else { // 24 hour mode
+			info =  (10 * ((rawData[2] & 0xC0) >> 4)) + (rawData[2] & 0x0F);
+		}
+		result->tm_hour = info;
+		
+		// day of the week
+		// on the chip 1 = sunday. in the result 0 = sunday
+		info = rawData[3] - 1;
+		result->tm_wday = info;
+		
+		// day of the month
+		info =  (10 * ((rawData[4] & 0x30) >> 4)) + (rawData[4] & 0x0F);
+		result->tm_mday = info;
+		
+		// month
+		// on the chip 1 = jan. in the result 0 = jan
+		info =  ((10 * ((rawData[5] & 0x10) >> 4)) + (rawData[5] & 0x0F)) - 1;
+		result->tm_mon = info;
+		
+		// year
+		// on the chip it's the years since 1900, and same on the result
+		// not entirely sure if this is 100% accurate.
+		// there seems to be some odd behavior when linux sets the year.
+		info =  (10 * ((rawData[6] & 0xF0) >> 4)) + (rawData[6] & 0x0F);
+		result->tm_year = info;
+		
+		// print some things for debugging
+		/*
+		printf("\nresult->tm_sec =\t%i", result->tm_sec);
+		printf("\nresult->tm_min =\t%i", result->tm_min);
+		printf("\nresult->tm_hour =\t%i", result->tm_hour);
+		printf("\nresult->tm_mday =\t%i", result->tm_mday);
+		printf("\nresult->tm_mon =\t%i", result->tm_mon);
+		printf("\nresult->tm_year =\t%i", result->tm_year);
+		printf("\nresult->tm_wday =\t%i", result->tm_wday);
+		printf("\nresult->tm_yday =\t%i", result->tm_yday);
+		printf("\nresult->tm_isdst =\t%i", result->tm_isdst);
+		*/
+		
+		delete rawData;
+		
 		return result;
 	}
 	
@@ -56,6 +144,8 @@ namespace PatricksDrivers {
 		delete val;
 		result ^= (1 << 6);
 		Device->writeRegister(_bus, DS1307_DEV_ADDR, 0x02, result);
+		// THIS IS INCOMPLETE!
+		// I need to adjust the hours value when toggling the mode.
 	}
 	
 	hourMode_t DS1307::read_mode() {

@@ -183,46 +183,7 @@ namespace PatricksDrivers {
 	}
 	
 	void DS1307::toggle_mode() {
-		unsigned char* val = new unsigned char[1];
-		Device->readRegister(_bus, DS1307_DEV_ADDR, 0x02, val);
-		unsigned char result = val[0];
-		delete val;
-		
-		//printf("\nresult = %X", result);
-		
-		unsigned char hour;
-		
-		if (result & (1<< 6)) { // if in 12 hour mode
-			// going to 24 hour mode
-			//printf("\n24->12");
-			hour = (10 * ((result & 0x10) >> 4)) + (result & 0x0F);
-			//printf("\nhour= %i", hour);
-			if ((result & (1 << 5)) && (hour != 12)) { // PM == true (12PM == 1200 -> don't adjust)
-				hour += 12;
-				//printf("\nhour= %i", hour);
-			} else if (hour == 12) { // (12AM == 0000 -> adjust)
-				hour = 0;
-				//printf("\nhour= %i", hour);
-			}
-			//printf("\nhour= %i", hour);
-			result = 0x00 | ((hour / 10) << 4) | (hour % 10);
-			//printf("\nresult = %X", result);
-		} else { // in 24 hour mode
-			// going to 12 hour mode
-			//printf("\n24->12");
-			hour = (10 * ((result & 0x30) >> 4)) + (result & 0x0F);
-			if (hour > 12) { // PM = true
-				hour -= 12;
-				//printf("\nhour= %i", hour);
-			} else if (hour == 0) { // (0000 == 12AM -> adjust)
-				hour = 12;
-				//printf("\nhour= %i", hour);
-			}
-			result = 0x40 | ((hour / 10) << 4) | (hour % 10);
-			//printf("\nresult = %X", result);
-		}
-		
-		Device->writeRegister(_bus, DS1307_DEV_ADDR, 0x02, result);
+		printf("\nWRITE THIS!");
 	}
 	
 	hourMode_t DS1307::read_mode() {

@@ -69,11 +69,11 @@ namespace PatricksDrivers {
 		// hours
 		if (rawData[2] & (1 << 6)) { // 12 hour mode
 			// needs to be read, and converted into 24 hour mode for the result
-			info =  (10 * ((rawData[2] & 0xE0) >> 4)) + (rawData[2] & 0x0F);
+			info =  (10 * ((rawData[2] & 0x10) >> 4)) + (rawData[2] & 0x0F);
 			if (rawData[2] & (1 << 5))
 				info += 12;
 		} else { // 24 hour mode
-			info =  (10 * ((rawData[2] & 0xC0) >> 4)) + (rawData[2] & 0x0F);
+			info =  (10 * ((rawData[2] & 0x30) >> 4)) + (rawData[2] & 0x0F);
 		}
 		result->tm_hour = info;
 		
@@ -95,11 +95,11 @@ namespace PatricksDrivers {
 		// on the chip it's the years since 1900, and same on the result
 		// not entirely sure if this is 100% accurate.
 		// there seems to be some odd behavior when linux sets the year.
-		info =  (10 * ((rawData[6] & 0xF0) >> 4)) + (rawData[6] & 0x0F);
+		info =  100 + (10 * ((rawData[6] & 0xF0) >> 4)) + (rawData[6] & 0x0F);
 		result->tm_year = info;
 		
-		// print some things for debugging
 		/*
+		// print some things for debugging
 		printf("\nresult->tm_sec =\t%i", result->tm_sec);
 		printf("\nresult->tm_min =\t%i", result->tm_min);
 		printf("\nresult->tm_hour =\t%i", result->tm_hour);
@@ -144,8 +144,6 @@ namespace PatricksDrivers {
 		delete val;
 		result ^= (1 << 6);
 		Device->writeRegister(_bus, DS1307_DEV_ADDR, 0x02, result);
-		// THIS IS INCOMPLETE!
-		// I need to adjust the hours value when toggling the mode.
 	}
 	
 	hourMode_t DS1307::read_mode() {

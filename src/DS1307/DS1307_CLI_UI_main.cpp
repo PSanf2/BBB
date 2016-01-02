@@ -53,7 +53,7 @@ void getDecInput(unsigned int *ptr) {
 
 int main(int argc, char* argv[]) {
 	
-	unsigned int menu_choice, bus;
+	unsigned int menu_choice, freq_choice, bus;
 	
 	struct tm* chipTime = new tm;
 	
@@ -117,15 +117,7 @@ int main(int argc, char* argv[]) {
 				//2) Read Time
 				printf("\n-----READ TIME-----");
 				RTClock.read_time(chipTime);
-				printf("\nchipTime->tm_sec =\t%i", chipTime->tm_sec);
-				printf("\nchipTime->tm_min =\t%i", chipTime->tm_min);
-				printf("\nchipTime->tm_hour =\t%i", chipTime->tm_hour);
-				printf("\nchipTime->tm_mday =\t%i", chipTime->tm_mday);
-				printf("\nchipTime->tm_mon =\t%i", chipTime->tm_mon);
-				printf("\nchipTime->tm_year =\t%i", chipTime->tm_year);
-				printf("\nchipTime->tm_wday =\t%i", chipTime->tm_wday);
-				printf("\nchipTime->tm_yday =\t%i", chipTime->tm_yday);
-				printf("\nchipTime->tm_isdst =\t%i", chipTime->tm_isdst);
+				printf("\n%s", asctime(chipTime));
 			break;
 			
 			case 3:
@@ -143,14 +135,41 @@ int main(int argc, char* argv[]) {
 			
 			case 6:
 				//6) Toggle Output Control
+				RTClock.toggle_out();
 			break;
 			
 			case 7:
 				//7) Toggle Square-wave Enable
+				RTClock.toggle_SQWE();
 			break;
 			
 			case 8:
 				//8) Set Square Wave Frequency
+				
+				printf("\n-----SET SQUARE WAVE FREQUENCY-----");
+				printf("\n\t0) 1 Hz");
+				printf("\n\t1) 4.096kHz");
+				printf("\n\t2) 8.192kHz");
+				printf("\n\t3) 32.768kHz");
+				printf("\nINPUT FREQUENCY SELECTION: ");
+				getDecInput(&freq_choice);
+				
+				switch (freq_choice) {
+					case PatricksDrivers::ONE_HZ:
+						RTClock.set_rate(PatricksDrivers::ONE_HZ);
+					break;
+					case PatricksDrivers::FOUR_KHZ:
+						RTClock.set_rate(PatricksDrivers::FOUR_KHZ);
+					break;
+					case PatricksDrivers::EIGHT_KHZ:
+						RTClock.set_rate(PatricksDrivers::EIGHT_KHZ);
+					break;
+					case PatricksDrivers::THIRTYTWO_KHZ:
+						RTClock.set_rate(PatricksDrivers::THIRTYTWO_KHZ);
+					break;
+					default:
+						printf("\nINVALID FREQUENCY SELECTION");
+				} // switch (freq_choice)
 			break;
 			
 			case 9:

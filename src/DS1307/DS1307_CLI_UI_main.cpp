@@ -53,7 +53,12 @@ void getDecInput(unsigned int *ptr) {
 
 int main(int argc, char* argv[]) {
 	
-	unsigned int menu_choice, freq_choice, bus;
+	unsigned int menu_choice, freq_choice, ram_choice, bus, start_addr, in_val;
+	
+	unsigned char my_char;
+	unsigned short my_short;
+	unsigned int my_int;
+	unsigned long my_long;
 	
 	struct tm* chipTime = new tm;
 	
@@ -180,6 +185,56 @@ int main(int argc, char* argv[]) {
 			
 			case 10:
 				//10) Memory Write
+				// print some options
+				printf("\n-----MEMORY WRITE-----");
+				// get a reasonable start addr
+				printf("\nStart register must be between 0x08 and 0x3F.");
+				printf("\nINPUT START REGISTER ADDRESS IN HEX: ");
+				getHexInput(&start_addr);
+				while (start_addr < 0x08 || start_addr > 0x3F) {
+					printf("\nINVALID START REGISTER");
+					printf("\nStart register must be between 0x08 and 0x3F.");
+					printf("\nINPUT START REGISTER ADDRESS IN HEX: ");
+					getHexInput(&start_addr);
+				}
+				// get a valid size selection
+				printf("\n1) unsigned char (1 byte)");
+				printf("\n2) unsigned short (2 bytes)");
+				printf("\n3) unsigned int (4 bytes)");
+				printf("\n4) unsigned long (4 bytes)");
+				printf("\nINPUT SIZE SELECTION: ");
+				getDecInput(&ram_choice);
+				while (ram_choice < 1 || ram_choice > 4) {
+					printf("\nINVALID SIZE SELECTION");
+					printf("\nINPUT SIZE SELECTION: ");
+					getDecInput(&ram_choice);
+				}
+				// Get a hex value to write
+				printf("\nINPUT VALUE TO WRITE IN HEX: ");
+				getHexInput(&in_val);
+				// evaluate the ram choice, cast the input value, call the proper function.
+				switch (ram_choice) {
+					case 1:
+						// unsigned char
+						my_char = (unsigned char) in_val;
+						RTClock.write_RAM<unsigned char*>(start_addr, &my_char);
+					break;
+					case 2:
+						// unsigned short
+						my_short = (unsigned short) in_val;
+						RTClock.write_RAM<unsigned short*>(start_addr, &my_short);
+					break;
+					case 3:
+						// unsigned int
+						my_int = (unsigned int) in_val;
+						RTClock.write_RAM<unsigned int*>(start_addr, &my_int);
+					break;
+					case 4:
+						// unsigned long
+						my_long = (unsigned long) in_val;
+						RTClock.write_RAM<unsigned long*>(start_addr, &my_long);
+					break;
+				} // switch (ram_choice)
 			break;
 			
 			case 0:

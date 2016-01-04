@@ -1,5 +1,5 @@
-#ifndef __ADS1X15_SINGLETON_H
-#define __ADS1X15_SINGLETON_H
+#ifndef __ADS1X15_H
+#define __ADS1X15_H
 
 #include "../lib/I2C_IO_Singleton.h"
 #include <cstdio>
@@ -89,7 +89,7 @@ namespace PatricksDrivers {
 	
 	// end Bill Earl code
 	
-	class ADS1015_Singleton {
+	class ADS1015 {
 		private:
 			;
 		protected:
@@ -101,8 +101,8 @@ namespace PatricksDrivers {
 			unsigned char _bitShift;
 			adsGain_t _gain;
 		public:
-			ADS1015_Singleton(unsigned char bus, unsigned char addr);
-			~ADS1015_Singleton();
+			ADS1015(unsigned char bus, unsigned char addr);
+			~ADS1015();
 			unsigned int readADC_SingleEnded(unsigned char channel);
 			int readADC_Differential_0_1();
 			int readADC_Differential_2_3();
@@ -112,9 +112,9 @@ namespace PatricksDrivers {
 			adsGain_t getGain();
 	}; // class
 	
-	class ADS1115_Singleton : public ADS1015_Singleton {
+	class ADS1115 : public ADS1015 {
 		public:
-			ADS1115_Singleton(unsigned char bus, unsigned char addr);
+			ADS1115(unsigned char bus, unsigned char addr);
 	}; // class
 	
 } // namespace

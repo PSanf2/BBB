@@ -7,7 +7,7 @@
 #include <iostream>		// pulls in cin and hex
 #include <cstdio>		// pulls in printf()
 
-#include "PCA9685_Singleton.h"
+#include "PCA9685.h"
 
 using namespace std;
 
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 	unsigned int dev;
 	getHexInput(&dev);
 	
-	PatricksDrivers::PCA9685_Singleton ServoBoard(bus, dev);
+	PatricksDrivers::PCA9685 ServoBoard(bus, dev);
 	
 	unsigned int menu_choice, reg, val, ch, on, off;
 	

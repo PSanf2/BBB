@@ -18,20 +18,20 @@ namespace PatricksDrivers {
 	#define ALL_LED_OFF_L 0xFC
 	#define ALL_LED_OFF_H 0xFD
 	
-	class PCA9685_Singleton {
+	class PCA9685 {
 		private:
 			I2C_IO_Singleton* Device;
 			unsigned char _bus;
 			unsigned char _addr;
 		public:
-			PCA9685_Singleton(unsigned char bus, unsigned char addr);
+			PCA9685(unsigned char bus, unsigned char addr);
 			void setRefresh(unsigned char rate);
 			void wake();
 			void sleep();
 			void reset();
 			void setPWM(unsigned char channel, unsigned int on, unsigned int off);
 			void setAllPWM(unsigned int on, unsigned int off);
-			~PCA9685_Singleton();
+			~PCA9685();
 	}; // class
 	
 } // namespace

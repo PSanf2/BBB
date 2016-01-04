@@ -32,6 +32,8 @@ WHEN CONNECTING A NEW DEVICE
 sudo i2cdetect -l // To see which I2C busses are available. There's one that's not enabled by default.
 sudo i2cdetect -y -r <i2c bus num> // To see which addresses are available. These roughly match to which devices are connected.
 sudo i2cdump -y <i2c bus num> <i2c dev hex addr> // To dump all of the registers on the device.
+sudo i2cset -y <i2c bus num> <i2c dev hex addr> <register hex addr> <val> // set a register value
+sudo i2cget -y <i2c bus num> <i2c dev hex addr> <register hex addr> // read a register value
 
 CODING NOTES
 Reading/Writing to/from an I2C device register isn't that difficult.
@@ -131,8 +133,40 @@ specific channel is active or not.
 Since I now have quite a number of drivers available I may with to 
 switch the framework to a Model-Controller-View setup.
 
-Moving forward, I need to quit using the _Singleton suffix on everything.
+Moving forward, I need to quit using the _Singleton suffix on 
+everything (with the exception of I2C_IO_Singleton).
 It's pretty redundant at this point. At some point I'll also need to 
 go over all of my existing code, and update it accordingly. Most of 
 the updating can probably be accomplished by deleting most instances 
-of "_Singleton" or some variation.
+of "_Singleton" or some variation. When I do this update I should also 
+remove all of the empty destructors I've declared. If they're not 
+being used to do anything then they can be left out. Empty destructors 
+are implicitly declared.
+
+With the DS1307 the following is used to add the device to the system 
+as a real time clock that's consulted after booting.
+
+Thing binds the chip as a device in the operating system. Once this is 
+done the device can no longer be freely communicated with via I2C w/o 
+forcing the transaction (bad). You run this before running the other 
+commands. You must be the superuser to run this command. Using sudo 
+will return an invalid permission error. Use sudo su to become the 
+superuser.
+echo ds1307 0x68 > /sys/class/i2c-adapter/i2c-1/new_device
+
+Whenever the time is written to the chip from the OS it's in GMT/UTC. 
+The OS will read the UTC time from the chip, and then adjust for the 
+local timezone that's set on the BBB.
+
+Reads the time from the chip.
+hwclock -r -f /dev/rtc1
+
+Writes the system time to the chip.
+hwclock -w -f /dev/rtc1
+
+Sets the system time from the chip.
+hwclock -s -f /dev/rtc1
+
+Running the proper commands after bootup to set the system type from 
+the chip is supposed to be set up as a service. Review the Adafruit 
+instructions for information on how to do this.

@@ -4,8 +4,6 @@
 #include "../lib/I2C_IO_Singleton.h"
 #include <ctime>	// pulls in date/time library
 
-#include <cstdio>	// pulls in printf()
-
 namespace PatricksDrivers {
 	
 	#define DS1307_DEV_ADDR 0x68
@@ -58,6 +56,9 @@ namespace PatricksDrivers {
 			template <class T> void read_RAM(unsigned char start_addr, T result);
 			 
 	}; // class
+	
+	// Template function members must be defined in the header file.
+	// If you attempt to define them in the .cpp file it won't compile.
 	
 	template <class T> void DS1307::write_RAM(unsigned char start_addr, T val) {
 		// make sure my starting address is valid

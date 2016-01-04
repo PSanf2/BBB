@@ -13,26 +13,6 @@ namespace PatricksDrivers {
 	}
 	
 	struct tm* DS1307::read_time(struct tm* result) {
-		/*
-		* The struct tm type is mostly compatable with the registers on
-		* the chip. One item to question is how the tm_year member is
-		* being handled by conversion functions in the ctime library.
-		* The docs say the member holds the years since 1900. The chip
-		* counts the years since 2000 in the year register. Trying to
-		* input values assuming the year register starts from 1900 seems
-		* to cause some sort of issue. Either way, in order to proper
-		* read the date off the chip I'll need to evaulate all the
-		* appropriate registers.
-		* Zero out all of the values received in result.
-		* Get as much data as possible from the chip.
-		* Convert the data into information, populate as many members of result as possible.
-		* //Run result rhough mktime() to populate any missing members.
-		* //Immediatly run that result throuhg gmtime to get a properly populated tm.
-		* //Use the values in that tm to populate result.
-		* Don't do those last three steps. I'm returning what's on the chip, not what
-		* the system thinks of what's on the chip. If the calling function wants the returned
-		* struct to have all possible values populated then let the programmer worry about it.
-		*/
 		result->tm_sec = 0;
 		result->tm_min = 0;
 		result->tm_hour = 0;
@@ -75,9 +55,6 @@ namespace PatricksDrivers {
 		info =  ((10 * ((rawData[5] & 0x10) >> 4)) + (rawData[5] & 0x0F)) - 1;
 		result->tm_mon = info;
 		// year
-		// on the chip it's the years since 1900, and same on the result
-		// not entirely sure if this is 100% accurate.
-		// there seems to be some odd behavior when linux sets the year.
 		info =  100 + (10 * ((rawData[6] & 0xF0) >> 4)) + (rawData[6] & 0x0F);
 		result->tm_year = info;
 		delete rawData;
@@ -108,7 +85,6 @@ namespace PatricksDrivers {
 		// years since 1900 or 2000. whatever!
 		int year = newDateTime->tm_year - 100;
 		newVals[7] = 0x00 | ((year / 10) << 4) | (year % 10);
-		//newVals[7] = 0x00 | (((newDateTime->tm_year - 100) / 10) << 4) | ((newDateTime->tm_mday - 100) % 10);
 		Device->write(_bus, DS1307_DEV_ADDR, 8, newVals);
 		delete newVals;
 	}

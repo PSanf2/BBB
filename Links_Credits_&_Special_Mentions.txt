@@ -1,0 +1,24 @@
+References, Credits, and Special Mentions:
+
+DS1307 References
+	* Manufacturer Datasheet (http://www.mouser.com/ds/2/256/DS1307-99500.pdf)
+	* DS1307 Real Time Clock Breakout Board Kit (https://learn.adafruit.com/ds1307-real-time-clock-breakout-board-kit?view=all)
+	* Adding a Real Time Clock to BeagleBone Black (https://learn.adafruit.com/adding-a-real-time-clock-to-beaglebone-black?view=all)
+
+Derek Molloy<br>
+	* Exploring BeagleBone (http://www.exploringbeaglebone.com/)
+
+Bill Earl<br>
+	* Adafruit 16-Channel Servo Drive with Arduino (https://learn.adafruit.com/16-channel-pwm-servo-driver)<br>
+	* Adafruit 4-Channel ADC Breakouts (https://learn.adafruit.com/adafruit-4-channel-adc-breakouts)
+
+Kevin Townsend<br>
+	* Adafruit LSM9DS0 Accelerometer + Gyro + Magnetometer 9-DOF Breakouts (https://learn.adafruit.com/adafruit-lsm9ds0-accelerometer-gyro-magnetometer-9-dof-breakouts)
+
+Lady Ada<br>
+	* Adafruit TCA9548A 1-to-8 I2C Multiplexer Breakout (https://learn.adafruit.com/adafruit-tca9548a-1-to-8-i2c-multiplexer-breakout)
+
+Adafruit Customer Support Team (http://forums.adafruit.com/)<br>
+	* adafruit_support_mike
+	* adafruit_support_rick
+	* adafruit_support_bill

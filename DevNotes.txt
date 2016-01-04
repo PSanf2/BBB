@@ -103,7 +103,7 @@ that the chips are only going to be able to perform a limited number
 of functions without jumping each line to VCC through a resistor. YUP! 
 I should be putting a resistor between each I2C bus line and VCC. 
 It'll be between 1Kohm an 10Kohm on each of them. The values affect 
-the communication speed. One source recommends 1k8 as giving the best 
+the communication speed. One source recommends 1k as giving the best 
 value. Not having this set up on the bus lines is the reason the 
 ADS1X15 boards won't work unless they're jacked directly into the BBB 
 with a very short piece of wire. The resistance of the wire is causing 

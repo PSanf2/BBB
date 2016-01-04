@@ -2,45 +2,13 @@
 
 Author: Patrick Sanford<br>
 Email: PatrickSanford@live.com<br>
-Date: Dec 14, 2015
+Date: Jan 3, 2016
 
-This repository is for my attempts to write drivers for the Beagle Bone Black to allow the microcontroller to interact with breakout boards sold by Adafruit.
-
-You may need to make obj and bin directories.
-
-All of the files are named *_Singleton.[h/cpp], but this is a styling convention. The only real singleton in the system is the I2C_IO_Singleton. All of the other classes rely on this. You can create multiple objects for the remaining classes, but I wouldn't advise it unless you're dealing with multiple real physical boards. When you instantiate an object you'll need to provide the I2C bus, and device address (if it's selectable). Don't connect multiple devices with the same address to the same bus or you'll have a bad time. By default the BBB only has one I2C bus available to the user. There is a bus that's used by the HDMI output that you don't want to mess with unless you're willing to disable the video.
-
-On the BeagleBoneBlack P9 header you can use four pins to communicate and power I2C breakout boards. My code is written assuming the boards are being powered by 5v.
+This repository is for my attempts to write I2C drivers for the BeagleBone Black. On the BeagleBoneBlack P9 header you can use four pins to power communicate with I2C devices. My code is written assuming the boards are being powered by 5v. Different I2C devices use differnt logic voltage levels, and you must consult with manufacturer provided documentation to determine the proper voltage to use with your device. When connecting an I2C device to the BeagleBone Black you should use pull-up resistors on the SCL and SDA lines. The I2C specification states that I2C devices may pull the lines to low, but not to high. I've had success using pull-up resistor values of 1k and 2.2k for this purpose. You must consult with the manufacturer provided documentation to determine the proper pull-up resistor values to use for a specific device. My code uses a common singleton object along with the "everything is a file" concept to read and write data via an I2C bus to a variety of devices. My I2C devices have primaily been sourced from Adafruit Industries in the form of breakout boards. My documentation is patchy, and incomplete. Where possible I've attempted to include links to relevant information in another file.
 
 P9, 01 => DGND<br>
 P9, 07 => SYS_5V<br>
 P9, 19 => I2C2_SCL<br>
 P9, 20 => I2C2_SDA<br>
 
---- CAUTION! ---<br>
-SCL and SDA should be wired to SYS_5V through 1Kohm pullup resistors.<br>
-**USERS ARE ADVISED TO VERIFY THIS WITH AN INDEPENDENT SOURCE!**<br>
-It worked for me. Read the disclaimer at the beginning of this file.<br>
---- /CAUTION! ---
-
-I have used these pin configurations to succesfully test my code using PCA9685, LSM9DS0, ADS1015, ADS1115, and TCS9548A breakout boards. Your results may vary. I have been able to test this code with multiple breakout boards connected to the same I2C bus successfully.
-
-References, Credits, and Special Mentions:
-
-Derek Molloy<br>
-	* Exploring BeagleBone (http://www.exploringbeaglebone.com/)
-
-Bill Earl<br>
-	* Adafruit 16-Channel Servo Drive with Arduino (https://learn.adafruit.com/16-channel-pwm-servo-driver)<br>
-	* Adafruit 4-Channel ADC Breakouts (https://learn.adafruit.com/adafruit-4-channel-adc-breakouts)
-
-Kevin Townsend<br>
-	* Adafruit LSM9DS0 Accelerometer + Gyro + Magnetometer 9-DOF Breakouts (https://learn.adafruit.com/adafruit-lsm9ds0-accelerometer-gyro-magnetometer-9-dof-breakouts)
-
-Lady Ada<br>
-	* Adafruit TCA9548A 1-to-8 I2C Multiplexer Breakout (https://learn.adafruit.com/adafruit-tca9548a-1-to-8-i2c-multiplexer-breakout)
-
-Adafruit Customer Support Team (http://forums.adafruit.com/)<br>
-	* adafruit_support_mike
-	* adafruit_support_rick
-	* adafruit_support_bill
+I have used these pin configurations to succesfully test my code using PCA9685, LSM9DS0, ADS1015, ADS1115, and TCS9548A breakout boards from Adafruit. I have also tested my code agaist a DS1307 chip on a breadboard. Your results may vary. I have been able to test this code with multiple breakout boards connected to the same I2C bus successfully.<br>

@@ -1,4 +1,4 @@
-#include "ADS1X15_Singleton.h"
+#include "ADS1X15.h"
 
 #include <unistd.h> // pulls in usleep()
 #include <cstdio>	// pulls in printf()
@@ -8,7 +8,7 @@ using namespace std;
 namespace PatricksDrivers {
 	
 	// Class ADS1015
-	ADS1015_Singleton::ADS1015_Singleton(unsigned char bus = 1, unsigned char addr = ADS1015_ADDRESS) {
+	ADS1015::ADS1015(unsigned char bus = 1, unsigned char addr = ADS1015_ADDRESS) {
 		Device = I2C_IO_Singleton::getInstance();
 		_bus = bus;
 		_addr = addr;
@@ -17,11 +17,11 @@ namespace PatricksDrivers {
 		_gain = GAIN_TWOTHIRDS;
 	}
 	
-	ADS1015_Singleton::~ADS1015_Singleton() {
+	ADS1015::~ADS1015() {
 		
 	}
 	
-	unsigned int ADS1015_Singleton::readADC_SingleEnded(unsigned char channel) {
+	unsigned int ADS1015::readADC_SingleEnded(unsigned char channel) {
 		if (channel > 3)
 			return 0;
 		
@@ -78,7 +78,7 @@ namespace PatricksDrivers {
 		return result;
 	}
 	
-	int ADS1015_Singleton::readADC_Differential_0_1() {
+	int ADS1015::readADC_Differential_0_1() {
 		// Start with default values
 		unsigned int config = ADS1015_REG_CONFIG_CQUE_NONE | // Disable the comparator (default val)
 			ADS1015_REG_CONFIG_CLAT_NONLAT  | // Non-latching (default val)
@@ -130,7 +130,7 @@ namespace PatricksDrivers {
 		}
 	}
 	
-	int ADS1015_Singleton::readADC_Differential_2_3() {
+	int ADS1015::readADC_Differential_2_3() {
 		// Start with default values
 		unsigned int config = ADS1015_REG_CONFIG_CQUE_NONE | // Disable the comparator (default val)
 			ADS1015_REG_CONFIG_CLAT_NONLAT  | // Non-latching (default val)
@@ -187,7 +187,7 @@ namespace PatricksDrivers {
 	 * then please contact the author of the git repository.
 	 * https://github.com/PSanf2/BBB
 	 */
-	void ADS1015_Singleton::startComparator_SingleEnded(unsigned char channel, unsigned int threshold) {
+	void ADS1015::startComparator_SingleEnded(unsigned char channel, unsigned int threshold) {
 		// Start with default values
 		unsigned int config = ADS1015_REG_CONFIG_CQUE_1CONV   | // Comparator enabled and asserts on 1 match
 			ADS1015_REG_CONFIG_CLAT_LATCH   | // Latching mode
@@ -243,7 +243,7 @@ namespace PatricksDrivers {
 	 * then please contact the author of the git repository.
 	 * https://github.com/PSanf2/BBB
 	 */
-	int ADS1015_Singleton::getLastConversionResults() {
+	int ADS1015::getLastConversionResults() {
 		// Wait for the conversion to complete
 		usleep(_convDelay * 1000);
 		
@@ -270,16 +270,16 @@ namespace PatricksDrivers {
 		}
 	}
 	
-	void ADS1015_Singleton::setGain(adsGain_t gain) {
+	void ADS1015::setGain(adsGain_t gain) {
 		_gain = gain;
 	}
 	
-	adsGain_t ADS1015_Singleton::getGain() {
+	adsGain_t ADS1015::getGain() {
 		return _gain;
 	}
 	
 	// Class ADS1115 (child class of ADS1015)
-	ADS1115_Singleton::ADS1115_Singleton(unsigned char bus = 1, unsigned char addr = ADS1015_ADDRESS) {
+	ADS1115::ADS1115(unsigned char bus = 1, unsigned char addr = ADS1015_ADDRESS) {
 		Device = I2C_IO_Singleton::getInstance();
 		_bus = bus;
 		_addr = addr;

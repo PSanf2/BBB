@@ -2,7 +2,7 @@
 #include <cstdio>		// pulls in printf()
 #include <cstdlib>		// lets me use system()
 
-#include "ADS1X15_Singleton.h"
+#include "ADS1X15.h"
 
 using namespace std;
 
@@ -46,7 +46,7 @@ void getDecInput(unsigned int *ptr) {
 void ADS1015_main(unsigned char bus, unsigned char addr) {
 	unsigned int menu_choice, channel;
 	
-	PatricksDrivers::ADS1015_Singleton SensorBoard(bus, addr);
+	PatricksDrivers::ADS1015 SensorBoard(bus, addr);
 	
 	do {
 		
@@ -84,7 +84,7 @@ void ADS1015_main(unsigned char bus, unsigned char addr) {
 void ADS1115_main(unsigned char bus, unsigned char addr) {
 	unsigned int menu_choice, channel;
 	
-	PatricksDrivers::ADS1115_Singleton SensorBoard(bus, addr);
+	PatricksDrivers::ADS1115 SensorBoard(bus, addr);
 	
 	do {
 		

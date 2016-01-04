@@ -1,10 +1,10 @@
-#include "LSM9DS0_Singleton.h"
+#include "LSM9DS0.h"
 
 using namespace std;
 
 namespace PatricksDrivers {
 	
-	LSM9DS0_Singleton::LSM9DS0_Singleton(
+	LSM9DS0::LSM9DS0(
 		unsigned char bus,
 		lsm9ds0AccelRange_t accelRange,
 		lsm9ds0MagGain_t magGain,
@@ -124,11 +124,11 @@ namespace PatricksDrivers {
 		
 	} // constructor
 	
-	LSM9DS0_Singleton::~LSM9DS0_Singleton() {
+	LSM9DS0::~LSM9DS0() {
 		
 	}
 	
-	void LSM9DS0_Singleton::readAccel() {
+	void LSM9DS0::readAccel() {
 		unsigned char* result = new unsigned char[6];
 		Device->read(_bus, LSM9DS0_ADDRESS_ACCELMAG, 0x80 | LSM9DS0_REGISTER_OUT_X_L_A, 6, result);
 		
@@ -165,7 +165,7 @@ namespace PatricksDrivers {
 		acceleration.z *= SENSORS_GRAVITY_STANDARD;
 	}
 	
-	void LSM9DS0_Singleton::readMag() {
+	void LSM9DS0::readMag() {
 		unsigned char* result = new unsigned char[6];
 		Device->read(_bus, LSM9DS0_ADDRESS_ACCELMAG, 0x80 | LSM9DS0_REGISTER_OUT_X_L_M, 6, result);
 		
@@ -199,7 +199,7 @@ namespace PatricksDrivers {
 		magnetic.z /= 1000;
 	}
 	
-	void LSM9DS0_Singleton::readGyro() {
+	void LSM9DS0::readGyro() {
 		unsigned char* result = new unsigned char[6];
 		Device->read(_bus, LSM9DS0_ADDRESS_GYRO, 0x80 | LSM9DS0_REGISTER_OUT_X_L_G, 6, result);
 		
@@ -228,7 +228,7 @@ namespace PatricksDrivers {
 		gyroscopic.z = gyroData.z * _gyro_dps_digit;
 	}
 	
-	void LSM9DS0_Singleton::readTemp() {
+	void LSM9DS0::readTemp() {
 		unsigned char* result = new unsigned char[2];
 		Device->read(_bus, LSM9DS0_ADDRESS_ACCELMAG, 0x80 | LSM9DS0_REGISTER_TEMP_OUT_L_XM, 2, result);
 				

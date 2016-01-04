@@ -1,5 +1,5 @@
-#ifndef __LSM9DS0_SINGLETON_H
-#define __LSM9DS0_SINGLETON_H
+#ifndef __LSM9DS0_H
+#define __LSM9DS0_H
 
 #include "../lib/I2C_IO_Singleton.h"
 #include <cstdio>
@@ -149,7 +149,7 @@ namespace PatricksDrivers {
 		LSM9DS0_G_ID = 0b11010100
 	} lsm9ds0DeviceInfo;
 	
-	class LSM9DS0_Singleton {
+	class LSM9DS0 {
 		private:
 			I2C_IO_Singleton* Device;
 			float _accel_mg_lsb;
@@ -172,13 +172,13 @@ namespace PatricksDrivers {
 			lsm9ds0Vector_t gyroData;
 			short tempData;
 			
-			LSM9DS0_Singleton(
+			LSM9DS0(
 				unsigned char bus,
 				lsm9ds0AccelRange_t accelRange,
 				lsm9ds0MagGain_t magGain,
 				lsm9ds0GyroScale_t gyroScale
 			); // constructor
-			~LSM9DS0_Singleton();
+			~LSM9DS0();
 			void readAccel();
 			void readMag();
 			void readGyro();

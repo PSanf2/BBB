@@ -2,7 +2,7 @@
 #include <cstdio>		// pulls in printf()
 #include <cstdlib>		// lets me use system()
 
-#include "LSM9DS0_Singleton.h"
+#include "LSM9DS0.h"
 
 using namespace std;
 
@@ -49,7 +49,7 @@ void getDecInput(unsigned int *ptr) {
 
 int main(int argc, char* argv[]) {
 	
-	PatricksDrivers::LSM9DS0_Singleton SensorBoard(
+	PatricksDrivers::LSM9DS0 SensorBoard(
 		1,
 		PatricksDrivers::LSM9DS0_ACCELRANGE_2G,
 		PatricksDrivers::LSM9DS0_MAGGAIN_2GAUSS,

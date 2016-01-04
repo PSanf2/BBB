@@ -1,4 +1,4 @@
-#include "PCA9685_Singleton.h"
+#include "PCA9685.h"
 
 #include <cstdio>	// pulls in read()
 #include <math.h>	// pulls in round()
@@ -9,13 +9,13 @@ using namespace std;
 
 namespace PatricksDrivers {
 	
-	PCA9685_Singleton::PCA9685_Singleton(unsigned char bus, unsigned char addr) {
+	PCA9685::PCA9685(unsigned char bus, unsigned char addr) {
 		Device = I2C_IO_Singleton::getInstance();
 		_bus = bus;
 		_addr = addr;
 	}
 	
-	void PCA9685_Singleton::setRefresh(unsigned char rate) {
+	void PCA9685::setRefresh(unsigned char rate) {
 		// calculate the new prescale value
 		// convert it to the proper data type
 		unsigned char pre_val = (unsigned char) (round(OSC_CLOCK / (4096 * rate)) - 1);
@@ -27,7 +27,7 @@ namespace PatricksDrivers {
 		Device->writeRegister(_bus, _addr, PRE_SCALE, pre_val);
 	}
 	
-	void PCA9685_Singleton::wake() {
+	void PCA9685::wake() {
 		// clear the sleep bit (4)
 		// writing a 0 to the restart bit (7) does not affect it.
 		unsigned char* mode = new unsigned char[1];
@@ -52,7 +52,7 @@ namespace PatricksDrivers {
 		delete mode;
 	}
 	
-	void PCA9685_Singleton::sleep() {
+	void PCA9685::sleep() {
 		// I'm not going to worry about a graceful shutdown to prevent
 		// the reset bit from being set. when the chip is put into sleep
 		// mode without clearing the PWM bits the registers will hold
@@ -67,7 +67,7 @@ namespace PatricksDrivers {
 		delete mode;
 	}
 	
-	void PCA9685_Singleton::reset() {
+	void PCA9685::reset() {
 		// I want this function to perform a software reset of the board.
 		// According to the datasheet I need to make a some special
 		// writes onto the I2C bus. I'll need to be able to send the
@@ -90,7 +90,7 @@ namespace PatricksDrivers {
 		Device->writeRegister(_bus, 0x00, 0x00, 0x06);
 	}
 	
-	void PCA9685_Singleton::setPWM(unsigned char channel, unsigned int on, unsigned int off) {
+	void PCA9685::setPWM(unsigned char channel, unsigned int on, unsigned int off) {
 		unsigned int ledN_on_l = LED0_ON_L+4*channel;
 		Device->writeRegister(_bus, _addr, ledN_on_l, on);
 		Device->writeRegister(_bus, _addr, ledN_on_l + 1, on >> 8);
@@ -98,14 +98,14 @@ namespace PatricksDrivers {
 		Device->writeRegister(_bus, _addr, ledN_on_l + 3, off >> 8);
 	}
 	
-	void PCA9685_Singleton::setAllPWM(unsigned int on, unsigned int off) {
+	void PCA9685::setAllPWM(unsigned int on, unsigned int off) {
 		Device->writeRegister(_bus, _addr, ALL_LED_ON_L, on);
 		Device->writeRegister(_bus, _addr, ALL_LED_ON_H, on >> 8);
 		Device->writeRegister(_bus, _addr, ALL_LED_OFF_L, off);
 		Device->writeRegister(_bus, _addr, ALL_LED_OFF_H, off >> 8);
 	}
 	
-	PCA9685_Singleton::~PCA9685_Singleton() {
+	PCA9685::~PCA9685() {
 		
 	}
 	

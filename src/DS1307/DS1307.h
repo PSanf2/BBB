@@ -55,7 +55,7 @@ namespace PatricksDrivers {
 			void toggle_SQWE();
 			bool SQWE_enabled();
 			template <class T> void write_RAM(unsigned char start_addr, T val);
-			template <class T*> T* read_RAM(unsigned char start_addr, T* result);
+			template <class T> void read_RAM(unsigned char start_addr, T result);
 			 
 	}; // class
 	
@@ -112,8 +112,31 @@ namespace PatricksDrivers {
 		delete newVals;
 	}
 	
-	template <class T*> T* DS1307::read_RAM(unsigned char start_addr, T* result) {
-		return result;
+	template <class T> void DS1307::read_RAM(unsigned char start_addr, T result) {
+		// make sure my starting address is valid
+		if (start_addr < 0x08)
+			return;
+		
+		// make sure the end address is valid
+		if ((start_addr + sizeof(*result) - 1) > 0x3F)
+			return;
+		
+		// clear the current value in *result
+		*result = 0;
+		
+		// create an array to hold the results off the chip
+		unsigned char* vals = new unsigned char[sizeof(*result)];
+		
+		// read the proper number of bytes off the chip
+		Device->read(_bus, DS1307_DEV_ADDR, start_addr, sizeof(*result), vals);
+		
+		// or shift each byte of the read values into the result variable
+		for (int i = 0; i < sizeof(*result); i++) {
+			*result |= (vals[i] << (8 * i));
+		}
+		
+		// clean up
+		delete vals;
 	}
 	
 } // namespace

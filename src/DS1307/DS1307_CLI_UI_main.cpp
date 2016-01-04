@@ -181,6 +181,47 @@ int main(int argc, char* argv[]) {
 			
 			case 9:
 				//9) Memory Read
+				printf("\n-----MEMORY READ-----");
+				// get a reasonable start addr
+				printf("\nStart register must be between 0x08 and 0x3F.");
+				printf("\nINPUT START REGISTER ADDRESS IN HEX: ");
+				getHexInput(&start_addr);
+				while (start_addr < 0x08 || start_addr > 0x3F) {
+					printf("\nINVALID START REGISTER");
+					printf("\nStart register must be between 0x08 and 0x3F.");
+					printf("\nINPUT START REGISTER ADDRESS IN HEX: ");
+					getHexInput(&start_addr);
+				}
+				// get a valid size selection
+				printf("\n1) unsigned char (1 byte)");
+				printf("\n2) unsigned short (2 bytes)");
+				printf("\n3) unsigned int (4 bytes)");
+				printf("\n4) unsigned long (4 bytes)");
+				printf("\nINPUT SIZE SELECTION: ");
+				getDecInput(&ram_choice);
+				while (ram_choice < 1 || ram_choice > 4) {
+					printf("\nINVALID SIZE SELECTION");
+					printf("\nINPUT SIZE SELECTION: ");
+					getDecInput(&ram_choice);
+				}
+				switch (ram_choice) {
+					case 1:
+						RTClock.read_RAM<unsigned char*>((unsigned char) start_addr, &my_char);
+						printf("\nunsigned char: 0x%X", my_char);
+					break;
+					case 2:
+						RTClock.read_RAM<unsigned short*>((unsigned short) start_addr, &my_short);
+						printf("\nunsigned short: 0x%X", my_short);
+					break;
+					case 3:
+						RTClock.read_RAM<unsigned int*>((unsigned int) start_addr, &my_int);
+						printf("\nunsigned int: 0x%X", my_int);
+					break;
+					case 4:
+						RTClock.read_RAM<unsigned long*>((unsigned long) start_addr, &my_long);
+						printf("\nunsigned long: 0x%X", my_long);
+					break;
+				}
 			break;
 			
 			case 10:

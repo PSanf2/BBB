@@ -2,7 +2,7 @@
 #include <cstdio>		// pulls in printf()
 #include <cstdlib>		// lets me use system()
 
-#include "TCA9548A_Singleton.h"
+#include "TCA9548A.h"
 
 using namespace std;
 
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 	printf("Input device address in hex: ");
 	getHexInput(&addr);
 	
-	PatricksDrivers::TCA9548A_Singleton I2CMultiplexer(bus, addr);
+	PatricksDrivers::TCA9548A I2CMultiplexer(bus, addr);
 	
 	system("clear");
 	

@@ -1,4 +1,4 @@
-#include "TCA9548A_Singleton.h"
+#include "TCA9548A.h"
 
 #include <cstdio>	// pulls in printf()
 
@@ -6,17 +6,17 @@ using namespace std;
 
 namespace PatricksDrivers {
 	
-	TCA9548A_Singleton::TCA9548A_Singleton(unsigned char bus, unsigned char addr) {
+	TCA9548A::TCA9548A(unsigned char bus, unsigned char addr) {
 		Device = I2C_IO_Singleton::getInstance();
 		_bus = bus;
 		_addr = addr;
 	}
 	
-	TCA9548A_Singleton::~TCA9548A_Singleton() {
+	TCA9548A::~TCA9548A() {
 		
 	}
 	
-	void TCA9548A_Singleton::select(unsigned char channel) {
+	void TCA9548A::select(unsigned char channel) {
 		if (channel > 7)
 			return;
 		
@@ -26,7 +26,7 @@ namespace PatricksDrivers {
 		delete vals;
 	}
 	
-	void TCA9548A_Singleton::enable(unsigned char channel) {
+	void TCA9548A::enable(unsigned char channel) {
 		if (channel > 7)
 			return;
 		
@@ -43,7 +43,7 @@ namespace PatricksDrivers {
 		delete vals;
 	}
 	
-	void TCA9548A_Singleton::disable(unsigned char channel) {
+	void TCA9548A::disable(unsigned char channel) {
 		if (channel > 7)
 			return;
 		
@@ -60,14 +60,14 @@ namespace PatricksDrivers {
 		delete vals;
 	}
 	
-	void TCA9548A_Singleton::disableAll() {
+	void TCA9548A::disableAll() {
 		unsigned char* vals = new unsigned char[1];
 		vals[0] = 0;
 		Device->write(_bus, _addr, 1, vals);
 		delete vals;
 	}
 	
-	unsigned char TCA9548A_Singleton::current() {
+	unsigned char TCA9548A::current() {
 		unsigned char* val = new unsigned char[1];
 		Device->read(_bus, _addr, 1, val);
 		unsigned char result = val[0];
@@ -75,7 +75,7 @@ namespace PatricksDrivers {
 		return result;
 	}
 	
-	bool TCA9548A_Singleton::enabled(unsigned char channel) {
+	bool TCA9548A::enabled(unsigned char channel) {
 		if (channel > 7)
 			return false;
 

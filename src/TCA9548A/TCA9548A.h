@@ -6,14 +6,14 @@
 
 namespace PatricksDrivers {
 	
-	class TCA9548A_Singleton {
+	class TCA9548A {
 		private:
 			I2C_IO_Singleton* Device;
 			unsigned char _bus;
 			unsigned char _addr;
 		public:
-			TCA9548A_Singleton(unsigned char bus, unsigned char addr);
-			~TCA9548A_Singleton();
+			TCA9548A(unsigned char bus, unsigned char addr);
+			~TCA9548A();
 			void select(unsigned char channel);
 			void enable(unsigned char channel);
 			void disable(unsigned char channel);

@@ -8,28 +8,24 @@ namespace PatricksDrivers {
 	
 	#define DS1307_DEV_ADDR 0x68
 	
-	typedef enum
-	{
+	typedef enum {
 		AM = 0,
 		PM = 1
 	} meridian_t;
 	
-	typedef enum
-	{
+	typedef enum {
 		TWENTYFOURHOURMODE = 0,
 		TWELVEHOURMODE = 1
 	} hourMode_t;
 	
-	typedef enum
-	{
+	typedef enum {
 		ONE_HZ = 0x0,
 		FOUR_KHZ = 0x1,
 		EIGHT_KHZ = 0x2,
 		THIRTYTWO_KHZ = 0x3
 	} rateSelect_t;
 	
-	typedef enum
-	{
+	typedef enum {
 		LOW = 0,
 		HIGH = 1
 	} out_t;

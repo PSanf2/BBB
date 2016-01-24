@@ -84,11 +84,59 @@ namespace PatricksDrivers {
 	}
 	
 	GPIO_DIRECTION GPIO_Singleton::GPIO_Pin::getDirection() {
-		return INPUT;
+		// build full path to file
+		string path = GPIO_PATH;
+		stringstream s;
+		s << _info.gpio;
+		string path2 = "gpio" + s.str() + "/";
+		string filename = "direction";
+		string full_path = path + path2 + filename;
+		
+		// open the file
+		ifstream fs;
+		fs.open(full_path.c_str());
+		if (!fs.is_open()) {
+			printf("\ngetDirection failed: Failed to open file");
+		}
+		string val;
+		// read file
+		getline(fs, val);
+		// close file
+		fs.close();
+		
+		// evaluate and return
+		if (val == "in")
+			return INPUT;
+		else
+			return OUTPUT;
 	}
 	
 	GPIO_VALUE GPIO_Singleton::GPIO_Pin::getValue() {
-		return HIGH;
+		// build full path to file
+		string path = GPIO_PATH;
+		stringstream s;
+		s << _info.gpio;
+		string path2 = "gpio" + s.str() + "/";
+		string filename = "value";
+		string full_path = path + path2 + filename;
+		
+		// open the file
+		ifstream fs;
+		fs.open(full_path.c_str());
+		if (!fs.is_open()) {
+			printf("\ngetValue failed: Failed to open file");
+		}
+		string val;
+		// read file
+		getline(fs, val);
+		// close file
+		fs.close();
+		
+		// evaluate and return
+		if (val == "1")
+			return HIGH;
+		else
+			return LOW;
 	}
 	
 	const char* GPIO_Singleton::GPIO_Pin::getName() {

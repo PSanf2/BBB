@@ -1,5 +1,7 @@
 #include "LED.h"
 
+#include <cstdio>	// pulls in printf()
+
 using namespace std;
 
 namespace PatricksDrivers {

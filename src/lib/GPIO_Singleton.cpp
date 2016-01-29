@@ -165,7 +165,7 @@ namespace PatricksDrivers {
 	}
 	
 	GPIO_Singleton::~GPIO_Singleton() {
-		delete GPIO_Singleton_instance;
+		
 	}
 	
 	int GPIO_Singleton::exportGPIO(int gpio) {

@@ -32,6 +32,10 @@ I'll end up with one for analog pins, one for GPIO, and one for PWM
 GPIO's don't use the device tree. analog and PWM do.
 
 Life is a learning experience.
+My code is suffering from some of the same flaws that Python code has.
+You have to do sudo su before you can run anything. I believe this can be overcome. The Adafruit code doesn't mention trying to get around this, and was only developer tested with root. Molloy addresses the shortcoming, noting that it's due to Linux permissions, and offers a possible workaround. I'll need to test this.
+There are memory leaks when the program terminates. With the Python code it's leaving things hanging on the device tree, and failing to clean up after itself. My code looks like an improperly implemented singleton template that results in the singleton object destructor never being called (and thus never deleting the instance from memory). Some of this can be mitigated by the programmer being smart about his own garbage collection from the calling code. The ultimate solution will be to redo the way I have the static pointer instance variable set up, and altering getInstance. I'm using a Gamma Singleton pattern. What I'm looking at as a memory leak is being cleaned up by the OS when the program quits. That's why the destructors are never called. The alternative pattern is the Meyers singleton, which I'll need to examine. What I have is not a memory leak. The OS will clean up the instances that have been allocated, but I need to explicitly clean up after myself. If I really wanted to get stupid with making sure a single destructor is called then there are some wonkly things I can do with friend classes that involve explicitly destroy the singleton when the friend goes out of scope. The Meyers singleton has been documented as acutally not being thread safe, and possibly causing real memory leaks.
+
 
 ------------------------------------------------------------------------
 

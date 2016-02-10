@@ -43,6 +43,18 @@ It looks like the program has been into the system path, so it's available from 
 I'm having an issue unloading the device tree overlay. When I try to unload an overlay it causes a kernel panic that kills the terminal session. According to Adafruit this is a bug, but should have already been corrected. The recommended workaround is rebooting the BBB instead of attempting to remove the overlay.
 
 The bottom line is config-pin in pretty awesome, and will probably work for all of my pin configuration needs. Instead of fucking around with device tree overlays I should just use config-pin, and the overlays it comes with.
+I need to see if Malloy's method of getting around using the root user works.
+If it does, then I just need to set up the cape-universaln overlay to deploy at boot.
+From there, my programs will be able to export pins as needed by writing to files.
+Screwing with the MUX settings may involve system calls to config-pin, or writing to files.
+If Malloy's methods don't work then I may be able to get around the root user issue by screwing with the permissions on various files.
+You can call config-pin without needing to be root, but you need to use the full path to call the program. You still can't export, or unexport anything without being root.
+
+Why do you need to be root to do fun stuff?
+You need to be root to load a device tree overlay because it's something that's screwing with the way the system is configured to interact with hardware. This is sane from the OS perspective.
+All of the directories that deal with exporting and unexporting pins are created under the /sys/class directory, and inherit the permissions of their parent directory. This is sane from the OS perspective. When working in Linux, everything is a file. This is sane because it makes an OS a lot easier to program, and works well.
+Linux was programmed, and intended to be, a multi-user system. That's where thing start failing to be sane.
+On the BBB, most people are interacting with the system through SSH, and using root. When the DTO system was implemented on the BBB it was decided that the programmers would interact with pins by writing to the "files" in the /sys/class/<blah>/ because that's where the system was going to mount them anyway. The fact that people were using root didn't matter because nobody was really thinking about needing to use other accounts. The intention is that you'll SSH into the BBB, configure the DTOs to load at boot time, and start whatever programs you want to run as root. When the BBB is intended to be left chugging away on its own without human supervision for long periods this is an acceptable method to do things. If you're actually wanting to follow good practices, and write a program that will work properly within the OS security constraints, you're pretty much fucked.
 
 
 ------------------------------------------------------------------------

@@ -36,6 +36,36 @@ My code is suffering from some of the same flaws that Python code has.
 You have to do sudo su before you can run anything. I believe this can be overcome. The Adafruit code doesn't mention trying to get around this, and was only developer tested with root. Molloy addresses the shortcoming, noting that it's due to Linux permissions, and offers a possible workaround. I'll need to test this.
 There are memory leaks when the program terminates. With the Python code it's leaving things hanging on the device tree, and failing to clean up after itself. My code looks like an improperly implemented singleton template that results in the singleton object destructor never being called (and thus never deleting the instance from memory). Some of this can be mitigated by the programmer being smart about his own garbage collection from the calling code. The ultimate solution will be to redo the way I have the static pointer instance variable set up, and altering getInstance. I'm using a Gamma Singleton pattern. What I'm looking at as a memory leak is being cleaned up by the OS when the program quits. That's why the destructors are never called. The alternative pattern is the Meyers singleton, which I'll need to examine. What I have is not a memory leak. The OS will clean up the instances that have been allocated, but I need to explicitly clean up after myself. If I really wanted to get stupid with making sure a single destructor is called then there are some wonkly things I can do with friend classes that involve explicitly destroy the singleton when the friend goes out of scope. The Meyers singleton has been documented as acutally not being thread safe, and possibly causing real memory leaks.
 
+Controlling PWM with the config-pin utility is the way to go.
+It will possibly also work for GPIOs.
+The source is in /opt/source/beaglebone-universal-io.
+It looks like the program has been into the system path, so it's available from everywhere.
+I'm having an issue unloading the device tree overlay. When I try to unload an overlay it causes a kernel panic that kills the terminal session. According to Adafruit this is a bug, but should have already been corrected. The recommended workaround is rebooting the BBB instead of attempting to remove the overlay.
+
+The bottom line is config-pin in pretty awesome, and will probably work for all of my pin configuration needs. Instead of fucking around with device tree overlays I should just use config-pin, and the overlays it comes with.
+
+
+------------------------------------------------------------------------
+
+SET UP SLOTS AND PINS FIRST!
+It is possible to load device tree overlays directly into /sys/devices/bone_capemgr.9/slots.
+debian@beaglebone:~/git-repos/BBB$ export SLOTS=/sys/devices/bone_capemgr.9/slots
+debian@beaglebone:~/git-repos/BBB$ export PINS=/sys/kernel/debug/pinctrl/44e10800.pinmux/pins
+debian@beaglebone:~/git-repos/BBB$ cat $SLOTS
+ 0: 54:PF--- 
+ 1: 55:PF--- 
+ 2: 56:PF--- 
+ 3: 57:PF--- 
+ 4: ff:P-O-L Bone-LT-eMMC-2G,00A0,Texas Instrument,BB-BONE-EMMC-2G
+ 5: ff:P-O-L Bone-Black-HDMI,00A0,Texas Instrument,BB-BONELT-HDMI
+debian@beaglebone:~/git-repos/BBB$ cat $PINS
+cat: /sys/kernel/debug/pinctrl/44e10800.pinmux/pins: Permission denied
+debian@beaglebone:~/git-repos/BBB$ sudo cat $PINS
+registered pins: 142
+pin 0 (44e10800) 00000031 pinctrl-single 
+pin 1 (44e10804) 00000031 pinctrl-single 
+pin 2 (44e10808) 00000031 pinctrl-single 
+...
 
 ------------------------------------------------------------------------
 
@@ -64,4 +94,116 @@ root@beaglebone:/sys/class/gpio# ls
 export	gpiochip0  gpiochip32  gpiochip64  gpiochip96  unexport
 root@beaglebone:/sys/class/gpio# exit
 exit
-debian@beaglebone:~$ 
+debian@beaglebone:~$
+
+------------------------------------------------------------------------
+
+CONTROLLING A PWM OUTPIT AS ROOT FROM THE TERMINAL
+In this example I'm attempting to use PWM to control an LED on P9_14.
+
+debian@beaglebone:~$ sudo su
+root@beaglebone:/home/debian# cat /sys/devices/bone_capemgr.9/slots
+ 0: 54:PF--- 
+ 1: 55:PF--- 
+ 2: 56:PF--- 
+ 3: 57:PF--- 
+ 4: ff:P-O-L Bone-LT-eMMC-2G,00A0,Texas Instrument,BB-BONE-EMMC-2G
+ 5: ff:P-O-L Bone-Black-HDMI,00A0,Texas Instrument,BB-BONELT-HDMI
+root@beaglebone:/home/debian# echo cape-universaln > /sys/devices/bone_capemgr.9/slots
+root@beaglebone:/home/debian# cat /sys/devices/bone_capemgr.9/slots
+ 0: 54:PF--- 
+ 1: 55:PF--- 
+ 2: 56:PF--- 
+ 3: 57:PF--- 
+ 4: ff:P-O-L Bone-LT-eMMC-2G,00A0,Texas Instrument,BB-BONE-EMMC-2G
+ 5: ff:P-O-L Bone-Black-HDMI,00A0,Texas Instrument,BB-BONELT-HDMI
+ 7: ff:P-O-L Override Board Name,00A0,Override Manuf,cape-universaln
+root@beaglebone:/home/debian# config-pin -l P9.14
+default gpio gpio_pu gpio_pd pwm
+root@beaglebone:/home/debian# cat /sys/devices/ocp.*/P9_14_pinmux.*/state
+default
+root@beaglebone:/home/debian# config-pin P9.14 pwm
+root@beaglebone:/home/debian# echo 3 > /sys/class/pwm/export 
+root@beaglebone:/home/debian# ls /sys/class/pwm
+export	pwm3  pwmchip0	pwmchip2  pwmchip3  pwmchip5  pwmchip7	unexport
+root@beaglebone:/home/debian# ls /sys/class/pwm/pwm3
+device	duty_ns  period_ns  polarity  power  run  subsystem  uevent
+root@beaglebone:/home/debian# echo 10000 > /sys/class/pwm/pwm3/period_ns 
+root@beaglebone:/home/debian# echo 5000 > /sys/class/pwm/pwm3/duty_ns 
+root@beaglebone:/home/debian# echo 1 > /sys/class/pwm/pwm3/run
+root@beaglebone:/home/debian# echo 1000 > /sys/class/pwm/pwm3/duty_ns 
+root@beaglebone:/home/debian# echo 0 > /sys/class/pwm/pwm3/run
+root@beaglebone:/home/debian# echo 3 > /sys/class/pwm/unexport 
+root@beaglebone:/home/debian# ls /sys/class/pwm
+export	pwmchip0  pwmchip2  pwmchip3  pwmchip5	pwmchip7  unexport
+root@beaglebone:/home/debian# echo -7 /sys/devices/bone_capemgr.9/slots
+-7 /sys/devices/bone_capemgr.9/slots
+root@beaglebone:/home/debian# echo -7 > /sys/devices/bone_capemgr.9/slots
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.745394] Internal error: Oops: 17 [#1] SMP THUMB2
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.823814] Process bash (pid: 1522, stack limit = 0xdaa6c240)
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.829991] Stack: (0xdaa6ddd8 to 0xdaa6e000)
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.844734] ddc0:                                                       dac20210 c0021789
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.854478] dde0: dac20210 c02ccf59 dac20210 dabd2a10 00000000 c02cdab7 00000000 dead4ead
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.863258] de00: df465100 dac20244 40000013 dac20210 dac20280 dac20210 40000013 00000004
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.876856] de20: 00000001 daa646e0 daca99d8 c02cde95 df465100 dac20210 c0899080 c0898090
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.885828] de40: 00000001 c02c73d5 df465100 dac20244 dac20210 c02c744d 00000000 df04943c
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.894592] de60: dac20210 c02c710f dac20210 dabd2a10 00000000 c02c5acf dac20200 dabd2a00
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.903446] de80: 00000000 c02c8507 dac20200 c02c86b1 dab5ca80 c03db207 dab5ca80 daa64718
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.912518] dea0: 00200200 daa64718 00100100 c03db2b5 df465100 daa646e0 00000015 daa646e8
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.921396] dec0: df0d9810 daa6e000 df0d9818 c03db56b de34cc10 df0d9800 00000000 c02d8337
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.930156] dee0: de0a6c20 00000007 de0a8b88 c02d9585 000aa630 daca99ec c08c09c0 22222222
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.946059] df00: 22222222 22222222 00000000 c02d934d c02c5121 de0a8b88 c051ff50 00000003
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  672.991239] df20: df0d9818 daca99d8 000b6c58 c02c512b daa6df80 c00fe2ad daa6c000 00000003
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  673.051376] df40: daa28200 c00fe205 000b2c08 daa6df80 00000000 c00bc323 da83acc0 c00c5fe5
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  673.097120] df60: daa28200 daa28200 00000000 000b2c08 00000003 00000000 00000000 c00bc521
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  673.124512] df80: 00000000 00000000 00000000 b6ecd5e0 00000003 000b2c08 00000004 c000c9e4
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  673.145767] dfa0: daa6c000 c000c841 b6ecd5e0 00000003 00000001 000b2c08 00000003 00000000
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  673.176075] dfc0: b6ecd5e0 00000003 000b2c08 00000004 bef0e4ac 000ad06c 000b6c59 000b6c58
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  673.209601] dfe0: 00000003 bef0e430 b6e3b905 b6e7506c 40000010 00000001 00000000 00000000
+
+Message from syslogd@beaglebone at Feb 10 17:33:38 ...
+ kernel:[  673.450671] Code: 4604 b108 f8d0 41c8 (7ee3) 2b01 
+debian@beaglebone:~$ cat /sys/devices/bone_capemgr.9/slots
+^C^K^X

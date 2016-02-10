@@ -4,8 +4,8 @@
 
 #include "LED.h"
 
-#define RED_LED_PIN "P8_09"
-#define GREEN_LED_PIN "P8_10"
+#define RED_LED_PIN "P8_14"
+#define GREEN_LED_PIN "P8_16"
 
 using namespace std;
 

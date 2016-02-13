@@ -55,7 +55,24 @@ You need to be root to load a device tree overlay because it's something that's 
 All of the directories that deal with exporting and unexporting pins are created under the /sys/class directory, and inherit the permissions of their parent directory. This is sane from the OS perspective. When working in Linux, everything is a file. This is sane because it makes an OS a lot easier to program, and works well.
 Linux was programmed, and intended to be, a multi-user system. That's where thing start failing to be sane.
 On the BBB, most people are interacting with the system through SSH, and using root. When the DTO system was implemented on the BBB it was decided that the programmers would interact with pins by writing to the "files" in the /sys/class/<blah>/ because that's where the system was going to mount them anyway. The fact that people were using root didn't matter because nobody was really thinking about needing to use other accounts. The intention is that you'll SSH into the BBB, configure the DTOs to load at boot time, and start whatever programs you want to run as root. When the BBB is intended to be left chugging away on its own without human supervision for long periods this is an acceptable method to do things. If you're actually wanting to follow good practices, and write a program that will work properly within the OS security constraints, you're pretty much fucked.
+After looking at nearly every way I can think of, there really isn't a good method to get around the issue.
+Ultimatly, apart from GPIOs, attempting to get around this is going to be a giant waste of time.
+If you write your own device tree overlay then you still need to be root to deploy it. Once it's deployed you need to be root to write to the /sys/class/<blah>/ files. It looks like the exceptions are the items in /dev/, which includes I2C.
 
+The Adafruit Python bullshit does have the saving grace is needing to rely on C++ in order to actually fucking work. This means I can fork their library, #include the relevant header files, have an easy time getting a lot of pins set up very quickly at run time, and it will work as long as it's being run by root.
+SOMEHOW that shit actually manages to load device tree overlays if you run a python script with sudo.
+That's well and good, but I still want to avoid getting python involved with my programs because of the performance issues scripting languages bring in to the picture.
+The I2C functionality in the Adafruit BBIO library is probably shit. Their documentation states that it's only compatable with python2. Their code is actually a fork of code that was written for the Raspberry Pi, and adapted for the BBB. It looks like I should be able to rip out the relevant C portions of the code, and simplify a lot of it. From there, I'll just need to run my programs as root.
+
+If I want to be very clever I'll set up some interprocess communication bullshit.
+Set up some files in a very specific directory.
+Create a group that will give users permissions to edit files in that directory.
+Add my user account to that group.
+Create a daemon that starts at run time under root.
+Have the daemon check the files in the directory for parameters to control it.
+Edit the files from the user accound to control the daemon.
+Ta-da! You can do a programmed set of tasks as root from a user account.
+I'll need to test this to see what's possible. If I can do this, then I'd just need to make an interface that would get the pins set up, and cleaned up as needed.
 
 ------------------------------------------------------------------------
 
@@ -111,6 +128,17 @@ debian@beaglebone:~$
 ------------------------------------------------------------------------
 
 CONTROLLING A PWM OUTPIT AS ROOT FROM THE TERMINAL
+
+EXPORT #	PIN NAME	PINS
+	0		EHRPWM0A	P9.22,P9.31
+	1		EHRPWM0B	P9.21,P9.29
+	2		ECAPPWM0	P9.42
+	3		EHRPWM1A	P9.14,P8.36
+	4		EHRPWM1B	P9.16,P8.34
+	5		EHRPWM2A	P8.19,P9.45
+	6		EHRPWM2B	P8.13,P8.46
+	7		ECAPPWM2	P9.28
+
 In this example I'm attempting to use PWM to control an LED on P9_14.
 
 debian@beaglebone:~$ sudo su
@@ -219,3 +247,18 @@ Message from syslogd@beaglebone at Feb 10 17:33:38 ...
  kernel:[  673.450671] Code: 4604 b108 f8d0 41c8 (7ee3) 2b01 
 debian@beaglebone:~$ cat /sys/devices/bone_capemgr.9/slots
 ^C^K^X
+
+--------------------------------------------------------------------------------
+WHAT TO DO
+
+Make sure I have the Adafruit library installed, and working properly in Python (I do).
+	This is mainly to make sure the Adafruit Device Tree Overlays are available, and working.
+Get the Adafruit BBIO Python library (Got it).
+Rip all of the Python shit out of the Adafruit code.
+	Strip it down so only C functions are left, and what's left is all that's needed for the job.
+Apply some good programming principles to what's left.
+	Object oriented.
+	Have a class for each type of pin setup I'll work with.
+		I2C, GPIO, ADC, PWM (DAC), etc.
+	Stop using singletons.
+Port my LED code over to the new system.

@@ -11,7 +11,7 @@
 #ifndef __BBIO_PWM_H
 #define __BBIO_PWM_H
 
-namespace PatricksDrivers {
+namespace BBIO {
 	
 	class PWM {
 		public:
@@ -28,6 +28,6 @@ namespace PatricksDrivers {
 			// unexport()
 	}; // class PWM
 	
-} // namespace PatricksDrivers
+} // namespace BBIO
 
 #endif

@@ -11,7 +11,7 @@
 #ifndef __BBIO_ADC_H
 #define __BBIO_ADC_H
 
-namespace PatricksDrivers {
+namespace BBIO {
 	
 	class ADC {
 		public:
@@ -23,6 +23,6 @@ namespace PatricksDrivers {
 			// unexport()
 	}; // class ADC
 	
-} // namespace PatricksDrivers
+} // namespace BBIO
 
 #endif

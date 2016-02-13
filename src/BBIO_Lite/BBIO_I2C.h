@@ -11,7 +11,7 @@
 #ifndef __BBIO_I2C_H
 #define __BBIO_I2C_H
 
-namespace PatricksDrivers {
+namespace BBIO {
 	
 	class I2C {
 		public:
@@ -22,6 +22,6 @@ namespace PatricksDrivers {
 			// close()
 	}; // class I2C
 	
-} // namespace PatricksDrivers
+} // namespace BBIO
 
 #endif

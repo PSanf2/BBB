@@ -11,7 +11,7 @@
 #ifndef __BBIO_GPIO_H
 #define __BBIO_GPIO_H
 
-namespace PatricksDrivers {
+namespace BBIO {
 	
 	// Most of the GPIO stuff in the Adafruit library is using Python, and no 
 	// This is because using the GPIO's doesn't require deploying a device tree overlay. 
@@ -33,6 +33,6 @@ namespace PatricksDrivers {
 			// unexport()
 	}; // class GPIO
 	
-} // namespace PatricksDrivers
+} // namespace BBIO
 
 #endif

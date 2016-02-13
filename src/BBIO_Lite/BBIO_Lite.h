@@ -11,10 +11,10 @@
 #ifndef __BBIO_H
 #define __BBIO_H
 
-namespace PatricksDrivers {
+namespace BBIO {
 	
 	// This is where all of the common stuff will go.
 	
-} // namespace PatricksDrivers
+} // namespace BBIO
 
 #endif

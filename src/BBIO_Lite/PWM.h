@@ -16,16 +16,12 @@ namespace BBIO {
 	class PWM {
 		public:
 			PWM();
-			// setup()
-			// cleanup()
 			// run()
 			// stop()
 			// set_duty()
 			// set_period()
 			~PWM();
 		private:
-			// export()
-			// unexport()
 	}; // class PWM
 	
 } // namespace BBIO

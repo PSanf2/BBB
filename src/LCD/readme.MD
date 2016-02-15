@@ -128,6 +128,11 @@ debian@beaglebone:~$
 ------------------------------------------------------------------------
 
 CONTROLLING A PWM OUTPIT AS ROOT FROM THE TERMINAL
+This isn't the way you'll do it in a program.
+In a program you load the am33xx_pwm device tree overlay, and then load an overlay fragment for each pin.
+The overlay for each pin will be named similar to bone_pwm_P9_14. The last part changes.
+Once that's done, everything gets manipulated through the /sys/devices/ocp.*/pwm_test_P9_14.*/ files.
+When you're done you can unload the DTO fragment without an issue, but if you try to unload the am33xx DTO you'll get a kernel panic.
 
 EXPORT #	PIN NAME	PINS
 	0		EHRPWM0A	P9.22,P9.31

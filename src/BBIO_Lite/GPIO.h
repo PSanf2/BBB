@@ -45,37 +45,26 @@ namespace BBIO {
 		{"CLKOUT2",		"P9_41",	20}
 	};
 	
-	enum GPIO_DIRECTION { INPUT, OUTPUT };
-	enum GPIO_VALUE { LOW, HIGH };
-	
-	// Most of the GPIO stuff in the Adafruit library is using Python, and no C++.
-	// This is because using the GPIO's doesn't require deploying a device tree overlay.
+	enum GPIO_DIRECTION { INPUT, OUTPUT, DIR_ERR };
+	enum GPIO_VALUE { LOW, HIGH, VAL_ERR };
 	
 	class GPIO {
 		public:
 			GPIO(const char* key);
 			~GPIO();
-			void direction(GPIO_DIRECTION dir);
-			void value(GPIO_VALUE val);
+			int direction(GPIO_DIRECTION dir);
+			int value(GPIO_VALUE val);
 			GPIO_DIRECTION direction();
 			GPIO_VALUE value();
 			const char* name();
 			const char* key();
-			int pin();
+			int gpio();
 			// I also need to have functions to take care of events
 			// add event detect()
 			// remove event detect()
 			// add event callback()
 			// wait for edge()
 		private:
-			/*
-			 * Usage of "export" for a member function name is not allowed because it's a C++ keyword.
-			 * In order to work around this, all private member names will begin with an underscore.
-			 * This convention will also help indicate which object members are public, and private from
-			 * outside the class. I hope this will also help to deobfuscate some of the name-mangling
-			 * that seems to exist when programming for the BBB. It seems to me that the same names are
-			 * being used all over the place. It tends to make some things rather confusing.
-			 */
 			gpio_pin_t _info;
 	}; // class GPIO
 	

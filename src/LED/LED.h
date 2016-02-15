@@ -7,12 +7,9 @@ namespace PatricksDrivers {
 	
 	class LED {
 		private:
-			//GPIO_Singleton* Gpio;
-			//GPIO_Singleton::GPIO_Pin* Pin;
 			BBIO::GPIO Pin;
 		public:
 			LED(const char* key);
-			~LED();
 			void on();
 			void off();
 	}; // class LED

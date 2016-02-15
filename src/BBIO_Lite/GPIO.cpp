@@ -9,7 +9,6 @@
  */
 
 #include "GPIO.h"
-#include <cstdio>	// pulls in printf() for debugging
 #include <cstring>	// pulls in strcmp for const char* comparisons, other string related functions.
 #include <string>	// string class/type
 #include <fstream>	// ofstream class/type
@@ -21,48 +20,33 @@ namespace BBIO {
 	
 	GPIO::GPIO(const char* key) {
 		// setup
-		printf("\nBBIO::GPIO called!");
-		printf("\nkey = %s", key);
-		
 		_info.name = "";
 		_info.key = "";
 		_info.gpio = -1;
-		
 		// search GPIO_Info to find the matching key
 		int idx = -1;
 		int sz = ARRAY_SIZE(GPIO_Info);
-				
 		for (int i = 0; i < sz; i++)
 			if (strcmp(key, GPIO_Info[i].key) == 0) {
 				idx = i;
 				break;
 			}
-		
 		// if not found, then we're not working w/ a GPIO pin I support
 		if (idx == -1)
 			return;
-		
 		// populate _info
 		_info = GPIO_Info[idx];
-		
-		printf("\n_info.name = %s", _info.name);
-		printf("\n_info.key = %s", _info.key);
-		printf("\n_info.gpio = %i", _info.gpio);
-		
 		// export the pin (exporting the same pin multiple times doesn't hurt anything).
 		// convert _info.gpio into a string
 		stringstream s;
 		s << _info.gpio;
 		string val = s.str();
-		
 		// convert the file name into a usable string
 		string filename = "export";
-		
 		// open the file
 		ofstream fs;
 		fs.open((GPIO_PATH + filename).c_str());
 		
-		// if the file's open
 		if (fs.is_open()) {
 			// write to the file
 			fs << val;
@@ -73,21 +57,16 @@ namespace BBIO {
 	
 	GPIO::~GPIO() {
 		// cleanup
-		printf("\nBBIO::~GPIO called!");
-		
 		// unexport the pin (unexporting the same pin multiple times doesn't hurt anything).
 		// convert _info.gpio into a string
 		stringstream s;
 		s << _info.gpio;
 		string val = s.str();
-		
 		// convert the file name into a usable string
 		string filename = "unexport";
-		
 		// open the file
 		ofstream fs;
 		fs.open((GPIO_PATH + filename).c_str());
-		
 		// if the file's open
 		if (fs.is_open()) {
 			// write to the file
@@ -97,20 +76,107 @@ namespace BBIO {
 		}
 	}
 	
-	void GPIO::direction(GPIO_DIRECTION dir) {
-		
+	int GPIO::direction(GPIO_DIRECTION dir) {
+		string path = GPIO_PATH;
+		stringstream s;
+		s << _info.gpio;
+		string path2 = "gpio" + s.str() + "/";
+		string filename = "direction";
+		string full_path = path + path2 + filename;
+		string value;
+		if (dir == INPUT)
+			value = "in";
+		else
+			value = "out";
+		// open the file
+		ofstream fs;
+		fs.open(full_path.c_str());
+		if (!fs.is_open()) {
+			return -1;
+		}
+		// write the file
+		fs << value;
+		// close the file
+		fs.close();
+		return 0;
 	}
 	
-	void GPIO::value(GPIO_VALUE val) {
-		
+	int GPIO::value(GPIO_VALUE val) {
+		string path = GPIO_PATH;
+		stringstream s;
+		s << _info.gpio;
+		string path2 = "gpio" + s.str() + "/";
+		string filename = "value";
+		string full_path = path + path2 + filename;
+		string value;
+		if (val == LOW)
+			value = "0";
+		else
+			value = "1";
+		// open the file
+		ofstream fs;
+		fs.open(full_path.c_str());
+		if (!fs.is_open()) {
+			return -1;
+		}
+		// write the file
+		fs << value;
+		// close the file
+		fs.close();
+		return 0;
 	}
 	
 	GPIO_DIRECTION GPIO::direction() {
-		return INPUT;
+		// build full path to file
+		string path = GPIO_PATH;
+		stringstream s;
+		s << _info.gpio;
+		string path2 = "gpio" + s.str() + "/";
+		string filename = "direction";
+		string full_path = path + path2 + filename;
+		// open the file
+		ifstream fs;
+		fs.open(full_path.c_str());
+		if (fs.is_open()) {
+			string val;
+			// read file
+			getline(fs, val);
+			// close file
+			fs.close();
+			
+			// evaluate and return
+			if (val == "in")
+				return INPUT;
+			else
+				return OUTPUT;
+		}
+		return DIR_ERR;
 	}
 	
 	GPIO_VALUE GPIO::value() {
-		return LOW;
+		// build full path to file
+		string path = GPIO_PATH;
+		stringstream s;
+		s << _info.gpio;
+		string path2 = "gpio" + s.str() + "/";
+		string filename = "value";
+		string full_path = path + path2 + filename;
+		// open the file
+		ifstream fs;
+		fs.open(full_path.c_str());
+		if (fs.is_open()) {
+			string val;
+			// read file
+			getline(fs, val);
+			// close file
+			fs.close();
+			// evaluate and return
+			if (val == "1")
+				return HIGH;
+			else
+				return LOW;
+		}
+		return VAL_ERR;
 	}
 	
 	const char* GPIO::name() {
@@ -121,7 +187,7 @@ namespace BBIO {
 		return _info.key;
 	}
 	
-	int GPIO::pin() {
+	int GPIO::gpio() {
 		return _info.gpio;
 	}
 	

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo "Building LED main"
-g++ -o obj/GPIO_Singleton.o -c src/lib/GPIO_Singleton.cpp
+echo "Building LED main..."
+./bash/compile_BBIO_Lite.sh
 g++ -o obj/LED.o -c src/LED/LED.cpp
 g++ -o obj/LED_CLI_UI_main.o -c src/LED/LED_CLI_UI_main.cpp
-g++ -o bin/LED obj/GPIO_Singleton.o obj/LED*
-echo "Done"
+g++ -o bin/LED obj/BBIO_Lite* obj/LED*
+echo "Done Building LED main"

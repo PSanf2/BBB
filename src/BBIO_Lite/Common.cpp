@@ -8,13 +8,16 @@
  * 			library.
  */
 
-#ifndef __BBIO_H
-#define __BBIO_H
+#include "Common.h"
 
 namespace BBIO {
 	
-	// This is where all of the common stuff will go.
+	int _export() {
+		return 0;
+	}
+	
+	int _unexport() {
+		return 0;
+	}
 	
 } // namespace BBIO
-
-#endif

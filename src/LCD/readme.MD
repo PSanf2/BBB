@@ -127,12 +127,51 @@ debian@beaglebone:~$
 
 ------------------------------------------------------------------------
 
-CONTROLLING A PWM OUTPIT AS ROOT FROM THE TERMINAL
-This isn't the way you'll do it in a program.
+CONTROLLING A PWM OUTPUT AS ROOT FROM THE TERMINAL AS A PROGRAM WILL DO
 In a program you load the am33xx_pwm device tree overlay, and then load an overlay fragment for each pin.
 The overlay for each pin will be named similar to bone_pwm_P9_14. The last part changes.
 Once that's done, everything gets manipulated through the /sys/devices/ocp.*/pwm_test_P9_14.*/ files.
-When you're done you can unload the DTO fragment without an issue, but if you try to unload the am33xx DTO you'll get a kernel panic.
+When you're done you can unload the DTO fragment without an issue, but if you try to unload the am33xx DTO you'll get a kernel panic. This is why the system is left with a hanging DTO in slots. This issue is due to a known bug with the operating system that was mentioned elsewhere in this file.
+With this method of doing thigs, there will never be a chage to the items in /sys/class/pwm. The programmer needs to keep track of which pins have been "exported."
+
+debian@beaglebone:~/git-repos/BBB$ sudo su
+root@beaglebone:/home/debian/git-repos/BBB# echo am33xx_pwm > /sys/devices/bone_capemgr.*/slots
+root@beaglebone:/home/debian/git-repos/BBB# echo bone_pwm_P9_14 > /sys/devices/bone_capemgr.*/slots
+root@beaglebone:/home/debian/git-repos/BBB# cat /sys/devices/bone_capemgr.*/slots
+ 0: 54:PF--- 
+ 1: 55:PF--- 
+ 2: 56:PF--- 
+ 3: 57:PF--- 
+ 4: ff:P-O-L Bone-LT-eMMC-2G,00A0,Texas Instrument,BB-BONE-EMMC-2G
+ 5: ff:P-O-L Bone-Black-HDMI,00A0,Texas Instrument,BB-BONELT-HDMI
+ 7: ff:P-O-L Override Board Name,00A0,Override Manuf,am33xx_pwm
+ 8: ff:P-O-L Override Board Name,00A0,Override Manuf,bone_pwm_P9_14
+root@beaglebone:/home/debian/git-repos/BBB# ls /sys/devices/ocp.*/pwm_test_P9_14.*
+driver	duty  modalias	period	polarity  power  run  subsystem  uevent
+root@beaglebone:/home/debian/git-repos/BBB# echo 10000 > /sys/devices/ocp.*/pwm_test_P9_14.*/period
+root@beaglebone:/home/debian/git-repos/BBB# echo 5000 > /sys/devices/ocp.*/pwm_test_P9_14.*/duty
+root@beaglebone:/home/debian/git-repos/BBB# echo 1 > /sys/devices/ocp.*/pwm_test_P9_14.*/run
+root@beaglebone:/home/debian/git-repos/BBB# echo 1000 > /sys/devices/ocp.*/pwm_test_P9_14.*/duty
+root@beaglebone:/home/debian/git-repos/BBB# echo 7500 > /sys/devices/ocp.*/pwm_test_P9_14.*/duty
+root@beaglebone:/home/debian/git-repos/BBB# echo 0 > /sys/devices/ocp.*/pwm_test_P9_14.*/run
+root@beaglebone:/home/debian/git-repos/BBB# echo -8 > /sys/devices/bone_capemgr.*/slots
+root@beaglebone:/home/debian/git-repos/BBB# cat /sys/devices/bone_capemgr.*/slots
+ 0: 54:PF--- 
+ 1: 55:PF--- 
+ 2: 56:PF--- 
+ 3: 57:PF--- 
+ 4: ff:P-O-L Bone-LT-eMMC-2G,00A0,Texas Instrument,BB-BONE-EMMC-2G
+ 5: ff:P-O-L Bone-Black-HDMI,00A0,Texas Instrument,BB-BONELT-HDMI
+ 7: ff:P-O-L Override Board Name,00A0,Override Manuf,am33xx_pwm
+root@beaglebone:/home/debian/git-repos/BBB# exit
+exit
+debian@beaglebone:~/git-repos/BBB$ 
+
+
+------------------------------------------------------------------------
+
+CONTROLLING A PWM OUTPUT AS ROOT FROM THE TERMINAL WITH EXPORT
+This isn't the way you'll do it in a program.
 
 EXPORT #	PIN NAME	PINS
 	0		EHRPWM0A	P9.22,P9.31

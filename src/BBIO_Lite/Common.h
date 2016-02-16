@@ -21,8 +21,14 @@ namespace BBIO {
 	
 	#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]));
 	
-	int _export();
-	int _unexport();
+	int build_path(
+		const char* partial_path,
+		const char* prefix,
+		char* full_path
+	);
+	
+	int load_device_tree(const char *name);
+	int unload_device_tree(const char *name);
 	
 } // namespace BBIO
 

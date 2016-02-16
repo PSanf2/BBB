@@ -20,9 +20,9 @@ namespace BBIO {
 	
 	GPIO::GPIO(const char* key) {
 		// setup
-		_info.name = "";
-		_info.key = "";
-		_info.gpio = -1;
+		_info.name = NULL;
+		_info.key = NULL;
+		_info.gpio = 0;
 		// search GPIO_Info to find the matching key
 		int idx = -1;
 		int sz = ARRAY_SIZE(GPIO_Info);

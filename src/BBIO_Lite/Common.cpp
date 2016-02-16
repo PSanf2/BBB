@@ -16,6 +16,7 @@
 #include <dirent.h>	// C POSIX Library object. Lets me go over directory contents.
 #include <fstream>	// ofstream class/type
 #include <sstream>	// stringstream class/type
+#include <time.h>	// pulls in nanosleep()
 
 using namespace std;
 
@@ -96,6 +97,8 @@ namespace BBIO {
 			fs << name;
 			// close it
 			fs.close();
+			//0.2 second delay
+			nanosleep((struct timespec[]){{0, 200000000}}, NULL);
 			result = 1;
 		}
 		

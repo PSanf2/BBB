@@ -18,7 +18,7 @@ namespace BBIO {
 	typedef struct pwm_pin_t {
 		const char* name;
 		const char* key;
-		const char* ocp_path;
+		char* ocp_path;
 	} pwm_pin_t;
 	
 	const pwm_pin_t PWM_Info[] = {
@@ -39,6 +39,8 @@ namespace BBIO {
 			// stop()
 			// set_duty()
 			// set_period()
+			// get_duty()
+			// get_period()
 		private:
 			pwm_pin_t _info;
 			static bool _initialized;

@@ -59,18 +59,11 @@ namespace BBIO {
 	} // build_path
 	
 	int load_device_tree(const char *name) {
-		printf("\nload_device_tree called!");
-		printf("\nname = %s", name);
-		
 		char* slots = new char[35];
 		int result = 0;
-		
 		// get the full path to slots
 		build_path("/sys/devices", "bone_capemgr", slots);
 		slots = strcat(slots, "/slots");
-		
-		printf("\nslots = %s", slots);
-		
 		// make sure it isn't already loaded
 		ifstream inf;
 		inf.open(slots);
@@ -78,7 +71,6 @@ namespace BBIO {
 			string line;
 			while (getline(inf, line)) {
 				if (strstr(line.c_str(), name) != 0) {
-					printf("\n%s already loaded.", name);
 					inf.close();
 					delete slots;
 					result = 1;
@@ -87,11 +79,9 @@ namespace BBIO {
 			} // while
 			inf.close();
 		} // if
-		
 		// open the file
 		ofstream fs;
 		fs.open(slots);
-		
 		if (fs.is_open()) {
 			// write to it
 			fs << name;
@@ -101,14 +91,61 @@ namespace BBIO {
 			nanosleep((struct timespec[]){{0, 200000000}}, NULL);
 			result = 1;
 		}
-		
 		// clean up
 		delete slots;
 		return result;
 	}
 	
 	int unload_device_tree(const char *name) {
-		return 0;
+		char* slots = new char[35];
+		int result = 0;
+		// get the full path to slots
+		build_path("/sys/devices", "bone_capemgr", slots);
+		slots = strcat(slots, "/slots");
+		// see if it is loaded
+		bool found = false;
+		string line;
+		ifstream inf;
+		inf.open(slots);
+		
+		if (inf.is_open()) {
+			while (getline(inf, line)) {
+				if (strstr(line.c_str(), name) != 0) {
+					found = true;
+					break;
+				}
+			} // while
+			inf.close();
+		} // if
+		
+		if (found) {
+			// i need to do some string manipulations
+			// get rid of everything after the first :
+			line = line.substr(0, line.find_first_of(":"));
+			// get rid of any leading spaces
+			if (line.substr(0, 1) == " ") {
+				line = line.substr(line.find_last_of(" ")+1);
+			}
+			// add a hyphen to the front.
+			line = "-" + line;
+			// open the file
+			ofstream fs;
+			fs.open(slots);
+			if (fs.is_open()) {
+				// write to it
+				fs << line.c_str();
+				// close it
+				fs.close();
+				//0.2 second delay
+				nanosleep((struct timespec[]){{0, 200000000}}, NULL);
+				result = 1;
+			}
+		} else {
+			// if it's not loaded there's nothing to do, and i can report success
+			result = 1;
+		}
+		delete slots;
+		return result;
 	}
 	
 } // namespace BBIO

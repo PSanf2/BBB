@@ -21,14 +21,9 @@ namespace BBIO {
 	bool PWM::_initialized = false;
 	
 	PWM::PWM(const char* key) {
-		printf("\nBBIO::PWM Called!");
-		printf("\n_initialized = %i", _initialized);
-		printf("\nkey = %s", key);
-		
 		_info.name = NULL;
 		_info.key = NULL;
 		_info.ocp_path = NULL;
-		
 		int idx = -1;
 		int sz = ARRAY_SIZE(PWM_Info);
 		for (int i = 0; i < sz; i++)
@@ -41,10 +36,6 @@ namespace BBIO {
 			return;
 		// populate _info
 		_info = PWM_Info[idx];
-		
-		printf("\n_info.name = %s", _info.name);
-		printf("\n_info.key = %s", _info.key);
-		
 		// if !_initialized
 		if (!_initialized) {
 			// load the am33xx_pwm DTO
@@ -56,36 +47,30 @@ namespace BBIO {
 		// load the bone_pwm_<key> DTO fragment
 		string dto = "bone_pwm_";
 		dto.append(_info.key);
-		printf("\ndto = %s", dto.c_str());
 		load_device_tree(dto.c_str());
-		printf("\nloaded!");
-		
 		// determine the ocp path for the PWM pin
-		
 		char* ocp = new char[50];
 		build_path("/sys/devices", "ocp", ocp);
-		printf("\nocp = %s", ocp);
-		
 		string pwm_test = "pwm_test_";
 		pwm_test.append(_info.key);
-		printf("\npwm_test = %s", pwm_test.c_str());
-		
 		char* ocp2 = new char[50];
-		
 		build_path(ocp, pwm_test.c_str(), ocp2);
-		printf("\nocp2 = %s", ocp2);
 		delete ocp;
 		_info.ocp_path = ocp2;
-		printf("\n_info.ocp_path = %s", _info.ocp_path);
-		
 		// set the default values for the PWM pin
-		
-		printf("\nBBIO::PWM Done!");
+		printf("\nBBIO::PWM says SET THE DEFAULT PWM VALUES!");
 	}
 	
 	PWM::~PWM() {
-		// unload my DTO fragment
-		printf("\nBBIO::~PWM Called!");
+		// make sure the constructor loaded valid values
+		if (_info.key != NULL) {
+			// figure out the name of the DTO fragment to unload
+			string bone_pwm = "bone_pwm_";
+			bone_pwm.append(_info.key);
+			// unload the DTO fragment
+			unload_device_tree(bone_pwm.c_str());
+		}
+		// cleanup
 		delete _info.ocp_path;
 	}
 	

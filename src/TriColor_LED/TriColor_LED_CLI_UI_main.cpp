@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 	
 	unsigned int menu_choice;
 	
-	PatricksDrivers::TriColor_LED(RED_PIN, GREEN_PIN, BLUE_PIN);
+	PatricksDrivers::TriColor_LED my_led(RED_PIN, GREEN_PIN, BLUE_PIN);
 	
 	//system("clear");
 	

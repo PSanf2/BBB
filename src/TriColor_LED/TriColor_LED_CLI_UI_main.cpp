@@ -14,6 +14,10 @@ using namespace std;
 void printMenu() {
 	printf("\n\t\t-----MAIN MENU-----");
 	printf("\n\t 1) Print Menu");
+	printf("\n\t 2) Start all");
+	printf("\n\t 3) Stop all");
+	printf("\n\t 4) Set RGB");
+	printf("\n\t 5) Set period");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -65,7 +69,37 @@ int main(int argc, char* argv[]) {
 			
 			case 1:
 				printMenu();
-			break; // case 1
+			break;
+			
+			case 2:
+				// start all
+				my_led.start();
+			break;
+			
+			case 3:
+				// stop all
+				my_led.stop();
+			break;
+			
+			case 4:
+				// set RGB
+				unsigned int r, g, b;
+				printf("\nInput duty for r ");
+				getDecInput(&r);
+				printf("\nInput duty for g ");
+				getDecInput(&g);
+				printf("\nInput duty for b ");
+				getDecInput(&b);
+				my_led.duty(r, g, b);
+			break;
+			
+			case 5:
+				// set period
+				unsigned int val;
+				printf("\nInput period ");
+				getDecInput(&val);
+				my_led.period(val);
+			break;
 			
 			case 0:
 				; // do nothing

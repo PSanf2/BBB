@@ -8,12 +8,36 @@ namespace PatricksDrivers {
 		const char* red_key,
 		const char* green_key,
 		const char* blue_key
-	) : Red(red_key), Blue(blue_key), Green(green_key) {
+	) : Red(red_key), Green(green_key), Blue(blue_key) {
 		
 	}
 	
 	TriColor_LED::~TriColor_LED() {
 		
+	}
+	
+	void TriColor_LED::start() {
+		Red.start();
+		Green.start();
+		Blue.start();
+	}
+	
+	void TriColor_LED::stop() {
+		Red.stop();
+		Green.stop();
+		Blue.stop();
+	}
+	
+	void TriColor_LED::duty(int r, int g, int b) {
+		Red.duty(r);
+		Green.duty(g);
+		Blue.duty(b);
+	}
+	
+	void TriColor_LED::period(int val) {
+		Red.period(val);
+		Blue.period(val);
+		Green.period(val);
 	}
 	
 } // namespace PatricksDrivers

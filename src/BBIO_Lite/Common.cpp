@@ -58,7 +58,7 @@ namespace BBIO {
 		return result;
 	} // build_path
 	
-	int load_device_tree(const char *name) {
+	int load_device_tree(const char* name) {
 		char* slots = new char[35];
 		int result = 0;
 		// get the full path to slots
@@ -96,7 +96,7 @@ namespace BBIO {
 		return result;
 	}
 	
-	int unload_device_tree(const char *name) {
+	int unload_device_tree(const char* name) {
 		char* slots = new char[35];
 		int result = 0;
 		// get the full path to slots

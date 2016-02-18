@@ -27,8 +27,8 @@ namespace BBIO {
 		char* full_path
 	);
 	
-	int load_device_tree(const char *name);
-	int unload_device_tree(const char *name);
+	int load_device_tree(const char* name);
+	int unload_device_tree(const char* name);
 	
 } // namespace BBIO
 

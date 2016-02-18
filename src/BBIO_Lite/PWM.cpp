@@ -12,7 +12,9 @@
 
 #include <cstdio>	// pulls in printf() for debugging
 #include <cstring>	// pulls in strcmp() and strstr()
-#include <string>
+#include <string>	// pulls in string class/type
+#include <fstream>	// ofstream class/type
+#include <sstream>	// pulls in ostringstream class/type
 
 using namespace std;
 
@@ -43,7 +45,6 @@ namespace BBIO {
 			// toggle _initialized
 			_initialized = !_initialized;
 		}
-		
 		// load the bone_pwm_<key> DTO fragment
 		string dto = "bone_pwm_";
 		dto.append(_info.key);
@@ -58,7 +59,10 @@ namespace BBIO {
 		delete ocp;
 		_info.ocp_path = ocp2;
 		// set the default values for the PWM pin
-		printf("\nBBIO::PWM says SET THE DEFAULT PWM VALUES!");
+		//printf("\nBBIO::PWM says SET THE DEFAULT PWM VALUES!");
+		duty(0);
+		period(500000);
+		start();
 	}
 	
 	PWM::~PWM() {
@@ -72,6 +76,82 @@ namespace BBIO {
 		}
 		// cleanup
 		delete _info.ocp_path;
+	}
+	
+	void PWM::start() {
+		// my path should be _info.ocp_path + run
+		// i need to write "1" to the file
+		char* run_path = new char[50];
+		build_path(_info.ocp_path, "run", run_path);
+		// open the file
+		ofstream fs;
+		fs.open(run_path);
+		if (fs.is_open()) {
+			// write to it
+			fs << "1";
+			// close it
+			fs.close();
+		}
+		delete run_path;
+	}
+	
+	void PWM::stop() {
+		// my path should be _info.ocp_path + run
+		// i need to write "0" to the file
+		char* run_path = new char[50];
+		build_path(_info.ocp_path, "run", run_path);
+		// open the file
+		ofstream fs;
+		fs.open(run_path);
+		if (fs.is_open()) {
+			// write to it
+			fs << "0";
+			// close it
+			fs.close();
+		}
+		delete run_path;
+	}
+	
+	void PWM::period(int val) {
+		// convert val to a string
+		string valstr;
+		ostringstream convert;
+		convert << val;
+		valstr = convert.str();
+		// get the path to the file
+		char* file = new char[50];
+		build_path(_info.ocp_path, "period", file);
+		// open the file
+		ofstream fs;
+		fs.open(file);
+		if (fs.is_open()) {
+			// write to it
+			fs << valstr.c_str();
+			// close it
+			fs.close();
+		}
+		delete file;
+	}
+	
+	void PWM::duty(int val) {
+		// convert val to a string
+		string valstr;
+		ostringstream convert;
+		convert << val;
+		valstr = convert.str();
+		// get the path to the file
+		char* file = new char[50];
+		build_path(_info.ocp_path, "duty", file);
+		// open the file
+		ofstream fs;
+		fs.open(file);
+		if (fs.is_open()) {
+			// write to it
+			fs << valstr.c_str();
+			// close it
+			fs.close();
+		}
+		delete file;
 	}
 	
 } // namespace BBIO

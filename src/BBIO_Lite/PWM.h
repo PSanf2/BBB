@@ -35,12 +35,10 @@ namespace BBIO {
 		public:
 			PWM(const char* key);
 			~PWM();
-			// run()
-			// stop()
-			// set_duty()
-			// set_period()
-			// get_duty()
-			// get_period()
+			void start();
+			void stop();
+			void period(int val);
+			void duty(int val);
 		private:
 			pwm_pin_t _info;
 			static bool _initialized;

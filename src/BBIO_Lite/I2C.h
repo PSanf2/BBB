@@ -11,15 +11,16 @@
 #ifndef __BBIO_I2C_H
 #define __BBIO_I2C_H
 
+#include "Common.h"	// Inclue BBIO_Lite Common library.
+
 namespace BBIO {
 	
 	class I2C {
 		public:
-			// write()
-			// read()
+			I2C();
+			~I2C();
 		private:
-			// open()
-			// close()
+			
 	}; // class I2C
 	
 } // namespace BBIO

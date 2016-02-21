@@ -20,10 +20,9 @@ namespace BBIO {
 	
 	class I2C {
 		public:
-			int get_error();
-			
 			I2C();
 			~I2C();
+			int get_error();
 			
 			unsigned char write(
 				unsigned char bus,

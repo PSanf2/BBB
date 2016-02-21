@@ -28,7 +28,7 @@ namespace BBIO {
 		close();
 	}
 	
-	int get_error() {
+	int I2C::get_error() {
 		return error_code;
 	}
 	
@@ -184,7 +184,7 @@ namespace BBIO {
 		return error_code;
 	} // writeRegister
 	
-	unsigned char* readRegister(
+	unsigned char* I2C::readRegister(
 		unsigned char bus,
 		unsigned char addr,
 		unsigned char reg,

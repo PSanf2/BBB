@@ -15,12 +15,58 @@
 
 namespace BBIO {
 	
+	#define BBB_I2C_0 "/dev/i2c-0"
+	#define BBB_I2C_1 "/dev/i2c-1"
+	
 	class I2C {
 		public:
+			int get_error();
+			
 			I2C();
 			~I2C();
-		private:
 			
+			unsigned char write(
+				unsigned char bus,
+				unsigned char addr,
+				unsigned char num,
+				unsigned char* vals
+			); // write
+			
+			unsigned char* read(
+				unsigned char bus,
+				unsigned char addr,
+				unsigned char reg,
+				unsigned char num,
+				unsigned char* result
+			); // read
+			
+			unsigned char* read(
+				unsigned char bus,
+				unsigned char addr,
+				unsigned char num,
+				unsigned char* result
+			); // read
+			
+			unsigned char writeRegister(
+				unsigned char bus,
+				unsigned char addr,
+				unsigned char reg,
+				unsigned char val
+			); // writeRegister
+			
+			unsigned char* readRegister(
+				unsigned char bus,
+				unsigned char addr,
+				unsigned char reg,
+				unsigned char* result
+			); // readRegister
+			
+		private:
+			unsigned char error_code;
+			int file;
+			int open(unsigned char bus, unsigned char addr);
+			void close();
+			bool is_open();
 	}; // class I2C
 	
 } // namespace BBIO

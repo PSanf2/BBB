@@ -1,0 +1,12 @@
+This is going to need to mostly be redone.
+The I2C stuff is fine, and shouldn't be touched.
+
+The un/load_device_tree and build_path functions are "fine."
+They work well enough, and there's no point in screwing with them.
+Each of them does a specific job that uses unique logic that needs to be contained in the function.
+
+I need to add read/write functions to Common.cpp like Molloy is using in his GPIO class.
+Any file read/writes for PWM, GPIO, and ADC should go through specialized read/write functions.
+This will greatly reduce the amount of code, and standardize parameter passing.
+Molloy is using string objects for parameter types on his read/write functions. I'll need to use char*.
+If I try using strings I'll with a stupid(er) number of type conversions.

@@ -79,79 +79,41 @@ namespace BBIO {
 	}
 	
 	void PWM::start() {
-		// my path should be _info.ocp_path + run
+		// my path should be _info.ocp_path + "/" + run
 		// i need to write "1" to the file
-		char* run_path = new char[50];
-		build_path(_info.ocp_path, "run", run_path);
-		// open the file
-		ofstream fs;
-		fs.open(run_path);
-		if (fs.is_open()) {
-			// write to it
-			fs << "1";
-			// close it
-			fs.close();
-		}
-		delete run_path;
+		stringstream s;
+		s << _info.ocp_path;
+		string path = s.str() + "/";
+		string filename = "run";
+		string value = "1";
+		write(path, filename, value);
 	}
 	
 	void PWM::stop() {
 		// my path should be _info.ocp_path + run
 		// i need to write "0" to the file
-		char* run_path = new char[50];
-		build_path(_info.ocp_path, "run", run_path);
-		// open the file
-		ofstream fs;
-		fs.open(run_path);
-		if (fs.is_open()) {
-			// write to it
-			fs << "0";
-			// close it
-			fs.close();
-		}
-		delete run_path;
+		stringstream s;
+		s << _info.ocp_path;
+		string path = s.str() + "/";
+		string filename = "run";
+		string value = "0";
+		write(path, filename, value);
 	}
 	
 	void PWM::period(int val) {
-		// convert val to a string
-		string valstr;
-		ostringstream convert;
-		convert << val;
-		valstr = convert.str();
-		// get the path to the file
-		char* file = new char[50];
-		build_path(_info.ocp_path, "period", file);
-		// open the file
-		ofstream fs;
-		fs.open(file);
-		if (fs.is_open()) {
-			// write to it
-			fs << valstr.c_str();
-			// close it
-			fs.close();
-		}
-		delete file;
+		stringstream s;
+		s << _info.ocp_path;
+		string path = s.str() + "/";
+		string filename = "period";
+		write(path, filename, val);
 	}
 	
 	void PWM::duty(int val) {
-		// convert val to a string
-		string valstr;
-		ostringstream convert;
-		convert << val;
-		valstr = convert.str();
-		// get the path to the file
-		char* file = new char[50];
-		build_path(_info.ocp_path, "duty", file);
-		// open the file
-		ofstream fs;
-		fs.open(file);
-		if (fs.is_open()) {
-			// write to it
-			fs << valstr.c_str();
-			// close it
-			fs.close();
-		}
-		delete file;
+		stringstream s;
+		s << _info.ocp_path;
+		string path = s.str() + "/";
+		string filename = "duty";
+		write(path, filename, val);
 	}
 	
 } // namespace BBIO

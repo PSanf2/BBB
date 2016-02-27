@@ -148,6 +148,21 @@ namespace BBIO {
 		return result;
 	}
 	
+	/*
+	 * I may be playing a dangerous game with overloading.
+	 * It's probably fine, but if something starts acting funny I should look at this
+	 * code again. I've tested everything, and it's working at this time. When I start asking
+	 * I2C to play nicely with other stuff I may hit an issue. In the I2C class there are
+	 * methods named write. They're using a different parameter set, and inside a class, so there
+	 * shouldn't be any issue. These write functions are inside the namespace, and not in a class.
+	 * When I call write from GPIO or PWM it goes here. When I call write from within I2C it goes to
+	 * I2C::write. Also, the system calls to ::write from within I2C are still working fine. Due to
+	 * the different scopes I believe everything will continue to work properly. The concern is
+	 * making sure I don't find the straw that breaks the camel's back. Art is knowing when to quit.
+	 * I may eventually hit a point where I try to define a function named write, and it proves to
+	 * be one overload too many. Hopefully, I'll get compiler errors. If not, I could get logical
+	 * errors affecting device interaction.
+	 */
 	// !remember that build path doesn't put a slash on the end of it's returned value!
 	// Mr. Function says: That's not my problem. Give me good inputs. Garbage in, garbage out!
 	// (make sure you have a / on the end of path)

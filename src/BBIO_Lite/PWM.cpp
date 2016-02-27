@@ -26,6 +26,7 @@ namespace BBIO {
 		_info.name = NULL;
 		_info.key = NULL;
 		_info.ocp_path = NULL;
+		// search for my info
 		int idx = -1;
 		int sz = ARRAY_SIZE(PWM_Info);
 		for (int i = 0; i < sz; i++)
@@ -59,7 +60,6 @@ namespace BBIO {
 		delete ocp;
 		_info.ocp_path = ocp2;
 		// set the default values for the PWM pin
-		//printf("\nBBIO::PWM says SET THE DEFAULT PWM VALUES!");
 		duty(0);
 		period(500000);
 		start();

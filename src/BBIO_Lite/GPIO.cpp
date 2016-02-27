@@ -70,7 +70,6 @@ namespace BBIO {
 			value = "in";
 		else
 			value = "out";
-		
 		return write(path, filename, value);
 	}
 	

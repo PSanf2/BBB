@@ -10,3 +10,6 @@ Any file read/writes for PWM, GPIO, and ADC should go through specialized read/w
 This will greatly reduce the amount of code, and standardize parameter passing.
 Molloy is using string objects for parameter types on his read/write functions. I'll need to use char*.
 If I try using strings I'll with a stupid(er) number of type conversions.
+
+I will eventually want to make some minor updates to the I2C class.
+All of the funtions are accepting a bus parameter. This should be a member variable. I should define an enum for each of the available I2C busses, accept a parameter from the constructor, evaluate it, and store the result in a member variable. When a method in I2C is called I shouldn't be using a bus parameter. That should be stored in a member variable. This won't cause any issues with defining which bus a device is on, or the logic of communicating on the bus. It does mean that I'll eventually need to update all of the code for the I2C devices I've already written. Basically, the I2C class needs its own _info member variable for storing pin information. Things like the name of the I2C bus, the name of the file to read/write from/to, the pins being used and their names, etc. This isn't a requirement, but will help the class conform more closely to the library's stylistic considerations.

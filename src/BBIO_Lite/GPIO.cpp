@@ -43,16 +43,7 @@ namespace BBIO {
 		string val = s.str();
 		// convert the file name into a usable string
 		string filename = "export";
-		// open the file
-		ofstream fs;
-		fs.open((GPIO_PATH + filename).c_str());
-		
-		if (fs.is_open()) {
-			// write to the file
-			fs << val;
-			// close the file
-			fs.close();
-		}
+		write(GPIO_PATH, filename, val);
 	}
 	
 	GPIO::~GPIO() {
@@ -64,76 +55,60 @@ namespace BBIO {
 		string val = s.str();
 		// convert the file name into a usable string
 		string filename = "unexport";
-		// open the file
-		ofstream fs;
-		fs.open((GPIO_PATH + filename).c_str());
-		// if the file's open
-		if (fs.is_open()) {
-			// write to the file
-			fs << val;
-			// close the file
-			fs.close();
-		}
+		write(GPIO_PATH, filename, val);
 	}
 	
 	int GPIO::direction(GPIO_DIRECTION dir) {
+		// convert a number to a string
+		stringstream dir_num;
+		dir_num << _info.gpio;
 		string path = GPIO_PATH;
-		stringstream s;
-		s << _info.gpio;
-		string path2 = "gpio" + s.str() + "/";
+		path = path + "gpio" + dir_num.str() + "/";
 		string filename = "direction";
-		string full_path = path + path2 + filename;
 		string value;
 		if (dir == INPUT)
 			value = "in";
 		else
 			value = "out";
-		// open the file
-		ofstream fs;
-		fs.open(full_path.c_str());
-		if (!fs.is_open()) {
-			return -1;
-		}
-		// write the file
-		fs << value;
-		// close the file
-		fs.close();
-		return 0;
+		
+		return write(path, filename, value);
 	}
 	
 	int GPIO::value(GPIO_VALUE val) {
+		// convert a number to a string
+		stringstream dir_num;
+		dir_num << _info.gpio;
 		string path = GPIO_PATH;
-		stringstream s;
-		s << _info.gpio;
-		string path2 = "gpio" + s.str() + "/";
+		path = path + "gpio" + dir_num.str() + "/";
 		string filename = "value";
-		string full_path = path + path2 + filename;
 		string value;
 		if (val == LOW)
 			value = "0";
 		else
 			value = "1";
-		// open the file
-		ofstream fs;
-		fs.open(full_path.c_str());
-		if (!fs.is_open()) {
-			return -1;
-		}
-		// write the file
-		fs << value;
-		// close the file
-		fs.close();
-		return 0;
+		return write(path, filename, value);
 	}
 	
+	// THIS NEEDS TO BE TESTED
 	GPIO_DIRECTION GPIO::direction() {
-		// build full path to file
+		stringstream dir_num;
+		dir_num << _info.gpio;
 		string path = GPIO_PATH;
-		stringstream s;
-		s << _info.gpio;
-		string path2 = "gpio" + s.str() + "/";
+		path = path + "gpio" + dir_num.str() + "/";
 		string filename = "direction";
-		string full_path = path + path2 + filename;
+		
+		string value = read(path, filename);
+		
+		printf("\nvalue = %s", value.c_str());
+		
+		if (value == "in")
+			return INPUT;
+		else if (value == "out")
+			return OUTPUT;
+		else
+			return DIR_ERR;
+		
+		/*
 		// open the file
 		ifstream fs;
 		fs.open(full_path.c_str());
@@ -151,9 +126,29 @@ namespace BBIO {
 				return OUTPUT;
 		}
 		return DIR_ERR;
+		*/
 	}
 	
+	// THIS NEEDS TO BE TESTED
 	GPIO_VALUE GPIO::value() {
+		stringstream dir_num;
+		dir_num << _info.gpio;
+		string path = GPIO_PATH;
+		path = path + "gpio" + dir_num.str() + "/";
+		string filename = "value";
+		
+		string value = read(path, filename);
+		
+		printf("\nvalue = %s", value.c_str());
+		
+		if (value == "1")
+			return HIGH;
+		else if (value == "0")
+			return LOW;
+		else
+			return VAL_ERR;
+		
+		/*
 		// build full path to file
 		string path = GPIO_PATH;
 		stringstream s;
@@ -177,6 +172,7 @@ namespace BBIO {
 				return LOW;
 		}
 		return VAL_ERR;
+		*/
 	}
 	
 	const char* GPIO::name() {

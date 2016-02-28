@@ -13,6 +13,8 @@
 #include <string>	// string class/type
 #include <fstream>	// ofstream class/type
 #include <sstream>	// stringstream class/type
+#include <sys/epoll.h> // pulls in epoll stuff
+#include <fcntl.h>	// pulls in open(), O_RDONLY, and O_NONBLOCK
 
 using namespace std;
 
@@ -184,6 +186,89 @@ namespace BBIO {
 	
 	int GPIO::gpio() {
 		return _info.gpio;
+	}
+	
+	int GPIO::edge(GPIO_EDGE val) {
+		// convert a number to a string
+		stringstream dir_num;
+		dir_num << _info.gpio;
+		string path = GPIO_PATH;
+		path = path + "gpio" + dir_num.str() + "/";
+		string filename = "edge";
+		string value;
+		if (val == RISING)
+			value = "rising";
+		else if (val == FALLING)
+			value = "falling";
+		else if (val == BOTH)
+			value = "both";
+		else // if value == NONE
+			value = "none";
+		return write(path, filename, value);
+	}
+	
+	GPIO_EDGE GPIO::edge() {
+		stringstream dir_num;
+		dir_num << _info.gpio;
+		string path = GPIO_PATH;
+		path = path + "gpio" + dir_num.str() + "/";
+		string filename = "edge";
+		
+		string value = read(path, filename);
+		
+		printf("\nvalue = %s", value.c_str());
+		
+		if (value == "none")
+			return NONE;
+		else if (value == "rising")
+			return RISING;
+		else if (value == "falling")
+			return FALLING;
+		else if (value == "both")
+			return BOTH;
+		else
+			return EDG_ERR;
+	}
+	
+	int GPIO::waitForEdge() {
+		direction(INPUT);
+		
+		int fd, i, epollfd, count = 0;
+		struct epoll_event ev;
+		stringstream dir_num;
+		dir_num << _info.gpio;
+		string path = GPIO_PATH;
+		path = path + "gpio" + dir_num.str() + "/";
+		string filename = "value";
+		
+		epollfd = epoll_create(1);
+		
+		if (epollfd == -1)
+			return -1;
+			
+		if ((fd = open((path + filename).c_str(), O_RDONLY | O_NONBLOCK)) == -1)
+			return -1;
+		
+		ev.events = EPOLLIN | EPOLLET | EPOLLPRI;
+		ev.data.fd = fd;
+		
+		if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) == -1)
+			return -1;
+		
+		while (count <= 1) {
+			i = epoll_wait(epollfd, &ev, 1, -1);
+			if (i == -1)
+				count = 5;
+			else
+				count++;
+		}
+		
+		close(fd);
+		
+		if (count == 5)
+			return -1;
+		
+		return 0;
 	}
 	
 } // namespace BBIO

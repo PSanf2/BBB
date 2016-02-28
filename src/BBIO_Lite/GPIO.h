@@ -47,22 +47,27 @@ namespace BBIO {
 	
 	enum GPIO_DIRECTION { INPUT, OUTPUT, DIR_ERR };
 	enum GPIO_VALUE { LOW, HIGH, VAL_ERR };
+	enum GPIO_EDGE { NONE, RISING, FALLING, BOTH, EDG_ERR };
 	
 	class GPIO {
 		public:
+			// de/constructor
 			GPIO(const char* key);
 			~GPIO();
+			// setters
 			int direction(GPIO_DIRECTION dir);
 			int value(GPIO_VALUE val);
+			int edge(GPIO_EDGE val);
+			// getters
 			GPIO_DIRECTION direction();
 			GPIO_VALUE value();
+			GPIO_EDGE edge();
+			
 			const char* name();
 			const char* key();
 			int gpio();
 			// I also need to have functions to take care of events
-			// add event detect()
-			// remove event detect()
-			// add event callback()
+			int waitForEdge(); // waits forever
 			// wait for edge()
 		private:
 			gpio_pin_t _info;

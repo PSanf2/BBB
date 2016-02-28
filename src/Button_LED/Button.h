@@ -10,7 +10,8 @@ namespace PatricksDrivers {
 			BBIO::GPIO Pin;
 		public:
 			Button(const char* key);
-			void wait_for();
+			void wait();
+			void wait(BBIO::GPIO::CallbackType callback);
 	}; // class button
 	
 } // namespace

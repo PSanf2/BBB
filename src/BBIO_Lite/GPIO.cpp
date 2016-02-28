@@ -15,6 +15,7 @@
 #include <sstream>	// stringstream class/type
 #include <sys/epoll.h> // pulls in epoll stuff
 #include <fcntl.h>	// pulls in open(), O_RDONLY, and O_NONBLOCK
+#include <pthread.h>// pulls in stuff needed for multithreading.
 
 using namespace std;
 
@@ -25,6 +26,7 @@ namespace BBIO {
 		_info.name = NULL;
 		_info.key = NULL;
 		_info.gpio = 0;
+		_info.debounce = 0;
 		// search GPIO_Info to find the matching key
 		int idx = -1;
 		int sz = ARRAY_SIZE(GPIO_Info);
@@ -259,6 +261,31 @@ namespace BBIO {
 		if (count == 5)
 			return -1;
 		return 0;
+	}
+	
+	// This is a friend function of the class
+	void* threadedPoll(void* value) {
+		GPIO* gpio = static_cast<GPIO*>(value);
+		while (gpio->threadRunning) {
+			gpio->callbackFunction(gpio->waitForEdge());
+			usleep(gpio->_info.debounce * 1000);
+		}
+		return 0;
+	}
+	
+	// works!
+	int GPIO::waitForEdge(CallbackType callback) {
+		threadRunning = true;
+		callbackFunction = callback;
+		if (pthread_create(&thread, NULL, &threadedPoll, static_cast<void*>(this))) {
+			threadRunning = false;
+			return -1;
+		}
+		return 0;
+	}
+	
+	void GPIO::debounce(int time) {
+		_info.debounce = time;
 	}
 	
 } // namespace BBIO

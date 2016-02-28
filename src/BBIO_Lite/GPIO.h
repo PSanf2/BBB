@@ -21,6 +21,7 @@ namespace BBIO {
 		const char* name;
 		const char* key;
 		int gpio;
+		int debounce;
 	} gpio_pin_t;
 	
 	const gpio_pin_t GPIO_Info[] = {
@@ -51,6 +52,7 @@ namespace BBIO {
 	
 	class GPIO {
 		public:
+			typedef int (*CallbackType) (int);
 			// de/constructor
 			GPIO(const char* key);
 			~GPIO();
@@ -58,6 +60,7 @@ namespace BBIO {
 			int direction(GPIO_DIRECTION dir);
 			int value(GPIO_VALUE val);
 			int edge(GPIO_EDGE val);
+			void debounce(int time);
 			// getters
 			GPIO_DIRECTION direction();
 			GPIO_VALUE value();
@@ -68,9 +71,14 @@ namespace BBIO {
 			int gpio();
 			// I also need to have functions to take care of events
 			int waitForEdge(); // waits forever
-			// wait for edge()
+			int waitForEdge(CallbackType callback); // non-blocking wait with multithreading
 		private:
 			gpio_pin_t _info;
+			bool threadRunning;
+			CallbackType callbackFunction;
+			pthread_t thread;
+			
+			friend void* threadedPoll(void* value);
 	}; // class GPIO
 	
 } // namespace BBIO

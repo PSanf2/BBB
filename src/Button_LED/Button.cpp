@@ -9,8 +9,12 @@ namespace PatricksDrivers {
 		Pin.edge(BBIO::RISING);
 	}
 	
-	void Button::wait_for() {
+	void Button::wait() {
 		Pin.waitForEdge();
+	}
+	
+	void Button::wait(BBIO::GPIO::CallbackType callback) {
+		Pin.waitForEdge(callback);
 	}
 	
 } // namespace

@@ -232,7 +232,6 @@ namespace BBIO {
 	
 	int GPIO::waitForEdge() {
 		direction(INPUT);
-		
 		int fd, i, epollfd, count = 0;
 		struct epoll_event ev;
 		stringstream dir_num;
@@ -240,21 +239,15 @@ namespace BBIO {
 		string path = GPIO_PATH;
 		path = path + "gpio" + dir_num.str() + "/";
 		string filename = "value";
-		
 		epollfd = epoll_create(1);
-		
 		if (epollfd == -1)
 			return -1;
-			
 		if ((fd = open((path + filename).c_str(), O_RDONLY | O_NONBLOCK)) == -1)
 			return -1;
-		
 		ev.events = EPOLLIN | EPOLLET | EPOLLPRI;
 		ev.data.fd = fd;
-		
 		if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) == -1)
 			return -1;
-		
 		while (count <= 1) {
 			i = epoll_wait(epollfd, &ev, 1, -1);
 			if (i == -1)
@@ -262,12 +255,9 @@ namespace BBIO {
 			else
 				count++;
 		}
-		
 		close(fd);
-		
 		if (count == 5)
 			return -1;
-		
 		return 0;
 	}
 	

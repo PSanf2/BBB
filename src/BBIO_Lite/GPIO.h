@@ -25,25 +25,25 @@ namespace BBIO {
 	} gpio_pin_t;
 	
 	const gpio_pin_t GPIO_Info[] = {
-		{"TIMER4",		"P8_07",	66},
-		{"TIMER7",		"P8_08",	67},
-		{"TIMER5",		"P8_09",	69},
-		{"TIMER6",		"P8_10",	68},
-		{"GPIO1_13",	"P8_11",	45},
-		{"GPIO1_12",	"P8_12",	44},
-		{"GPIO0_26",	"P8_14",	26},
-		{"GPIO1_15",	"P8_15",	47},
-		{"GPIO1_14",	"P8_16",	46},
-		{"GPIO0_27",	"P8_17",	27},
-		{"GPIO2_1",		"P8_18",	65},
-		{"GPIO1_29",	"P8_26",	61},
-		{"GPIO1_28",	"P9_12",	60},
-		{"GPIO1_16",	"P9_15",	48},
-		{"GPIO1_17",	"P9_23",	49},
-		{"GPIO3_21",	"P9_25",	117},
-		{"GPIO3_19",	"P9_27",	115},
-		{"SPI1_D1",		"P9_30",	112},
-		{"CLKOUT2",		"P9_41",	20}
+		{"TIMER4",		"P8_07",	66,		0},
+		{"TIMER7",		"P8_08",	67,		0},
+		{"TIMER5",		"P8_09",	69,		0},
+		{"TIMER6",		"P8_10",	68,		0},
+		{"GPIO1_13",	"P8_11",	45,		0},
+		{"GPIO1_12",	"P8_12",	44,		0},
+		{"GPIO0_26",	"P8_14",	26,		0},
+		{"GPIO1_15",	"P8_15",	47,		0},
+		{"GPIO1_14",	"P8_16",	46,		0},
+		{"GPIO0_27",	"P8_17",	27,		0},
+		{"GPIO2_1",		"P8_18",	65,		0},
+		{"GPIO1_29",	"P8_26",	61,		0},
+		{"GPIO1_28",	"P9_12",	60,		0},
+		{"GPIO1_16",	"P9_15",	48,		0},
+		{"GPIO1_17",	"P9_23",	49,		0},
+		{"GPIO3_21",	"P9_25",	117,	0},
+		{"GPIO3_19",	"P9_27",	115,	0},
+		{"SPI1_D1",		"P9_30",	112,	0},
+		{"CLKOUT2",		"P9_41",	20,		0}
 	};
 	
 	enum GPIO_DIRECTION { INPUT, OUTPUT, DIR_ERR };
@@ -72,6 +72,7 @@ namespace BBIO {
 			// I also need to have functions to take care of events
 			int waitForEdge(); // waits forever
 			int waitForEdge(CallbackType callback); // non-blocking wait with multithreading
+			void waitForEdgeCancel();
 		private:
 			gpio_pin_t _info;
 			bool threadRunning;

@@ -306,3 +306,52 @@ Apply some good programming principles to what's left.
 		I2C, GPIO, ADC, PWM (DAC), etc.
 	Stop using singletons.
 Port my LED code over to the new system.
+
+--------------------------------------------------------------------------------
+ANALOG INPUTS
+
+From the terminal as a program would
+You load the device tree, and then get your readings from /sys/devices/ocp.*/helper.*/AIN#
+As with GPIOs, don't unload the device tree. If you attempt to do so you'll cause a kernel panic.
+
+debian@beaglebone:~$ cat /sys/devices/bone_capemgr.9/slots
+ 0: 54:PF--- 
+ 1: 55:PF--- 
+ 2: 56:PF--- 
+ 3: 57:PF--- 
+ 4: ff:P-O-L Bone-LT-eMMC-2G,00A0,Texas Instrument,BB-BONE-EMMC-2G
+ 5: ff:P-O-L Bone-Black-HDMI,00A0,Texas Instrument,BB-BONELT-HDMI
+debian@beaglebone:~$ sudo su
+root@beaglebone:/home/debian# echo cape-bone-iio > /sys/devices/bone_capemgr.9/slots
+root@beaglebone:/home/debian# exit
+exit
+debian@beaglebone:~$ cat /sys/devices/bone_capemgr.9/slots
+ 0: 54:PF--- 
+ 1: 55:PF--- 
+ 2: 56:PF--- 
+ 3: 57:PF--- 
+ 4: ff:P-O-L Bone-LT-eMMC-2G,00A0,Texas Instrument,BB-BONE-EMMC-2G
+ 5: ff:P-O-L Bone-Black-HDMI,00A0,Texas Instrument,BB-BONELT-HDMI
+ 7: ff:P-O-L Override Board Name,00A0,Override Manuf,cape-bone-iio
+debian@beaglebone:~$ ls /sys/devices/ocp.3/
+44e07000.gpio     44e35000.wdt    48044000.timer  4819c000.i2c                   48310000.rng       56000000.sgx  mmc.5        power
+44e09000.serial   44e3e000.rtc    48046000.timer  481ac000.gpio                  49000000.edma      gpio-leds.8   modalias     rstctl.4
+44e0b000.i2c      47400000.usb    48048000.timer  481ae000.gpio                  4a100000.ethernet  hdmi.13       nop-phy.6    sound.14
+44e0d000.tscadc   48038000.mcasp  4804a000.timer  48200000.interrupt-controller  53100000.sham      helper.15     nop-phy.7    subsystem
+44e10448.bandgap  48042000.timer  4804c000.gpio   4830e000.fb                    53500000.aes       mmc.11        nxptda@0.12  uevent
+debian@beaglebone:~$ ls /sys/devices/ocp.3/helper.15/
+AIN0  AIN1  AIN2  AIN3  AIN4  AIN5  AIN6  AIN7  driver  modalias  power  subsystem  uevent
+debian@beaglebone:~$ cat /sys/devices/ocp.3/helper.15/AIN1
+727
+debian@beaglebone:~$ cat /sys/devices/ocp.3/helper.15/AIN1
+719
+debian@beaglebone:~$ cat /sys/devices/ocp.3/helper.15/AIN1
+196
+debian@beaglebone:~$ cat /sys/devices/ocp.3/helper.15/AIN1
+1367
+debian@beaglebone:~$ cat /sys/devices/ocp.3/helper.15/AIN1
+1760
+debian@beaglebone:~$ cat /sys/devices/ocp.3/helper.15/AIN1
+1750
+debian@beaglebone:~$ cat /sys/devices/ocp.3/helper.15/AIN1
+195

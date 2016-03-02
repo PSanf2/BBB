@@ -284,6 +284,10 @@ namespace BBIO {
 		return 0;
 	}
 	
+	void GPIO::waitForEdgeCancel() {
+		threadRunning = false;
+	}
+	
 	void GPIO::debounce(int time) {
 		_info.debounce = time;
 	}

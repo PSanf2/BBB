@@ -184,7 +184,7 @@ namespace BBIO {
 	
 	string read(string path, string filename) {
 		ifstream fs;
-		fs.open((filename + path).c_str());
+		fs.open((path + filename).c_str());
 		if (!fs.is_open())
 			return NULL;
 		string input;

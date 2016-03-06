@@ -4,9 +4,9 @@
 
 #include "TriColor_LED.h"
 
-#define RED_PIN "P8_13"
-#define GREEN_PIN "P8_19"
-#define BLUE_PIN "P9_14"
+#define RED_PIN "P9_16"
+#define GREEN_PIN "P9_14"
+#define BLUE_PIN "P8_13"
 
 using namespace std;
 

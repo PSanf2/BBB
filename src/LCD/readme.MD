@@ -372,3 +372,30 @@ A workaround involves unloading the DTO fragment of the blocking pin so you can 
 The smart thing to do is work with the default period of 500000. If you want to be really clever, then when you try to change the period or duty values, you'd read in the existing period, and scale the duty to match, storing a "virtual" period in a member variable to take into account. It'd be a nifty way to seemingly correct the issue for most practacle purposes.
 
 For my LCD driver, I'm finding that the PWM pins on the P9 header won't let me change the period value because they're being managed by the same controller on the BBB. No matter what I do, the period is stuck at the default value of 500000. I'll just use that. I've found that I can control the color of the backlight without an issue when I do.
+
+The process for controlling an LCD is pretty simple.
+The four to eight data lines are used to communicate a nibble or byte of information to the LCD. The RS line is used to indicate if the data lines are sending information relating to a command or data. The enable line is used as a clock to tell the LCD when it may read the values that have been set on the other five to nine lines. If I'm wanting to be able to control the backlight then I'll need to use PWM channels to essentially control the brightness of an LED. One very important item of consideration is the timing of events. The LCD needs to be provided a minimum amount of time to respond to certain events. It's also possible to perform some read operations on the LCD, but these are not important.
+
+				PIN CHART
+LCD Pin	|		Name				|	BBB Pin		|
+--------+---------------------------+---------------+
+	1	|	VSS (Ground)			|	P8_02 DGND	|
+	2	|	VDD (+ve)				|	P9_07 VDD_5V|
+	3	|	VE (Contrast Voltage)	|	POT CTR PIN	|
+	4	|	Register Select			|	P8_08		|
+	5	|	Read/Write (r/w)		|	P8_02 DGND	|
+	6	|	Enable (EN)				|	P8_10		|
+	7	|	Data 0					|	-----		|
+	8	|	Data 1					|	-----		|
+	9	|	Data 2					|	-----		|
+	10	|	Data 3					|	-----		|
+	11	|	Data 4					|	P8_18		|
+	12	|	Data 5					|	P8_16		|
+	13	|	Data 6					|	P8_14		|
+	14	|	Data 7					|	P8_12		|
+	15	|	Backlight Anode (+ve)	|	P9_07 VDD_5V|
+	16	|	Red Cathode (-R/red)	|	P9_16		| *Only cathode on monochrome LCD
+	17	|	Green Cathode (-G/green)|	P9_14		| *Only on RGB backlit LCD
+	18	|	Blue Cathode (-B/blue)	|	P8_13		| *Only on RGB backlit LCD
+	
+	NOTE: The potentiometer needs to have one outter pin connected to P9_07 VDD_5V, and the other connected to P8_02 DGND. The potentiometer controls the contrast for the LCD characters. The RGB cathodes are controlled with PWM, and govern the color and brightness of the backlight. The BBB does have enough GPIO pins available to accomidate LCD pins 7-10, but this would just allow me to halve the number of write operations required to control the device. This is something I could do in order to allow me to code for it, but isn't required with compatable LCD modules. I'm coding for HD44780 compatible LCD modules. I have three I can play with, and an I2C breakout board as well. I have one monochrome 16x2 LCD, one 16x2 LCD with tri-color backlight, and one monochrome 20x4 LCD. I'm wanting to write a driver that will support all three devices. All three devices support the same protocol. Everybody else (Adafruit, who else?) has written their code to support an 8 bit, and 4 bit parralel bus. The I2C backback does use all the LCD pins, but that's a totally different story. 

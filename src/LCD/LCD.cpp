@@ -78,16 +78,19 @@ namespace PatricksDrivers {
 		_green = new BBIO::PWM(green);
 		_blue = new BBIO::PWM(blue);
 		
+		// If polarity is 1 then higher duty values give a longer duty cycle.
+		// If polarity is 0 then higher duty values give a shorter duty cycle.
+		_red->polarity(1);
+		_green->polarity(1);
+		_blue->polarity(1);
+		
+		_red->duty(500000);
+		_green->duty(500000);
+		_blue->duty(500000);
+		
 		_red->start();
 		_green->start();
 		_blue->start();
-		
-		// If you pass an signed int then 0 is full on, and higher values are lower.
-		// If duty == period then the LED is off.
-		// If you pass an unsigned int then things get a little whackier.
-		_red->duty(0);
-		_green->duty(0);
-		_blue->duty(0);
 	}
 	
 	LCD_RGB_PWM::~LCD_RGB_PWM() {

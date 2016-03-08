@@ -127,4 +127,12 @@ namespace BBIO {
 		write(path, filename, val);
 	}
 	
+	void PWM::polarity(int val) {
+		stringstream s;
+		s << _info.ocp_path;
+		string path = s.str() + "/";
+		string filename = "polarity";
+		write(path, filename, val);
+	}
+	
 } // namespace BBIO

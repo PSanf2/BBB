@@ -39,6 +39,7 @@ namespace BBIO {
 			void stop();
 			void period(int val);
 			void duty(int val);
+			void polarity(int val);
 		private:
 			pwm_pin_t _info;
 			static bool _initialized;

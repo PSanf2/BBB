@@ -67,6 +67,8 @@ int main(int argc, char* argv[]) {
 	
 	PatricksDrivers::TriColor_LED backlight(RED_PIN, GREEN_PIN, BLUE_PIN);
 	
+	backlight.duty(500000, 500000, 500000); // white
+	
 	//system("clear");
 	
 	do {

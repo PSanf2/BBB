@@ -11,7 +11,6 @@ namespace PatricksDrivers {
 		const char* green_key,
 		const char* blue_key
 	) : Red(red_key), Green(green_key), Blue(blue_key) {
-
 		start();
 	}
 	

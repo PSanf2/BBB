@@ -24,7 +24,6 @@ namespace PatricksDrivers {
 			BBIO::GPIO* _rs;
 			BBIO::GPIO* _en;
 			BBIO::GPIO* _data[4];
-			
 			void send(unsigned char data_bits, unsigned char rs_val);
 			void command(unsigned char data_bits) { send(data_bits, 0); }
 			void write(unsigned char data_bits) { send(data_bits, 1); }
@@ -36,10 +35,11 @@ namespace PatricksDrivers {
 				const char* data4,
 				const char* data5,
 				const char* data6,
-				const char* data7
+				const char* data7,
+				unsigned int rows = 2,
+				unsigned int cols = 16
 			);
 			~LCD();
-			void begin(unsigned char* rows, unsigned char* cols);
 			void print(const char* val);
 			void clear();
 			void home();

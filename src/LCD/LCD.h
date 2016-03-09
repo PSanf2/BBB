@@ -4,13 +4,31 @@
 #include "../BBIO_Lite/PWM.h"
 #include "../BBIO_Lite/GPIO.h"
 
+#include <string>
+
 namespace PatricksDrivers {
 	
+	/* I could support all eight data pins, but screw it.
+	// It would be extra code that wouldn't be used. If I'm hooking up
+	// an LCD then I'm not going to use more wires than I need.
+	*/
+	
+	/*
+	 * Don't waste time writing a bunch of child classes just for the backlight controls.
+	 * That's dumb. Let the programmer worry about it. The backlight controls on an LCD
+	 * are just like an LED, and the code to control them can be the same.
+	 */
+	
 	class LCD {
-		protected:
+		private:
 			BBIO::GPIO* _rs;
 			BBIO::GPIO* _en;
 			BBIO::GPIO* _data[4];
+			
+			void send(unsigned char data_bits, unsigned char rs_val);
+			void command(unsigned char data_bits) { send(data_bits, 0); }
+			void write(unsigned char data_bits) { send(data_bits, 1); }
+			void pulse_en();
 		public:
 			LCD(
 				const char* rs,
@@ -21,43 +39,24 @@ namespace PatricksDrivers {
 				const char* data7
 			);
 			~LCD();
+			void begin(unsigned char* rows, unsigned char* cols);
+			void print(const char* val);
+			void clear();
+			void home();
+			void curPos(unsigned int col, unsigned int row);
+			void dispOn();
+			void dispOff();
+			void curOn();
+			void curOff();
+			void curBlinkOn();
+			void curBlinkOff();
+			void scrollDisplayLeft();
+			void scrollDisplayRight();
+			void leftToRight();
+			void rightToLeft();
+			void autoScrollOn();
+			void autoScrollOff();
 	}; // class LCD
-	
-	class LCD_RGB_PWM : public LCD {
-		private:
-			BBIO::PWM* _red;
-			BBIO::PWM* _green;
-			BBIO::PWM* _blue;
-		public:
-			LCD_RGB_PWM(
-				const char* rs,
-				const char* en,
-				const char* data4,
-				const char* data5,
-				const char* data6,
-				const char* data7,
-				const char* red,
-				const char* green,
-				const char* blue
-			);
-			~LCD_RGB_PWM();
-	}; // class LCD_RGB_PWM
-	
-	class LCD_GPIO_Backlight : public LCD {
-		private:
-			BBIO::GPIO* _backlight;
-		public:
-			LCD_GPIO_Backlight(
-				const char* rs,
-				const char* en,
-				const char* data4,
-				const char* data5,
-				const char* data6,
-				const char* data7,
-				const char* backlight
-			);
-			~LCD_GPIO_Backlight();
-	}; // class LCD_GPIO_Backlight
 	
 } // namespace
 

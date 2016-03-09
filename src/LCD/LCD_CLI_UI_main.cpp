@@ -3,6 +3,7 @@
 #include <cstdlib>		// lets me use system()
 
 #include "LCD.h"
+#include "TriColor_LED.h"
 
 #define RS_PIN		"P8_08"
 #define EN_PIN		"P8_10"
@@ -55,17 +56,16 @@ int main(int argc, char* argv[]) {
 	
 	unsigned int menu_choice;
 	
-	PatricksDrivers::LCD_RGB_PWM my_lcd(
+	PatricksDrivers::LCD lcd(
 		RS_PIN,
 		EN_PIN,
 		DATA4_PIN,
 		DATA5_PIN,
 		DATA6_PIN,
-		DATA7_PIN,
-		RED_PIN,
-		GREEN_PIN,
-		BLUE_PIN
+		DATA7_PIN
 	);
+	
+	PatricksDrivers::TriColor_LED backlight(RED_PIN, GREEN_PIN, BLUE_PIN);
 	
 	//system("clear");
 	

@@ -22,6 +22,8 @@ void printMenu() {
 	printf("\n\t\t-----MAIN MENU-----");
 	printf("\n\t 1) Print Menu");
 	printf("\n\t 2) Hello World!");
+	printf("\n\t 3) Clear");
+	printf("\n\t 4) Display Control");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -55,7 +57,7 @@ void getDecInput(unsigned int *ptr) {
 
 int main(int argc, char* argv[]) {
 	
-	unsigned int menu_choice;
+	unsigned int menu_choice, disp_choice, cur_choice, blink_choice;
 	
 	PatricksDrivers::LCD lcd(
 		RS_PIN,
@@ -90,6 +92,29 @@ int main(int argc, char* argv[]) {
 				lcd.clear();
 				lcd.home();
 				lcd.print("Hello World!");
+			break;
+			
+			case 3:
+				lcd.clear();
+			break;
+			
+			case 4:
+				printf("\n-----DISPLAY CONTROL-----");
+				printf("\nDisplay On/Off? [0\\1]: ");
+				getDecInput(&disp_choice);
+				printf("\nCursor On/Off? [0\\1]: ");
+				getDecInput(&cur_choice);
+				printf("\nCursor Blink On/Off? [0\\1]: ");
+				getDecInput(&blink_choice);
+				
+				bool disp, cur, blink;
+				
+				disp = (bool) disp_choice;
+				cur = (bool) cur_choice;
+				blink = (bool) blink_choice;
+				
+				lcd.onOff(disp, cur, blink);
+				
 			break;
 			
 			case 0:

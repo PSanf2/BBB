@@ -181,7 +181,13 @@ namespace PatricksDrivers {
 	}
 	
 	void LCD::onOff(bool display, bool cursor, bool blink) {
-		
+		// use ternary operator for cleaner code.
+		// variable = (condition) ? true : false;
+		unsigned char val = 0x08;
+		val = (display) ? (val | 0x04) : (val & ~0x04);
+		val = (cursor) ? (val | 0x02) : (val & ~0x02);
+		val = (blink) ? (val | 0x01) : (val & ~0x01);
+		command(val);
 	}
 	
 	void LCD::curPos(unsigned int col, unsigned int row) {

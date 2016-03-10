@@ -24,7 +24,8 @@ namespace PatricksDrivers {
 			BBIO::GPIO* _rs;
 			BBIO::GPIO* _en;
 			BBIO::GPIO* _data[4];
-			void send(unsigned char data_bits, unsigned char rs_val);
+			void send(unsigned char data_byte, unsigned char rs_val);
+			void set4bits(unsigned char data_bits);
 			void command(unsigned char data_bits) { send(data_bits, 0); }
 			void write(unsigned char data_bits) { send(data_bits, 1); }
 			void pulse_en();

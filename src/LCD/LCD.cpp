@@ -79,17 +79,32 @@ namespace PatricksDrivers {
 		 * I'll need to send the first nibble from here, and pulse the en pin the first time.
 		 * After that, I should be able to send everything through command and write
 		 */
-		 
-		 _data[3]->value(BBIO::LOW);	// data7
-		 _data[2]->value(BBIO::LOW);	// data6
-		 _data[1]->value(BBIO::HIGH);	// data5
-		 _data[0]->value(BBIO::LOW);	// data4
-		 
-		 pulse_en();
-		 
-		 command(0x28);
-		 command(0x0F);
-		 command(0x06);
+
+		_data[3]->value(BBIO::LOW);	// data7
+		_data[2]->value(BBIO::LOW);	// data6
+		_data[1]->value(BBIO::HIGH);	// data5
+		_data[0]->value(BBIO::LOW);	// data4
+		
+		pulse_en();
+		
+		command(0x28);
+		command(0x0F);
+		command(0x06);
+		
+		/* Bit banging works!
+		write(0x48); // H
+		write(0x65); // e
+		write(0x6C); // l
+		write(0x6C); // l
+		write(0x6F); // o
+		write(0x20); // space
+		write(0x57); // W
+		write(0x6F); // o
+		write(0x72); // r
+		write(0x6C); // l
+		write(0x64); // d
+		write(0x21); // !
+		*/
 	}
 	
 	LCD::~LCD() {
@@ -97,7 +112,7 @@ namespace PatricksDrivers {
 		// When an object goes out of scope the destructors are automatically called.
 	}
 	
-	void LCD::send(unsigned char data_bits, unsigned char rs_val) {
+	void LCD::send(unsigned char data_byte, unsigned char rs_val) {
 		printf("\nsend called!");
 		if (rs_val == 0) {
 			// rs needs to be low for a command
@@ -111,6 +126,37 @@ namespace PatricksDrivers {
 		// off the value of data_bits.
 		// i'll need to write the first four bits, pulse en, write the last four, and pulse again.
 		
+		printf("\ndata_byte = 0x%X", data_byte);
+		
+		unsigned char high_nibble = (data_byte >> 4);
+		unsigned char low_nibble = (data_byte & 0x0F);
+		
+		set4bits(high_nibble);
+		pulse_en();
+		set4bits(low_nibble);
+		pulse_en();
+		
+	}
+	
+	void LCD::set4bits(unsigned char data_bits) {
+		//_data[3]->value(BBIO::LOW);	// data7
+		//_data[2]->value(BBIO::LOW);	// data6
+		//_data[1]->value(BBIO::HIGH);	// data5
+		//_data[0]->value(BBIO::LOW);	// data4
+		// an input of 0x2 will be evaluated as 0100
+
+		printf("\ndata_bits = 0x%X", data_bits);
+		printf("\n");
+		for (int i = 3; i >= 0; i--) {
+			bool bit = ((data_bits >> i) & 0x01);
+			if (bit) {
+				printf("1");
+				_data[i]->value(BBIO::HIGH);
+			} else {
+				printf("0");
+				_data[i]->value(BBIO::LOW);
+			}
+		}
 	}
 	
 	void LCD::pulse_en() {

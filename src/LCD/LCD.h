@@ -44,13 +44,8 @@ namespace PatricksDrivers {
 			void print(const char* val);
 			void clear();
 			void home();
+			void onOff(bool display, bool cursor, bool blink);
 			void curPos(unsigned int col, unsigned int row);
-			void dispOn();
-			void dispOff();
-			void curOn();
-			void curOff();
-			void curBlinkOn();
-			void curBlinkOff();
 			void scrollDisplayLeft();
 			void scrollDisplayRight();
 			void leftToRight();

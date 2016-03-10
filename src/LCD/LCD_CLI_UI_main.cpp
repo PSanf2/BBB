@@ -21,6 +21,7 @@ using namespace std;
 void printMenu() {
 	printf("\n\t\t-----MAIN MENU-----");
 	printf("\n\t 1) Print Menu");
+	printf("\n\t 2) Hello World!");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -85,6 +86,12 @@ int main(int argc, char* argv[]) {
 				printMenu();
 			break;
 			
+			case 2:
+				lcd.clear();
+				lcd.home();
+				lcd.print("Hello World!");
+			break;
+			
 			case 0:
 				; // do nothing
 			break;
@@ -95,6 +102,8 @@ int main(int argc, char* argv[]) {
 		} // switch (menu_choice)
 		
 	} while (menu_choice != 0);
+	
+	backlight.duty(0, 0, 0);
 	
 	printf("Goodbye!\n");
 	

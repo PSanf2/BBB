@@ -1,6 +1,7 @@
 #include "LCD.h"
 
 #include <cstdio>		// pulls in printf()
+#include <cstring>
 
 using namespace std;
 
@@ -18,6 +19,7 @@ namespace PatricksDrivers {
 		unsigned int rows,
 		unsigned int cols
 	) {
+		/*
 		printf("\nLCD called!");
 		printf("\nrs = %s", rs);
 		printf("\nen = %s", en);
@@ -27,6 +29,7 @@ namespace PatricksDrivers {
 		printf("\ndata7 = %s", data7);
 		printf("\nrows = %i", rows);
 		printf("\ncols = %i", cols);
+		*/
 		
 		// I need to create a BBIO::GPIO object for each of the inputs.
 		// I need to set the relevant member variables to store pointers to those objects.
@@ -80,10 +83,10 @@ namespace PatricksDrivers {
 		 * After that, I should be able to send everything through command and write
 		 */
 
-		_data[3]->value(BBIO::LOW);	// data7
-		_data[2]->value(BBIO::LOW);	// data6
-		_data[1]->value(BBIO::HIGH);	// data5
-		_data[0]->value(BBIO::LOW);	// data4
+		_data[3]->value(BBIO::LOW); // data7
+		_data[2]->value(BBIO::LOW); // data6
+		_data[1]->value(BBIO::HIGH);// data5
+		_data[0]->value(BBIO::LOW); // data4
 		
 		pulse_en();
 		
@@ -113,20 +116,16 @@ namespace PatricksDrivers {
 	}
 	
 	void LCD::send(unsigned char data_byte, unsigned char rs_val) {
-		printf("\nsend called!");
-		if (rs_val == 0) {
+		if (rs_val == 0)
 			// rs needs to be low for a command
 			_rs->value(BBIO::LOW);
-		} else {
+		else
 			// rs needs to be high
 			_rs->value(BBIO::HIGH);
-		}
 		
 		// this is where i need to set the values on each of the GPIO lines based
 		// off the value of data_bits.
 		// i'll need to write the first four bits, pulse en, write the last four, and pulse again.
-		
-		printf("\ndata_byte = 0x%X", data_byte);
 		
 		unsigned char high_nibble = (data_byte >> 4);
 		unsigned char low_nibble = (data_byte & 0x0F);
@@ -135,7 +134,6 @@ namespace PatricksDrivers {
 		pulse_en();
 		set4bits(low_nibble);
 		pulse_en();
-		
 	}
 	
 	void LCD::set4bits(unsigned char data_bits) {
@@ -144,23 +142,16 @@ namespace PatricksDrivers {
 		//_data[1]->value(BBIO::HIGH);	// data5
 		//_data[0]->value(BBIO::LOW);	// data4
 		// an input of 0x2 will be evaluated as 0100
-
-		printf("\ndata_bits = 0x%X", data_bits);
-		printf("\n");
 		for (int i = 3; i >= 0; i--) {
 			bool bit = ((data_bits >> i) & 0x01);
-			if (bit) {
-				printf("1");
+			if (bit)
 				_data[i]->value(BBIO::HIGH);
-			} else {
-				printf("0");
+			else
 				_data[i]->value(BBIO::LOW);
-			}
 		}
 	}
 	
 	void LCD::pulse_en() {
-		printf("\npulse_en called!");
 		/*
 		 * The en line is supposed to be pulled high.
 		 * To pulse the en line I need to...
@@ -177,42 +168,23 @@ namespace PatricksDrivers {
 	}
 	
 	void LCD::print(const char* val) {
-		
+		for (int i = 0; i < strlen(val); i++)
+			write(val[i]);
 	}
 	
 	void LCD::clear() {
-		
+		command(0x01);
 	}
 	
 	void LCD::home() {
+		command(0x02);
+	}
+	
+	void LCD::onOff(bool display, bool cursor, bool blink) {
 		
 	}
 	
 	void LCD::curPos(unsigned int col, unsigned int row) {
-		
-	}
-	
-	void LCD::dispOn() {
-		
-	}
-	
-	void LCD::dispOff() {
-		
-	}
-	
-	void LCD::curOn() {
-		
-	}
-	
-	void LCD::curOff() {
-		
-	}
-	
-	void LCD::curBlinkOn() {
-		
-	}
-	
-	void LCD::curBlinkOff() {
 		
 	}
 	

@@ -1,3 +1,40 @@
+/*
+ *				PIN CHART
+ *LCD Pin	|		Name				|	BBB Pin		|
+ *----------+---------------------------+---------------+
+ *	1		|	VSS (Ground)			|	P8_02 DGND	|
+ *	2		|	VDD (+ve)				|	P9_07 VDD_5V|
+ *	3		|	VE (Contrast Voltage)	|	POT CTR PIN	|
+ *	4		|	Register Select			|	P8_08		|
+ *	5		|	Read/Write (r/w)		|	P8_02 DGND	|
+ *	6		|	Enable (EN)				|	P8_10		|
+ *	7		|	Data 0					|	-----		|
+ *	8		|	Data 1					|	-----		|
+ *	9		|	Data 2					|	-----		|
+ *	10		|	Data 3					|	-----		|
+ *	11		|	Data 4					|	P8_18		|
+ *	12		|	Data 5					|	P8_16		|
+ *	13		|	Data 6					|	P8_14		|
+ *	14		|	Data 7					|	P8_12		|
+ *	15		|	Backlight Anode (+ve)	|	P9_07 VDD_5V|
+ *	16		|	Red Cathode (-R/red)	|	P9_16		| *Only cathode on monochrome LCD.
+ *	17		|	Green Cathode (-G/green)|	P9_14		| *Only on RGB backlit LCD.
+ *	18		|	Blue Cathode (-B/blue)	|	P8_13		| *Only on RGB backlit LCD.
+ * 
+ * NOTE: The potentiometer needs to have one outter pin connected to P9_07 VDD_5V, and the
+ * other connected to P8_02 DGND. The potentiometer controls the contrast for the LCD characters.
+ * The RGB cathodes are controlled with PWM, and govern the color and brightness of the backlight.
+ * The BBB does have enough GPIO pins available to accomidate LCD pins 7-10, but this would just
+ * allow me to halve the number of write operations required to control the device. This is something
+ * I could do in order to allow me to code for it, but isn't required with compatable LCD modules.
+ * I'm coding for HD44780 compatible LCD modules. I have three I can play with, and an I2C breakout
+ * board as well. I have one monochrome 16x2 LCD, one 16x2 LCD with tri-color backlight, and one
+ * monochrome 20x4 LCD. I'm wanting to write a driver that will support all three devices. All three
+ * devices support the same protocol. Everybody else (Adafruit, who else?) has written their code to
+ * support an 8 bit, and 4 bit parralel bus. The I2C backback does use all the LCD pins, but that's a
+ * totally different story. 
+ */
+
 #include "LCD.h"
 
 #include <cstdio>		// pulls in printf()
@@ -19,22 +56,6 @@ namespace PatricksDrivers {
 		unsigned int rows,
 		unsigned int cols
 	) {
-		/*
-		printf("\nLCD called!");
-		printf("\nrs = %s", rs);
-		printf("\nen = %s", en);
-		printf("\ndata4 = %s", data4);
-		printf("\ndata5 = %s", data5);
-		printf("\ndata6 = %s", data6);
-		printf("\ndata7 = %s", data7);
-		printf("\nrows = %i", rows);
-		printf("\ncols = %i", cols);
-		*/
-		
-		// I need to create a BBIO::GPIO object for each of the inputs.
-		// I need to set the relevant member variables to store pointers to those objects.
-		// I need to set the direction on each of the GPIO objects.
-		// I need to set the initial value for each of the GPIO objets.
 		
 		_rows = rows;
 		_cols = cols;
@@ -67,11 +88,11 @@ namespace PatricksDrivers {
 		 * Nibble sequence
 		 * rs	7654	0xN
 		 * 0	0010	0x20	// 1 nibble operation
-		 * 0	0010	0x20
+		 * 0	0010	0x20	// function set
 		 * 0	1000	0x80
-		 * 0	0000	0x00
+		 * 0	0000	0x00	// display on/off
 		 * 0	1111	0xF0
-		 * 0	0000	0x00
+		 * 0	0000	0x00	// entry mode
 		 * 0	0110	0x60
 		 * Byte sequence
 		 * rs	7654 3210	0xN
@@ -97,7 +118,7 @@ namespace PatricksDrivers {
 		command(0x0F);
 		command(0x06);
 		
-		/* Bit banging works!
+		/* Bit banging works! I can now use the LCD.
 		write(0x48); // H
 		write(0x65); // e
 		write(0x6C); // l
@@ -111,11 +132,6 @@ namespace PatricksDrivers {
 		write(0x64); // d
 		write(0x21); // !
 		*/
-	}
-	
-	LCD::~LCD() {
-		// I don't need to delete anything becuase garbage collection will take care of it.
-		// When an object goes out of scope the destructors are automatically called.
 	}
 	
 	void LCD::send(unsigned char data_byte, unsigned char rs_val) {
@@ -170,6 +186,21 @@ namespace PatricksDrivers {
 		usleep(50);
 	}
 	
+	/*
+	 * There's some funky things to know about the way an LCD displays to the screen.
+	 * The maximum sized LCD that the controller will support is 20x4.
+	 * Think of the LCD as having a little memory on it (because it does).
+	 * This memory takes the form of an array.
+	 * The upper left character on the LCD is at position 0 of the array.
+	 * If you were using a 20x4 LCD then the lower right character would be at the last position.
+	 * When you write to a 16x2 LCD then things get funny.
+	 * The first row can display the first 16 positons of the array, but consists of the first 40.
+	 * The second row displays the last 40 positions on the aray.
+	 * Text will wrap, but you'll need to put in >40 characters to fill the first row. When you
+	 * do this you will only be able to see the first 16 characters on the LCD.
+	 * The solution is for the user to be aware of this behavior, and take advantage of the
+	 * methods that have been defined so text displays where they want it to.
+	 */
 	void LCD::print(const char* val) {
 		for (int i = 0; i < strlen(val); i++)
 			write(val[i]);
@@ -206,28 +237,20 @@ namespace PatricksDrivers {
 		command(0x80 | (col + offsets[row]));
 	}
 	
-	void LCD::scrollDisplayLeft() {
-		
+	void LCD::scroll(bool scrollLock, bool leftRight) {
+		unsigned char val = 0x04;
+		val = (scrollLock) ? (val | 0x01) : (val & ~0x01);
+		val = (leftRight) ? (val | 0x02) : (val & ~0x02);
+		printf("\nval = 0x%X", val);
+		command(val);
 	}
 	
-	void LCD::scrollDisplayRight() {
-		
-	}
-	
-	void LCD::leftToRight() {
-		
-	}
-	
-	void LCD::rightToLeft() {
-		
-	}
-	
-	void LCD::autoScrollOn() {
-		
-	}
-	
-	void LCD::autoScrollOff() {
-		
+	void LCD::scrollDisplay(bool right) {
+		// comes out ot 0x18. example does stupid shit like this.
+		// it was done to create mode #defines
+		unsigned char val = 0x10 | 0x08;
+		val = (right) ? (val | 0x04) : (val & ~0x04);
+		command(val);
 	}
 	
 } // namespace

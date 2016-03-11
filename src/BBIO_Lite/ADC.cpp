@@ -33,7 +33,7 @@ namespace BBIO {
 				idx = i;
 				break;
 			}
-		// if not found, then we're not working w/ a PWM pin I support
+		// if not found, then we're not working w/ a pin I support
 		if (idx == -1)
 			return;
 		// populate _info

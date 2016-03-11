@@ -42,19 +42,14 @@ namespace PatricksDrivers {
 				unsigned int rows = 2,
 				unsigned int cols = 16
 			);
-			~LCD();
 			void print(const char* val);
 			void clear();
 			void home();
 			void onOff(bool display, bool cursor, bool blink);
 			void curPos(unsigned int col, unsigned int row);
+			void scroll(bool scrollLock, bool leftRight);
+			void scrollDisplay(bool right);
 			
-			void scrollDisplayLeft();
-			void scrollDisplayRight();
-			void leftToRight();
-			void rightToLeft();
-			void autoScrollOn();
-			void autoScrollOff();
 	}; // class LCD
 	
 } // namespace

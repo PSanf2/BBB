@@ -27,6 +27,8 @@ void printMenu() {
 	printf("\n\t 4) Display Control");
 	printf("\n\t 5) Print string");
 	printf("\n\t 6) Set cursor position");
+	printf("\n\t 7) Scroll Control");
+	printf("\n\t 8) Scroll Display");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -61,9 +63,10 @@ void getDecInput(unsigned int *ptr) {
 int main(int argc, char* argv[]) {
 	
 	unsigned int menu_choice, disp_choice, cur_choice, blink_choice, row_choice, col_choice;
+	unsigned int auto_choice, r2l_choice, dir_choice;
 	string in_str;
 	char in_buf[256];
-	bool disp, cur, blink;
+	bool disp, cur, blink, aut, r2l, dir;
 	
 	PatricksDrivers::LCD lcd(
 		RS_PIN,
@@ -106,11 +109,11 @@ int main(int argc, char* argv[]) {
 			
 			case 4:
 				printf("\n-----DISPLAY CONTROL-----");
-				printf("\nDisplay On/Off? [0\\1]: ");
+				printf("\nDisplay On/Off? [1\\0]: ");
 				getDecInput(&disp_choice);
-				printf("\nCursor On/Off? [0\\1]: ");
+				printf("\nCursor On/Off? [1\\0]: ");
 				getDecInput(&cur_choice);
-				printf("\nCursor Blink On/Off? [0\\1]: ");
+				printf("\nCursor Blink On/Off? [1\\0]: ");
 				getDecInput(&blink_choice);
 				
 				disp = (bool) disp_choice;
@@ -135,6 +138,25 @@ int main(int argc, char* argv[]) {
 				printf("\nInput col: ");
 				getDecInput(&col_choice);
 				lcd.curPos(col_choice, row_choice);
+			break;
+			
+			case 7:
+				printf("\n-----SCROLL CONTROL-----");
+				printf("\nScroll lock On/Off? [1\\0]: ");
+				getDecInput(&auto_choice);
+				printf("\nL2R or R2L? [1\\0]: ");
+				getDecInput(&r2l_choice);
+				aut = (bool) auto_choice;
+				r2l = (bool) r2l_choice;
+				lcd.scroll(aut, r2l);
+			break;
+			
+			case 8:
+				printf("\n-----SCROLL DISPLAY-----");
+				printf("\nRight/left? [1\\0]: ");
+				getDecInput(&dir_choice);
+				dir = (bool) dir_choice;
+				lcd.scrollDisplay(dir);
 			break;
 			
 			case 0:

@@ -36,6 +36,9 @@ namespace PatricksDrivers {
 		// I need to set the direction on each of the GPIO objects.
 		// I need to set the initial value for each of the GPIO objets.
 		
+		_rows = rows;
+		_cols = cols;
+		
 		_rs = new BBIO::GPIO(rs);
 		_en = new BBIO::GPIO(en);
 		_data[0] = new BBIO::GPIO(data4);
@@ -73,9 +76,9 @@ namespace PatricksDrivers {
 		 * Byte sequence
 		 * rs	7654 3210	0xN
 		 * 00	0010 ----	0x2-	// 1 nibble operation
-		 * 0	0010 1000	0x28
-		 * 0	0000 1111	0x0F
-		 * 0	0000 0110	0x06
+		 * 0	0010 1000	0x28	// function set
+		 * 0	0000 1111	0x0F	// display on/off
+		 * 0	0000 0110	0x06	// entry mode
 		 * 
 		 * I'll need to pulse en after each nibble.
 		 * 
@@ -191,7 +194,16 @@ namespace PatricksDrivers {
 	}
 	
 	void LCD::curPos(unsigned int col, unsigned int row) {
+		unsigned int offsets[4] = { 0x00, 0x40, 0x00 + _cols, 0x40 + _cols };
+		const unsigned int max_lines = sizeof(offsets) / sizeof(*offsets);
 		
+		if (row >= max_lines)
+			row = max_lines - 1;
+		
+		if (row >= _rows)
+			row = _rows - 1;
+		
+		command(0x80 | (col + offsets[row]));
 	}
 	
 	void LCD::scrollDisplayLeft() {

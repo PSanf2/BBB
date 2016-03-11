@@ -1,6 +1,7 @@
 #include <iostream>		// pulls in cin and hex
 #include <cstdio>		// pulls in printf()
 #include <cstdlib>		// lets me use system()
+#include <string>
 
 #include "LCD.h"
 #include "TriColor_LED.h"
@@ -24,6 +25,8 @@ void printMenu() {
 	printf("\n\t 2) Hello World!");
 	printf("\n\t 3) Clear");
 	printf("\n\t 4) Display Control");
+	printf("\n\t 5) Print string");
+	printf("\n\t 6) Set cursor position");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -57,7 +60,10 @@ void getDecInput(unsigned int *ptr) {
 
 int main(int argc, char* argv[]) {
 	
-	unsigned int menu_choice, disp_choice, cur_choice, blink_choice;
+	unsigned int menu_choice, disp_choice, cur_choice, blink_choice, row_choice, col_choice;
+	string in_str;
+	char in_buf[256];
+	bool disp, cur, blink;
 	
 	PatricksDrivers::LCD lcd(
 		RS_PIN,
@@ -107,14 +113,28 @@ int main(int argc, char* argv[]) {
 				printf("\nCursor Blink On/Off? [0\\1]: ");
 				getDecInput(&blink_choice);
 				
-				bool disp, cur, blink;
-				
 				disp = (bool) disp_choice;
 				cur = (bool) cur_choice;
 				blink = (bool) blink_choice;
 				
 				lcd.onOff(disp, cur, blink);
 				
+			break;
+			
+			case 5:
+				printf("\nInput a string: ");
+				cin.getline(in_buf, 256);
+				getline(cin,in_str);
+				lcd.print(in_str.c_str());
+				printf("\nLook at the LCD.");
+			break;
+			
+			case 6:
+				printf("\nInput row: ");
+				getDecInput(&row_choice);
+				printf("\nInput col: ");
+				getDecInput(&col_choice);
+				lcd.curPos(col_choice, row_choice);
 			break;
 			
 			case 0:

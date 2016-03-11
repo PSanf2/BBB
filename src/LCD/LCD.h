@@ -24,6 +24,8 @@ namespace PatricksDrivers {
 			BBIO::GPIO* _rs;
 			BBIO::GPIO* _en;
 			BBIO::GPIO* _data[4];
+			unsigned int _rows;
+			unsigned int _cols;
 			void send(unsigned char data_byte, unsigned char rs_val);
 			void set4bits(unsigned char data_bits);
 			void command(unsigned char data_bits) { send(data_bits, 0); }
@@ -46,6 +48,7 @@ namespace PatricksDrivers {
 			void home();
 			void onOff(bool display, bool cursor, bool blink);
 			void curPos(unsigned int col, unsigned int row);
+			
 			void scrollDisplayLeft();
 			void scrollDisplayRight();
 			void leftToRight();

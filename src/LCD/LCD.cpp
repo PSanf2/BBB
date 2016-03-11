@@ -1,25 +1,25 @@
 /*
  *				PIN CHART
- *LCD Pin	|		Name				|	BBB Pin		|
- *----------+---------------------------+---------------+
- *	1		|	VSS (Ground)			|	P8_02 DGND	|
- *	2		|	VDD (+ve)				|	P9_07 VDD_5V|
- *	3		|	VE (Contrast Voltage)	|	POT CTR PIN	|
- *	4		|	Register Select			|	P8_08		|
- *	5		|	Read/Write (r/w)		|	P8_02 DGND	|
- *	6		|	Enable (EN)				|	P8_10		|
- *	7		|	Data 0					|	-----		|
- *	8		|	Data 1					|	-----		|
- *	9		|	Data 2					|	-----		|
- *	10		|	Data 3					|	-----		|
- *	11		|	Data 4					|	P8_18		|
- *	12		|	Data 5					|	P8_16		|
- *	13		|	Data 6					|	P8_14		|
- *	14		|	Data 7					|	P8_12		|
- *	15		|	Backlight Anode (+ve)	|	P9_07 VDD_5V|
- *	16		|	Red Cathode (-R/red)	|	P9_16		| *Only cathode on monochrome LCD.
- *	17		|	Green Cathode (-G/green)|	P9_14		| *Only on RGB backlit LCD.
- *	18		|	Blue Cathode (-B/blue)	|	P8_13		| *Only on RGB backlit LCD.
+ *LCD Pin	|		Name				|	BBB Pin			|
+ *----------+---------------------------+-------------------+
+ *	1		|	VSS (Ground)			|	P8_02 DGND		|
+ *	2		|	VDD (+ve)				|	P9_07 VDD_5V	|
+ *	3		|	VE (Contrast Voltage)	|	POT CTR PIN		|
+ *	4		|	Register Select (RS)	|	P8_08 GPIO_67	|
+ *	5		|	Read/Write (r/w)		|	P8_02 DGND		|
+ *	6		|	Enable (EN)				|	P8_10 GPIO_68	|
+ *	7		|	Data 0					|	-----			| *Pins for the low nibble aren't needed.
+ *	8		|	Data 1					|	-----			|
+ *	9		|	Data 2					|	-----			|
+ *	10		|	Data 3					|	-----			|
+ *	11		|	Data 4					|	P8_18 GPIO_65	|
+ *	12		|	Data 5					|	P8_16 GPIO_46	|
+ *	13		|	Data 6					|	P8_14 GPIO_26	|
+ *	14		|	Data 7					|	P8_12 GPIO_44	|
+ *	15		|	Backlight Anode (+ve)	|	P9_07 VDD_5V	|
+ *	16		|	Red Cathode (-R/red)	|	P9_16 EHRPWM1A	| *Only cathode on monochrome LCD.
+ *	17		|	Green Cathode (-G/green)|	P9_14 EHRPWM1B	| *Only on RGB backlit LCD.
+ *	18		|	Blue Cathode (-B/blue)	|	P8_13 EHRPWM2B	| *Only on RGB backlit LCD.
  * 
  * NOTE: The potentiometer needs to have one outter pin connected to P9_07 VDD_5V, and the
  * other connected to P8_02 DGND. The potentiometer controls the contrast for the LCD characters.
@@ -32,7 +32,9 @@
  * monochrome 20x4 LCD. I'm wanting to write a driver that will support all three devices. All three
  * devices support the same protocol. Everybody else (Adafruit, who else?) has written their code to
  * support an 8 bit, and 4 bit parralel bus. The I2C backback does use all the LCD pins, but that's a
- * totally different story. 
+ * totally different story. Keep in mind that the PWM pins are not the same as GPIO pins. They can
+ * probably be used for digital output if needed (full on/full off), but if you want to code for
+ * a GPIO controlled LED backlight then you need to use a GPIO pin (Unless you want to get crazy).
  */
 
 #include "LCD.h"

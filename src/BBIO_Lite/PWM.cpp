@@ -127,6 +127,8 @@ namespace BBIO {
 		write(path, filename, val);
 	}
 	
+	// If polarity is 1 then higher duty values give a longer duty cycle.
+	// If polarity is 0 then higher duty values give a shorter duty cycle.
 	void PWM::polarity(int val) {
 		stringstream s;
 		s << _info.ocp_path;

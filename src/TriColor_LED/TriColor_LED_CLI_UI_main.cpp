@@ -17,7 +17,6 @@ void printMenu() {
 	printf("\n\t 2) Start all");
 	printf("\n\t 3) Stop all");
 	printf("\n\t 4) Set RGB");
-	printf("\n\t 5) Set period");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -91,14 +90,6 @@ int main(int argc, char* argv[]) {
 				printf("\nInput duty for b ");
 				getDecInput(&b);
 				my_led.duty(r, g, b);
-			break;
-			
-			case 5:
-				// set period
-				unsigned int val;
-				printf("\nInput period ");
-				getDecInput(&val);
-				my_led.period(val);
 			break;
 			
 			case 0:

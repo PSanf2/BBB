@@ -19,6 +19,9 @@ namespace PatricksDrivers {
 	}
 	
 	void TriColor_LED::start() {
+		Red.polarity(1);
+		Green.polarity(1);
+		Blue.polarity(1);
 		Red.start();
 		Green.start();
 		Blue.start();
@@ -35,13 +38,5 @@ namespace PatricksDrivers {
 		Green.duty(g);
 		Blue.duty(b);
 	}
-	
-	/*
-	void TriColor_LED::period(int val) {
-		Red.period(val);
-		Green.period(val);
-		Blue.period(val);
-	}
-	*/
 	
 } // namespace PatricksDrivers

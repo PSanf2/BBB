@@ -8,7 +8,7 @@ namespace PatricksDrivers {
 	
 	Servo::Servo(
 		const char* servo_key
-	) : PWMObj(servo_key) {
+	) : PWMObj(servo_key, 20000000) {
 		PWMObj.polarity(1);
 		start();
 	}

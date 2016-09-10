@@ -64,7 +64,50 @@ namespace BBIO {
 		_info.ocp_path = ocp2;
 		// set the default values for the PWM pin
 		duty(0);
-		period(20000000); // 2 ms. Good for servos.
+		period(500000);
+	}
+	
+	PWM::PWM(const char* key, const int per) {
+		_info.name = NULL;
+		_info.key = NULL;
+		_info.ocp_path = NULL;
+		// search for my info
+		int idx = -1;
+		int sz = ARRAY_SIZE(PWM_Info);
+		for (int i = 0; i < sz; i++)
+			if (strcmp(key, PWM_Info[i].key) == 0) {
+				idx = i;
+				break;
+			}
+		// if not found, then we're not working w/ a PWM pin I support
+		if (idx == -1)
+			return;
+		// populate _info
+		_info = PWM_Info[idx];
+		// if !_initialized
+		if (!_initialized) {
+			// load the am33xx_pwm DTO
+			load_device_tree("am33xx_pwm");
+			// toggle _initialized
+			_initialized = !_initialized;
+		}
+		// load the bone_pwm_<key> DTO fragment
+		string dto = "bone_pwm_";
+		dto.append(_info.key);
+		load_device_tree(dto.c_str());
+		// determine the ocp path for the PWM pin
+		char* ocp = new char[50];
+		build_path("/sys/devices", "ocp", ocp);
+		string pwm_test = "pwm_test_";
+		pwm_test.append(_info.key);
+		char* ocp2 = new char[50];
+		build_path(ocp, pwm_test.c_str(), ocp2);
+		delete ocp;
+		_info.ocp_path = ocp2;
+		// set the default values for the PWM pin
+		duty(0);
+		//period(20000000); // 2 ms. Good for servos.
+		period(per);
 	}
 	
 	PWM::~PWM() {

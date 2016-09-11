@@ -28,7 +28,7 @@
 #include "IR_LED.h"
 #include "IR_Sensor.h"
 
-#define IR_LED_PIN "P8_16"
+#define IR_LED_PIN "P8_19"
 
 using namespace std;
 
@@ -36,10 +36,8 @@ using namespace std;
 void printMenu() {
 	printf("\n\t\t-----MAIN MENU-----");
 	printf("\n\t 1) Print Menu");
-	printf("\n\t 2) IR LED On");
-	printf("\n\t 3) IR LED Off");
-	printf("\n\t 4) Run IR LED");
-	printf("\n\t 5) Stop IR LED");
+	printf("\n\t 2) Run IR LED");
+	printf("\n\t 3) Stop IR LED");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -95,18 +93,10 @@ int main(int argc, char* argv[]) {
 			break; // case 1
 			
 			case 2:
-				ir_light.on();
-			break; // case 2
-			
-			case 3:
-				ir_light.off();
-			break; // case 3
-			
-			case 4:
 				ir_light.run();
 			break; // case 4
 			
-			case 5:
+			case 3:
 				ir_light.stop();
 			break; // case 5
 			

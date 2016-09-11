@@ -7,16 +7,7 @@ using namespace std;
 namespace PatricksDrivers {
 	
 	IR_LED::IR_LED(const char* key) : Pin(key) {
-		Pin.direction(BBIO::OUTPUT);
-		off();
-	}
-	
-	void IR_LED::on() {
-		Pin.value(BBIO::HIGH);
-	}
-	
-	void IR_LED::off() {
-		Pin.value(BBIO::LOW);
+		
 	}
 	
 	// This is a friend function of the class
@@ -25,14 +16,7 @@ namespace PatricksDrivers {
 
 		while (ir_led->threadRunning) {
 			// this is where the magic happens
-			// 1 second = 1,000,000 microseconds
-			for (int i = 0; i < 40000; i += 26) {
-				ir_led->on();
-				usleep(10);
-				ir_led->off();
-				usleep(10);
-			}
-			usleep(40000);
+			
 		}
 		return 0;
 	}

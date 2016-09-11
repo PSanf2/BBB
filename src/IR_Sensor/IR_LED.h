@@ -12,7 +12,6 @@ namespace PatricksDrivers {
 			pthread_t thread;
 			friend void* threadedFunction(void* value);
 		public:
-			typedef int (*CallbackType) (int);
 			IR_LED(const char* key);
 			int run();
 			void stop();

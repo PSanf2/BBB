@@ -25,10 +25,14 @@ namespace PatricksDrivers {
 
 		while (ir_led->threadRunning) {
 			// this is where the magic happens
-			ir_led->on();
-			usleep(100000);
-			ir_led->off();
-			usleep(100000);
+			// 1 second = 1,000,000 microseconds
+			for (int i = 0; i < 40000; i += 26) {
+				ir_led->on();
+				usleep(10);
+				ir_led->off();
+				usleep(10);
+			}
+			usleep(40000);
 		}
 		return 0;
 	}

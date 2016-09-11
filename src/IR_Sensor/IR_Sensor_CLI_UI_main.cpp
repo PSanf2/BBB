@@ -4,6 +4,13 @@
  * pin, and turning it on and off rapidly.
  * Turn on, wait 13 microseconds, turn off, wait 13 microseconds, repeat.
  * 
+ * NOPE. Need to use PWM pin to get a 38kHz signal to the LED. Just blinking
+ * it w/ a GPIO doesn't work for shit.
+ * 
+ * Using a 220 ohm resistor seems to work best on the LED.
+ * Want to make it bright, but don't damage the pin.
+ * 220 is as low as I'd take it.
+ * 
  * The IR sensor uses a 5v reference that requires very little current.
  * The Arduino is capable of powering the sensor, and it doesn't
  * register any pull on my bench power supply. I believe it'll be safe

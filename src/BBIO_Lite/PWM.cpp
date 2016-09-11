@@ -106,7 +106,6 @@ namespace BBIO {
 		_info.ocp_path = ocp2;
 		// set the default values for the PWM pin
 		duty(0);
-		//period(20000000); // 2 ms. Good for servos.
 		period(per);
 	}
 	

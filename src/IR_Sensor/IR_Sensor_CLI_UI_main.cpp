@@ -31,11 +31,13 @@
 #include <iostream>		// pulls in cin and hex
 #include <cstdio>		// pulls in printf()
 #include <cstdlib>		// lets me use system()
+#include <ctime>
 
 #include "IR_LED.h"
 #include "IR_Sensor.h"
 
 #define IR_LED_PIN "P8_19"
+#define IR_SENSOR_PIN "P8_12"
 
 using namespace std;
 
@@ -45,6 +47,8 @@ void printMenu() {
 	printf("\n\t 1) Print Menu");
 	printf("\n\t 2) Run IR LED");
 	printf("\n\t 3) Stop IR LED");
+	printf("\n\t 4) Listen for bits");
+	printf("\n\t 5) Stop listening");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -76,12 +80,22 @@ void getDecInput(unsigned int *ptr) {
 	}
 }
 
+clock_t lastDebounceTime;
+const int debounceDelay = 5000;
+
+int IR_Sensor_callback(int var) {
+	if ((clock() - lastDebounceTime) > debounceDelay) {
+		printf("\nBit detected.");
+	}
+	lastDebounceTime = clock();
+}
+
 int main(int argc, char* argv[]) {
 	
 	unsigned int menu_choice;
 	
-	//PatricksDrivers::LED red_light(RED_LED_PIN);
 	PatricksDrivers::IR_LED ir_light(IR_LED_PIN);
+	PatricksDrivers::IR_Sensor ir_sensor(IR_SENSOR_PIN);
 	
 	//system("clear");
 	
@@ -101,10 +115,20 @@ int main(int argc, char* argv[]) {
 			
 			case 2:
 				ir_light.run();
-			break; // case 4
+			break; // case 2
 			
 			case 3:
 				ir_light.stop();
+			break; // case 3
+			
+			case 4:
+				// listen for bits
+				ir_sensor.run(&IR_Sensor_callback);
+			break; // case 4
+			
+			case 5:
+				// stop listening
+				ir_sensor.stop();
 			break; // case 5
 			
 			case 0:

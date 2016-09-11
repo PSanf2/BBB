@@ -10,7 +10,8 @@ namespace PatricksDrivers {
 			BBIO::GPIO Pin;
 		public:
 			IR_Sensor(const char* key);
-			void wait(BBIO::GPIO::CallbackType callback);
+			void run(BBIO::GPIO::CallbackType callback);
+			void stop();
 	}; // class IR_Sensor
 	
 } // namespace

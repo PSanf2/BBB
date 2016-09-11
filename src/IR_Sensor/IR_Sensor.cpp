@@ -9,8 +9,12 @@ namespace PatricksDrivers {
 		Pin.edge(BBIO::FALLING);
 	}
 	
-	void IR_Sensor::wait(BBIO::GPIO::CallbackType callback) {
+	void IR_Sensor::run(BBIO::GPIO::CallbackType callback) {
 		Pin.waitForEdge(callback);
+	}
+	
+	void IR_Sensor::stop() {
+		Pin.waitForEdgeCancel();
 	}
 	
 } // namespace

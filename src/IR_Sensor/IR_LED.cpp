@@ -18,7 +18,6 @@ namespace PatricksDrivers {
 	void* threadedFunction(void* value) {
 		IR_LED* ir_led = static_cast<IR_LED*>(value);
 		while (ir_led->threadRunning) {
-			srand(time(NULL));
 			for (int i = 0; i < 8; i++) {
 				ir_led->Pin.start();
 				usleep(1000);

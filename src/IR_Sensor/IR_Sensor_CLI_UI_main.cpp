@@ -1,31 +1,12 @@
 /*
- * The LED needs to blink at a rate of 38kHz in order for the IR sensor
- * to detect anything. This can be done by driving the LED w/ a GPIO
- * pin, and turning it on and off rapidly.
- * Turn on, wait 13 microseconds, turn off, wait 13 microseconds, repeat.
+ * The BBB is set up as follows.
+ * P9_09 -> 220 ohm resistor -> IR LED -> P8_02(DGND)
+ * P9_04(VDD_3V3) -> IR Sensor -> P8_12 & P9_02(DGND)
  * 
- * NOPE. Need to use PWM pin to get a 38kHz signal to the LED. Just blinking
- * it w/ a GPIO doesn't work for shit.
+ * The way the sensor and LED are oriented matter.
+ * The LED and sensor should be at about the same height, and covered with a minimal amount of
+ * shrink tubing on them. Each component should peek above the shrink tubing just a little bit.
  * 
- * Using a 220 ohm resistor seems to work best on the LED.
- * Want to make it bright, but don't damage the pin.
- * 220 is as low as I'd take it.
- * 
- * The IR sensor uses a 5v reference that requires very little current.
- * The Arduino is capable of powering the sensor, and it doesn't
- * register any pull on my bench power supply. I believe it'll be safe
- * to run the sensor directly off the BBB. The sensor can operate between
- * 3.3v and 5v. Because the GPIO pins are 3.3v tolerant I'll need to use
- * the VDD_3V3 reference off pin P9_03/04 for the sensor. I should be
- * able to connect the sensor just like a button, and use it in a
- * similar manner. The difference is that the sensor stays high unless
- * it gets a signal, so I need to watch for inputs on the falling edge.
- * 
- * I'll need to use multi-threading to pull this off.
- * The LED will need to have a thread to blink the light. That will
- * need to keep running until told to quit, or until the program terminates.
- * The sensor itself will need to have a thread with a callback function to
- * handle events.
  */
 
 #include <iostream>		// pulls in cin and hex

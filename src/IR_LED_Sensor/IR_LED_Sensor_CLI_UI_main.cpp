@@ -1,7 +1,3 @@
-/*
- * 
- */
-
 #include <iostream>		// pulls in cin and hex
 #include <cstdio>		// pulls in printf()
 #include <cstdlib>		// lets me use system()
@@ -9,8 +5,22 @@
 
 #include "IR_LED_Sensor.h"
 
+/*
+ * Notes on pin selection.
+ * You want the IR LED pins to be on different PWM channels.
+ * If they're on the same channel then they won't blink reliably.
+ * 
+ * You want the LEDs and sensors to use seperate ground pins on the BBB.
+ * If you use the same ground trace then you end up getting feedback from
+ * the LEDs on the sensor channels.
+ */
+
 #define IR_LED_PIN_1 "P8_19"
 #define IR_SENSOR_PIN_1 "P8_12"
+
+#define IR_LED_PIN_2 "P9_14"
+//#define IR_LED_PIN_2 "P8_13" // don't put the second IR LED on the same PWM channel
+#define IR_SENSOR_PIN_2 "P8_10"
 
 using namespace std;
 
@@ -51,8 +61,9 @@ void getDecInput(unsigned int *ptr) {
 	}
 }
 
-clock_t lastDebounceTime1;
 const int debounceDelay = 5000;
+
+clock_t lastDebounceTime1;
 
 int IR_Sensor_callback_1(int var) {
 	if ((clock() - lastDebounceTime1) > debounceDelay) {
@@ -61,11 +72,21 @@ int IR_Sensor_callback_1(int var) {
 	lastDebounceTime1 = clock();
 }
 
+clock_t lastDebounceTime2;
+
+int IR_Sensor_callback_2(int var) {
+	if ((clock() - lastDebounceTime2) > debounceDelay) {
+		printf("\nBit detected on sensor 2.");
+	}
+	lastDebounceTime2 = clock();
+}
+
 int main(int argc, char* argv[]) {
 	
 	unsigned int menu_choice;
 	
 	PatricksDrivers::IR_LED_Sensor Sensor1(IR_LED_PIN_1, IR_SENSOR_PIN_1);
+	PatricksDrivers::IR_LED_Sensor Sensor2(IR_LED_PIN_2, IR_SENSOR_PIN_2);
 	
 	//system("clear");
 	
@@ -85,10 +106,12 @@ int main(int argc, char* argv[]) {
 			
 			case 2:
 				Sensor1.run(&IR_Sensor_callback_1);
+				Sensor2.run(&IR_Sensor_callback_2);
 			break;
 			
 			case 3:
 				Sensor1.stop();
+				Sensor2.stop();
 			break;
 			
 			case 0:

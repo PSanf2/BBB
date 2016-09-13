@@ -5,8 +5,8 @@
 #include "LightSensor.h"
 #include "Button.h"
 
-#define BUTTON_PIN "P8_12"
-#define SENSOR_PIN "P9_40"
+#define BUTTON_PIN "P8_14"
+#define SENSOR_PIN "P9_38" // pins 38 and 40 atm
 
 using namespace std;
 

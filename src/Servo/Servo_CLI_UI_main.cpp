@@ -4,7 +4,8 @@
 
 #include "Servo.h"
 
-#define SERVO_PIN "P8_13"
+#define SERVO_PIN "P9_22"
+#define SERVO_PIN_2 "P9_42" // don't put the second servo on the same PWM channel.
 
 using namespace std;
 
@@ -14,7 +15,9 @@ void printMenu() {
 	printf("\n\t 1) Print Menu");
 	printf("\n\t 2) Start");
 	printf("\n\t 3) Stop");
-	printf("\n\t 4) Set Duty");
+	printf("\n\t 4) Set All Duty");
+	printf("\n\t 5) Set Servo 1 Duty");
+	printf("\n\t 6) Set Servo 2 Duty");
 	printf("\n\t 0) Quit");
 	printf("\nInput selection ");
 }
@@ -49,8 +52,10 @@ void getDecInput(unsigned int *ptr) {
 int main(int argc, char* argv[]) {
 	
 	unsigned int menu_choice;
+	unsigned int n;
 	
 	PatricksDrivers::Servo my_servo(SERVO_PIN);
+	PatricksDrivers::Servo my_servo_2(SERVO_PIN_2);
 	
 	//system("clear");
 	
@@ -70,17 +75,31 @@ int main(int argc, char* argv[]) {
 			
 			case 2:
 				my_servo.start();
+				my_servo_2.start();
 			break;
 			
 			case 3:
 				my_servo.stop();
+				my_servo_2.stop();
 			break;
 			
 			case 4:
-				unsigned int n;
 				printf("\nInput duty: ");
 				getDecInput(&n);
 				my_servo.duty(n);
+				my_servo_2.duty(n);
+			break;
+			
+			case 5:
+				printf("\nInput duty: ");
+				getDecInput(&n);
+				my_servo.duty(n);
+			break;
+			
+			case 6:
+				printf("\nInput duty: ");
+				getDecInput(&n);
+				my_servo_2.duty(n);
 			break;
 			
 			case 0:
